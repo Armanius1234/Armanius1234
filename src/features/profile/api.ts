@@ -189,3 +189,16 @@ export function useUnblockUser() {
     },
   });
 }
+
+/** A profile by id. Null when it does not exist or is hidden (blocked). */
+export function useProfileById(id: string | undefined) {
+  return useQuery({
+    queryKey: ['profile', 'id', id],
+    enabled: !!id,
+    queryFn: async (): Promise<Profile | null> => {
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', id!).maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+}

@@ -37,8 +37,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "PL8 needs access to your photos so you can choose a profile picture.",
-          "cameraPermission": false,
+          "photosPermission": "PL8 needs access to your photos so you can add pictures of your car and a profile picture.",
+          "cameraPermission": "PL8 uses the camera to take live photos of your car, for your garage and to verify your license plate.",
           "microphonePermission": false
         }
       ]

@@ -7,11 +7,11 @@ verified license plates to digital vehicle profiles.
 
 | | |
 |---|---|
-| Status | **Milestone 1 — Foundation** (awaiting founder approval) |
+| Status | **Milestone 2 — Vehicle identity** (awaiting founder approval) |
 | App | React Native + Expo SDK 58 + TypeScript (strict), iOS & Android |
 | Backend | Supabase (Postgres + Row Level Security, Auth, Storage), EU region |
 | Plan | [docs/MILESTONE-0-PLAN.md](docs/MILESTONE-0-PLAN.md) |
-| Latest report | [docs/MILESTONE-1-REPORT.md](docs/MILESTONE-1-REPORT.md) |
+| Latest report | [docs/MILESTONE-2-REPORT.md](docs/MILESTONE-2-REPORT.md) |
 
 ---
 
@@ -83,11 +83,14 @@ src/app/            Screens (Expo Router: every file is a route)
   (tabs)/           Home · Discover · PL8 Search · Messages · Profile
   settings/         Settings, privacy, blocked users, language, legal
   profile/edit.tsx  Edit profile
-  user/[username]   Other members' profiles (block)
-src/features/       Feature logic (auth, profile, legal, placeholders)
+  user/[username]   Other members' profiles (garage, block)
+  vehicle/          Add vehicle, vehicle profile, edit + photos, plate
+  verification/     Plate verification (challenge code + live photos)
+  admin/            Verification review queue (admins only)
+src/features/       Feature logic (auth, profile, garage/plates/search, legal)
 src/ui/             Design-system components
 src/theme/          Design tokens (brand colours, spacing, type)
-src/shared/         Validation rules shared with the database
+src/shared/         Validation + German plate rules shared with the database
 src/i18n/           German + English texts
 src/lib/            Supabase client, env, errors, secure session storage
 supabase/migrations SQL: tables, Row Level Security, functions, storage

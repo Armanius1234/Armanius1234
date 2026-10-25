@@ -128,6 +128,16 @@ function RootNavigator() {
         <Stack.Screen name="profile/edit" options={{ headerShown: true, title: t('profile.editTitle') }} />
         <Stack.Screen name="settings" />
         <Stack.Screen name="user/[username]" options={{ headerShown: true, title: '' }} />
+        <Stack.Screen name="vehicle/new" options={{ headerShown: true, title: t('vehicle.newTitle') }} />
+        <Stack.Screen name="vehicle/[id]/index" options={{ headerShown: true, title: '' }} />
+        <Stack.Screen name="vehicle/[id]/edit" options={{ headerShown: true, title: t('vehicle.editTitle') }} />
+        <Stack.Screen name="vehicle/[id]/plate" options={{ headerShown: true, title: t('plate.title') }} />
+        <Stack.Screen
+          name="verification/[claimId]"
+          options={{ headerShown: true, title: t('verification.title') }}
+        />
+        <Stack.Screen name="admin/index" options={{ headerShown: true, title: t('admin.title') }} />
+        <Stack.Screen name="admin/[requestId]" options={{ headerShown: true, title: t('admin.title') }} />
       </Stack.Protected>
     </Stack>
   );

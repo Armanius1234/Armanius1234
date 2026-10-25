@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { Alert, StyleSheet } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { useIsAdmin } from '@/features/garage/api';
 import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { spacing } from '@/theme/tokens';
@@ -11,6 +12,7 @@ import { AppText, Divider, ListRow, Screen, Section } from '@/ui';
 export default function SettingsScreen() {
   const { t, locale } = useI18n();
   const { session, signOut } = useAuth();
+  const isAdmin = useIsAdmin().data === true;
 
   function confirmSignOut() {
     Alert.alert(t('settings.signOutConfirm'), undefined, [
@@ -51,6 +53,12 @@ export default function SettingsScreen() {
       <Section title={t('settings.legal')}>
         <ListRow icon="document-text-outline" label={t('legal.title')} onPress={() => router.push('/settings/legal')} />
       </Section>
+
+      {isAdmin ? (
+        <Section title={t('settings.admin')}>
+          <ListRow icon="shield-outline" label={t('admin.settingsRow')} onPress={() => router.push('/admin')} />
+        </Section>
+      ) : null}
 
       <AppText variant="caption" color="textSecondary" center>
         {t('settings.version', { version: Constants.expoConfig?.version ?? '—' })}

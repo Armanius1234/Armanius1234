@@ -29,6 +29,33 @@ this once. Nothing here costs money: the **Free** plan is enough for development
 > Run each migration file only once, in date order. Future milestones add new
 > files; you will run only the new ones.
 
+### Milestone 2 update (vehicles, plates, search)
+
+If you already ran the first file, run only the second one:
+
+1. **SQL Editor → New query**, paste everything from
+   `supabase/migrations/20261026090000_vehicle_identity.sql`, then click **Run**.
+2. Check: **Table Editor** now also shows `vehicles` and `vehicle_images`.
+   **Storage** shows two new **private** buckets: `vehicle-photos` and
+   `verification-evidence`.
+
+### Make yourself the reviewer (admin)
+
+Plate verifications are approved by hand in the app. Give your own account the
+admin role **after** you have registered in the app:
+
+```sql
+insert into private.user_roles (user_id, role)
+select id, 'admin' from auth.users where email = 'YOUR-EMAIL@example.com';
+```
+
+Paste this into **SQL Editor**, replace the email, then **Run**. Restart the app.
+**Settings → Admin → Verification review** now appears.
+
+For safety, nobody can approve their own plate, including admins. To test the
+full journey you need **two accounts**: one that claims a plate, and your admin
+account that approves it.
+
 ## 3. Email sign-up settings
 
 Left menu → **Authentication**:

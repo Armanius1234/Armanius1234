@@ -30,7 +30,7 @@ if [ -z "${DATABASE_URL:-}" ]; then
     RUN=(runuser -u postgres --)
   fi
 
-  "${RUN[@]}" "$PGBIN/initdb" -D "$TMP/data" -U postgres --auth=trust >/dev/null
+  "${RUN[@]}" "$PGBIN/initdb" -D "$TMP/data" -U postgres --auth=trust --encoding=UTF8 --locale=C.UTF-8 >/dev/null
   "${RUN[@]}" "$PGBIN/pg_ctl" -D "$TMP/data" -o "-p $PORT -k $TMP -c listen_addresses=''" -l "$TMP/log" -w start >/dev/null
   CLEANUP="$TMP"
   trap '"${RUN[@]}" "$PGBIN/pg_ctl" -D "$CLEANUP/data" -m fast stop >/dev/null 2>&1 || true; rm -rf "$CLEANUP"' EXIT
@@ -40,6 +40,7 @@ if [ -z "${DATABASE_URL:-}" ]; then
   DATABASE_URL="postgresql://postgres@/pl8_test?host=$TMP&port=$PORT"
 fi
 
+export PL8_TESTS_DIR="$ROOT/supabase/tests"
 PSQL=(psql "$DATABASE_URL" -X -q -v ON_ERROR_STOP=1)
 
 echo "▸ Applying Supabase shim"

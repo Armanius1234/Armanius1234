@@ -26,6 +26,27 @@ const AUTH_CODES: Record<string, TKey> = {
   email_address_invalid: 'errors.email_invalid',
 };
 
+/** Server-side business errors raised by PL8 database functions. */
+const PL8_CODES: Record<string, TKey> = {
+  RATE_LIMITED: 'errors.rate_limited',
+  INVALID_PLATE: 'errors.plate_invalid',
+  UNSUPPORTED_COUNTRY: 'errors.plate_invalid',
+  VEHICLE_HAS_PLATE: 'errors.vehicle_has_plate',
+  ALREADY_CLAIMED: 'errors.already_claimed',
+  EVIDENCE_REQUIRED: 'errors.evidence_required',
+  NOT_VERIFIED: 'errors.not_verified',
+  VEHICLE_LIMIT: 'errors.vehicle_limit',
+  IMAGE_LIMIT: 'errors.image_limit',
+  SELF_REVIEW: 'errors.self_review',
+  REASON_REQUIRED: 'errors.reason_required',
+  INVALID_STATE: 'errors.invalid_state',
+  EVIDENCE_REMAINS: 'errors.upload_failed',
+  NOT_FOUND: 'errors.permission_denied',
+  NOT_YOUR_VEHICLE: 'errors.permission_denied',
+  ADMIN_ONLY: 'errors.permission_denied',
+  AUTH_REQUIRED: 'errors.permission_denied',
+};
+
 export function errorKey(error: unknown): TKey {
   if (!error || typeof error !== 'object') return 'errors.unknown';
   const e = error as ErrorLike;
@@ -33,8 +54,12 @@ export function errorKey(error: unknown): TKey {
   const message = typeof e.message === 'string' ? e.message : '';
 
   if (e.name === 'PhotoPermissionError') return 'errors.photo_permission';
+  if (e.name === 'CameraPermissionError') return 'errors.camera_permission';
   if (e.name === 'UploadError') return 'errors.upload_failed';
   if (code && AUTH_CODES[code]) return AUTH_CODES[code];
+
+  const pl8 = /PL8_([A-Z_]+)/.exec(message)?.[1];
+  if (pl8 && PL8_CODES[pl8]) return PL8_CODES[pl8];
 
   // The sign-up trigger rejected the request (missing 18+ / consent).
   if (/PL8_(AGE_CONFIRMATION|CONSENT)_REQUIRED|Database error saving new user/i.test(message)) {

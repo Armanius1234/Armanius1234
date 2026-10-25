@@ -3,11 +3,12 @@ import { router } from 'expo-router';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { GarageSection } from '@/features/garage/GarageSection';
 import { useMyProfile } from '@/features/profile/api';
 import { ProfileHeader } from '@/features/profile/ProfileHeader';
 import { useI18n } from '@/i18n';
 import { colors, hitSize, spacing } from '@/theme/tokens';
-import { AppText, Button, EmptyView, ErrorView, Logo, Skeleton } from '@/ui';
+import { Button, ErrorView, Logo, Skeleton } from '@/ui';
 
 export default function MyProfileScreen() {
   const { t } = useI18n();
@@ -65,17 +66,7 @@ export default function MyProfileScreen() {
             }
           />
           <View style={styles.divider} />
-          <AppText variant="overline" color="textSecondary">
-            {t('profile.garage').toUpperCase()}
-          </AppText>
-          <View style={styles.garage}>
-            <EmptyView
-              icon="car-sport-outline"
-              title={t('placeholders.garageTitle')}
-              body={t('placeholders.garageBody')}
-              badge={t('placeholders.milestone', { n: 2 })}
-            />
-          </View>
+          <GarageSection ownerId={profile.data.id} isMe />
         </ScrollView>
       )}
     </SafeAreaView>
@@ -95,7 +86,6 @@ const styles = StyleSheet.create({
   content: { padding: spacing.md, gap: spacing.md },
   flex: { flex: 1 },
   divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.border, marginVertical: spacing.xs },
-  garage: { minHeight: 260 },
   skeletonRow: { flexDirection: 'row', gap: spacing.md, alignItems: 'center' },
   skeletonAvatar: { width: 88, height: 88, borderRadius: 44 },
   skeletonLines: { flex: 1, gap: spacing.xs },

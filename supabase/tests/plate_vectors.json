@@ -1,0 +1,28 @@
+[
+  { "d": "F", "l": "AB", "n": "123", "s": "", "expected": "F-AB-123" },
+  { "d": "f", "l": "ab", "n": "123", "s": "", "expected": "F-AB-123" },
+  { "d": " WI ", "l": "FA", "n": "480", "s": "", "expected": "WI-FA-480" },
+  { "d": "MTK", "l": "X", "n": "1", "s": "", "expected": "MTK-X-1" },
+  { "d": "M", "l": "AB", "n": "1234", "s": "E", "expected": "M-AB-1234E" },
+  { "d": "DA", "l": "PL", "n": "8", "s": "h", "expected": "DA-PL-8H" },
+  { "d": "LÖ", "l": "AB", "n": "12", "s": "", "expected": "LÖ-AB-12" },
+  { "d": "mü", "l": "C", "n": "77", "s": "", "expected": "MÜ-C-77" },
+  { "d": "TÜ", "l": "XY", "n": "999", "s": "", "expected": "TÜ-XY-999" },
+  { "d": "OF", "l": "M", "n": "3", "s": "E", "expected": "OF-M-3E" },
+
+  { "d": "", "l": "AB", "n": "123", "s": "", "expected": null },
+  { "d": "ABCD", "l": "A", "n": "1", "s": "", "expected": null },
+  { "d": "F", "l": "", "n": "123", "s": "", "expected": null },
+  { "d": "F", "l": "ABC", "n": "123", "s": "", "expected": null },
+  { "d": "F", "l": "ÄB", "n": "123", "s": "", "expected": null },
+  { "d": "F", "l": "AB", "n": "", "s": "", "expected": null },
+  { "d": "F", "l": "AB", "n": "0123", "s": "", "expected": null },
+  { "d": "F", "l": "AB", "n": "12345", "s": "", "expected": null },
+  { "d": "F", "l": "AB", "n": "12a", "s": "", "expected": null },
+  { "d": "F1", "l": "AB", "n": "123", "s": "", "expected": null },
+  { "d": "F", "l": "AB", "n": "123", "s": "X", "expected": null },
+  { "d": "MTK", "l": "AB", "n": "1234", "s": "", "expected": null },
+  { "d": "MTK", "l": "AB", "n": "123", "s": "E", "expected": null },
+  { "d": "F", "l": "A-B", "n": "123", "s": "", "expected": null },
+  { "d": "F'", "l": "AB", "n": "1", "s": "", "expected": null }
+]

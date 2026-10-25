@@ -1,8 +1,9 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Alert, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { GarageSection } from '@/features/garage/GarageSection';
 import { useBlockUser, useProfileByUsername } from '@/features/profile/api';
 import { ProfileHeader } from '@/features/profile/ProfileHeader';
 import { useI18n } from '@/i18n';
@@ -68,6 +69,8 @@ export default function UserProfileScreen() {
       />
       <ScrollView style={styles.root} contentContainerStyle={styles.content}>
         <ProfileHeader profile={target} />
+        <View style={styles.divider} />
+        <GarageSection ownerId={target.id} isMe={isMe} />
       </ScrollView>
     </>
   );
@@ -75,6 +78,7 @@ export default function UserProfileScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgPrimary },
-  content: { padding: spacing.md },
+  content: { padding: spacing.md, gap: spacing.md },
+  divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.border },
   headerButton: { width: hitSize, height: hitSize, alignItems: 'center', justifyContent: 'center' },
 });
