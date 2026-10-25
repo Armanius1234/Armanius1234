@@ -158,6 +158,8 @@ Mutation checks (bugs added on purpose to prove the tests catch them):
 | 6 | Emails use Supabase's built-in sender (low hourly limit) | Own email provider before launch |
 | 7 | Messages are not end-to-end encrypted | Say so in the privacy policy |
 | 8 | Moderators see the text of reported messages | Say so in the privacy policy |
+| 9 | No dedicated performance pass on real phones yet. Lists already load in pages and render only what is on screen; images are cached and resized before upload | Measure with the beta build on an older Android phone |
+| 10 | Play Store internal testing needs the Google Play Console ($25 once) | Not needed for the free APK beta; **needs your approval** later |
 
 ## 5. Estimated ongoing costs
 
