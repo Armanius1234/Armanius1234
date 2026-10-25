@@ -130,10 +130,18 @@ Mutation checks (bugs added on purpose to prove the tests catch them):
 depends on Supabase Auth setting the provider *before* it saves a new user. I
 confirmed this in the Supabase Auth source code (`signup.go`, `ToUserModel`).
 
-**Observed once:** in about 20 full runs of the app tests, one run (right
-after the heavy mutation testing) had 1 failed test; its name was not
-recorded. The next 17 runs all passed. This is probably a timing issue under
-load. I'll watch for it in CI.
+**Flaky test found and fixed:** an older test from Milestone 3 ("FollowButton
+follows a public account") failed now and then: twice locally and once in CI
+on the first Milestone 6 push.
+- **Cause:** the Follow button shows its label while it is still loading, but
+  ignores presses until loading is done. On a busy machine the test pressed
+  it too early.
+- **The app was fine.** The test now waits until the button is ready, as a
+  person would.
+- **Proof:**
+  - It was reproduced under CPU load.
+  - With a 300 ms delay added on purpose, the old test fails every time and
+    the fixed test passes.
 
 **Not tested yet:**
 - Real Google and Apple sign-in. This needs the provider set up in Supabase

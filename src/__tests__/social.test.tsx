@@ -126,6 +126,18 @@ describe('time and counts', () => {
   });
 });
 
+/**
+ * The follow button shows its label while the relationship is still loading,
+ * but ignores presses until then. Wait until it is ready, as a person would.
+ */
+async function findEnabledButton(name: string) {
+  return waitFor(() => {
+    const button = screen.getByRole('button', { name });
+    expect(button).toBeEnabled();
+    return button;
+  });
+}
+
 // ---------------------------------------------------------------- follow ----
 describe('FollowButton', () => {
   it('follows a public account', async () => {
@@ -137,7 +149,7 @@ describe('FollowButton', () => {
       ),
     );
     await wrap(<FollowButton profile={profile} />);
-    await fireEvent.press(await screen.findByRole('button', { name: 'Follow' }));
+    await fireEvent.press(await findEnabledButton('Follow'));
     await waitFor(() => expect(mockRpc).toHaveBeenCalledWith('follow_user', { p_target: 'ann' }));
   });
 
@@ -157,7 +169,7 @@ describe('FollowButton', () => {
       error: null,
     });
     await wrap(<FollowButton profile={{ ...profile, is_private: true }} />);
-    await fireEvent.press(await screen.findByRole('button', { name: 'Requested' }));
+    await fireEvent.press(await findEnabledButton('Requested'));
     expect(alert).toHaveBeenCalledWith('Withdraw your follow request?', undefined, expect.any(Array));
     expect(mockRpc).not.toHaveBeenCalledWith('unfollow_user', expect.anything());
     alert.mockRestore();
