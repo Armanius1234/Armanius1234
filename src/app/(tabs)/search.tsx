@@ -5,6 +5,9 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useSearchPlate, useSignedUrls } from '@/features/garage/api';
 import { PlateBadge, PlateInput, VehicleCard } from '@/features/garage/components';
+import { MessageButton } from '@/features/messaging/MessageButton';
+import { useProfileByUsername } from '@/features/profile/api';
+import { FollowButton } from '@/features/social/components';
 import { useI18n } from '@/i18n';
 import type { SearchResult } from '@/lib/database.types';
 import { errorKey } from '@/lib/errors';
@@ -149,9 +152,19 @@ function ResultCard({ result, plate }: { result: SearchResult; plate: string }) 
           {t('search.privateGarage')}
         </AppText>
       )}
-      <AppText variant="caption" color="textSecondary">
-        {t('search.nextSteps')}
-      </AppText>
+      {result.owner_username ? <OwnerActions username={result.owner_username} /> : null}
+    </View>
+  );
+}
+
+/** Follow / message the owner (only when they chose to be shown). */
+function OwnerActions({ username }: { username: string }) {
+  const profile = useProfileByUsername(username);
+  if (!profile.data) return null;
+  return (
+    <View style={styles.ownerActions}>
+      <FollowButton profile={profile.data} />
+      <MessageButton userId={profile.data.id} />
     </View>
   );
 }
@@ -172,5 +185,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  ownerActions: { flexDirection: 'row', gap: spacing.sm },
   hint: { flexDirection: 'row', gap: spacing.xs, alignItems: 'flex-start', marginTop: spacing.sm },
 });

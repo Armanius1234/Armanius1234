@@ -12,6 +12,34 @@ export type RequestStatus = 'awaiting_evidence' | 'submitted' | 'approved' | 're
 
 type NoArgs = Record<PropertyKey, never>;
 
+export type ConversationStatus = 'request' | 'active' | 'declined';
+
+export type InboxItem = {
+  conversation_id: string;
+  status: ConversationStatus;
+  is_request_for_me: boolean;
+  other_id: string;
+  other_username: string;
+  other_display_name: string;
+  other_avatar_path: string | null;
+  last_message: string | null;
+  last_message_mine: boolean | null;
+  last_message_at: string;
+  unread_count: number;
+};
+
+export type ConversationInfo = {
+  conversation_id: string;
+  status: ConversationStatus;
+  is_request_for_me: boolean;
+  i_sent_request: boolean;
+  other_id: string;
+  other_username: string;
+  other_display_name: string;
+  other_avatar_path: string | null;
+  other_last_read_at: string;
+};
+
 export type FeedMode = 'home' | 'discover' | 'user' | 'saved' | 'single';
 
 export type FeedPost = {
@@ -259,6 +287,31 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
+      conversations: {
+        Row: {
+          id: string;
+          created_by: string | null;
+          pair_key: string;
+          status: ConversationStatus;
+          last_message_at: string | null;
+          created_at: string;
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      conversation_participants: {
+        Row: { conversation_id: string; user_id: string; last_read_at: string; joined_at: string };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      messages: {
+        Row: { id: string; conversation_id: string; sender_id: string | null; body: string; created_at: string };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
       saved_posts: {
         Row: { user_id: string; post_id: string; created_at: string };
         Insert: { user_id: string; post_id: string };
@@ -398,6 +451,13 @@ export type Database = {
         Args: { p_post: string; p_after?: string | null; p_limit?: number };
         Returns: PostComment[];
       };
+      start_conversation: { Args: { p_target: string }; Returns: string };
+      send_message: { Args: { p_conversation: string; p_body: string }; Returns: string };
+      respond_message_request: { Args: { p_conversation: string; p_accept: boolean }; Returns: undefined };
+      mark_conversation_read: { Args: { p_conversation: string }; Returns: undefined };
+      my_conversations: { Args: NoArgs; Returns: InboxItem[] };
+      unread_message_count: { Args: NoArgs; Returns: number };
+      conversation_info: { Args: { p_conversation: string }; Returns: ConversationInfo[] };
       admin_revoke_claim: { Args: { p_claim_id: string; p_reason: string }; Returns: undefined };
     };
     Enums: {
@@ -420,4 +480,5 @@ export type VehicleUpdate = Database['public']['Tables']['vehicles']['Update'];
 export type VehicleImage = Database['public']['Tables']['vehicle_images']['Row'];
 export type PlateClaim = Fn['my_plate_claims']['Returns'][number];
 export type SearchResult = Fn['search_plate']['Returns'][number];
+export type Message = Database['public']['Tables']['messages']['Row'];
 export type QueueItem = Fn['admin_verification_queue']['Returns'][number];

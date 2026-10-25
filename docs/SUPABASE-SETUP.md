@@ -47,6 +47,14 @@ Check: **Table Editor** shows `follows`, `follow_requests`, `posts`,
 `post_media`, `likes`, `comments`, `saved_posts`. **Storage** shows a new
 **private** bucket `post-media`.
 
+### Milestone 4 update (messaging)
+
+Run only the fourth file: **SQL Editor → New query**, paste everything from
+`supabase/migrations/20261028090000_messaging.sql`, then **Run**.
+Check: **Table Editor** shows `conversations`, `conversation_participants`,
+`messages`. Then **Database → Publications → supabase_realtime**: `messages`
+should be switched on (the file does this; switch it on by hand if not).
+
 ### Make yourself the reviewer (admin)
 
 Plate verifications are approved by hand in the app. Give your own account the

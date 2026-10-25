@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { GarageSection } from '@/features/garage/GarageSection';
+import { MessageButton } from '@/features/messaging/MessageButton';
 import { ProfileHeader } from '@/features/profile/ProfileHeader';
 import { useI18n } from '@/i18n';
 import type { Profile } from '@/lib/database.types';
@@ -35,6 +36,7 @@ export function ProfileBody({ profile, isMe, actions }: { profile: Profile; isMe
           ) : (
             <>
               <FollowButton profile={profile} />
+              <MessageButton userId={profile.id} />
               {actions}
             </>
           )

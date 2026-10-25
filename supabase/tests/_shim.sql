@@ -160,3 +160,13 @@ end;
 $$;
 
 grant execute on all functions in schema tests to anon, authenticated, service_role;
+
+-- ------------------------------------------------------------- realtime ------
+-- Supabase creates this publication; tables are added to it by migrations.
+do $$
+begin
+  if not exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
+    create publication supabase_realtime;
+  end if;
+end;
+$$;

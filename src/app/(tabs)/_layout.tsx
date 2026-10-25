@@ -3,6 +3,8 @@ import { Tabs } from 'expo-router/js-tabs';
 import type { ComponentProps } from 'react';
 import { StyleSheet, View, type ColorValue } from 'react-native';
 
+import { useMessagesRealtime, useUnreadCount } from '@/features/messaging/api';
+import { useFollowRequests } from '@/features/social/api';
 import { useI18n } from '@/i18n';
 import { colors, fonts } from '@/theme/tokens';
 
@@ -25,6 +27,10 @@ function SearchIcon({ focused }: { focused: boolean }) {
 
 export default function TabsLayout() {
   const { t } = useI18n();
+  useMessagesRealtime();
+  const { unread, requests } = useUnreadCount();
+  const followRequests = useFollowRequests().data?.length ?? 0;
+  const messageBadge = unread + requests;
   return (
     <Tabs
       screenOptions={{
@@ -50,11 +56,21 @@ export default function TabsLayout() {
       />
       <Tabs.Screen
         name="messages"
-        options={{ title: t('tabs.messages'), tabBarIcon: icon('chatbubbles', 'chatbubbles-outline') }}
+        options={{
+          title: t('tabs.messages'),
+          tabBarIcon: icon('chatbubbles', 'chatbubbles-outline'),
+          tabBarBadge: messageBadge > 0 ? (messageBadge > 99 ? '99+' : messageBadge) : undefined,
+          tabBarBadgeStyle: { backgroundColor: colors.accent, color: '#fff', fontFamily: fonts.semibold, fontSize: 11 },
+        }}
       />
       <Tabs.Screen
         name="profile"
-        options={{ title: t('tabs.profile'), tabBarIcon: icon('person-circle', 'person-circle-outline') }}
+        options={{
+          title: t('tabs.profile'),
+          tabBarIcon: icon('person-circle', 'person-circle-outline'),
+          tabBarBadge: followRequests > 0 ? followRequests : undefined,
+          tabBarBadgeStyle: { backgroundColor: colors.accent, color: '#fff', fontFamily: fonts.semibold, fontSize: 11 },
+        }}
       />
     </Tabs>
   );

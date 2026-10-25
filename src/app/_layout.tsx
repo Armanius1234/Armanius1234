@@ -3,12 +3,13 @@ import { Inter_500Medium } from '@expo-google-fonts/inter/500Medium';
 import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
 import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
 import { Orbitron_900Black } from '@expo-google-fonts/orbitron/900Black';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { DarkTheme, Stack, ThemeProvider, type Theme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { AppState, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
@@ -26,6 +27,15 @@ const queryClient = new QueryClient({
     mutations: { retry: 0 },
   },
 });
+
+// Refetch stale data when the app returns to the foreground (React Native has
+// no window focus events).
+if (Platform.OS !== 'web') {
+  focusManager.setEventListener((handleFocus) => {
+    const sub = AppState.addEventListener('change', (state) => handleFocus(state === 'active'));
+    return () => sub.remove();
+  });
+}
 
 const navTheme: Theme = {
   ...DarkTheme,
@@ -134,6 +144,7 @@ function RootNavigator() {
         <Stack.Screen name="post/new" options={{ headerShown: true, title: t('post.newTitle') }} />
         <Stack.Screen name="post/[id]" options={{ headerShown: true, title: t('post.title') }} />
         <Stack.Screen name="saved" options={{ headerShown: true, title: t('post.savedTitle') }} />
+        <Stack.Screen name="chat/[id]" options={{ headerShown: true, title: '' }} />
         <Stack.Screen name="vehicle/new" options={{ headerShown: true, title: t('vehicle.newTitle') }} />
         <Stack.Screen name="vehicle/[id]/index" options={{ headerShown: true, title: '' }} />
         <Stack.Screen name="vehicle/[id]/edit" options={{ headerShown: true, title: t('vehicle.editTitle') }} />

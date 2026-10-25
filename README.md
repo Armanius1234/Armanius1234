@@ -7,11 +7,11 @@ verified license plates to digital vehicle profiles.
 
 | | |
 |---|---|
-| Status | **Milestone 3 — Social network** (awaiting founder approval) |
+| Status | **Milestone 4 — Messaging** (awaiting founder approval) |
 | App | React Native + Expo SDK 58 + TypeScript (strict), iOS & Android |
 | Backend | Supabase (Postgres + Row Level Security, Auth, Storage), EU region |
 | Plan | [docs/MILESTONE-0-PLAN.md](docs/MILESTONE-0-PLAN.md) |
-| Latest report | [docs/MILESTONE-3-REPORT.md](docs/MILESTONE-3-REPORT.md) |
+| Latest report | [docs/MILESTONE-4-REPORT.md](docs/MILESTONE-4-REPORT.md) |
 
 ---
 
@@ -86,11 +86,12 @@ src/app/            Screens (Expo Router: every file is a route)
   user/[username]/  Member profiles, followers, following (follow, block)
   post/             New post, post detail with comments
   saved.tsx         Saved posts
+  chat/[id].tsx     Conversation (live messages, requests)
   follow-requests   Requests for private accounts
   vehicle/          Add vehicle, vehicle profile, edit + photos, plate
   verification/     Plate verification (challenge code + live photos)
   admin/            Verification review queue (admins only)
-src/features/       Feature logic (auth, profile, garage/plates/search, social, legal)
+src/features/       Feature logic (auth, profile, garage/plates/search, social, messaging, legal)
 src/ui/             Design-system components
 src/theme/          Design tokens (brand colours, spacing, type)
 src/shared/         Validation + German plate rules shared with the database
