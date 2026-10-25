@@ -62,6 +62,17 @@ export type ReportQueueItem = {
   owner_username: string | null;
   open_reports: number;
   preview: { [key: string]: Json | undefined } | null;
+  /** The content as it was when it was reported. */
+  snapshot: { [key: string]: Json | undefined } | null;
+};
+
+export type SuspendedUser = {
+  user_id: string;
+  username: string;
+  display_name: string;
+  avatar_path: string | null;
+  suspended_at: string;
+  reason: string | null;
 };
 
 export type ConversationStatus = 'request' | 'active' | 'declined';
@@ -583,6 +594,13 @@ export type Database = {
       delete_my_account: { Args: NoArgs; Returns: undefined };
       export_my_data: { Args: NoArgs; Returns: Json };
       admin_revoke_claim: { Args: { p_claim_id: string; p_reason: string }; Returns: undefined };
+      my_consent: { Args: NoArgs; Returns: boolean };
+      record_consent: {
+        Args: { p_age_confirmed: boolean; p_terms_version: string; p_privacy_version: string; p_locale?: string | null };
+        Returns: undefined;
+      };
+      hide_conversation: { Args: { p_conversation: string }; Returns: undefined };
+      admin_suspended_users: { Args: NoArgs; Returns: SuspendedUser[] };
     };
     Enums: {
       messaging_policy: MessagingPolicy;

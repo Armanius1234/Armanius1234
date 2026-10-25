@@ -28,6 +28,9 @@ app actually stores, where, for how long, and which questions are still open.
 | Plate claim attempts (rate limiting) | `private.claim_log` | operator only | 30 days |
 | Reports (who reported what, reason, decision) | `reports` | the reporter (own reports), moderators | 1 year after the decision |
 | Moderator actions (decision, reason, who decided) | `private.admin_actions` | operator only | **no automatic deletion yet** (see §4.8) |
+| Copy of reported content at the time of the report | `private.report_snapshots` | moderators | deleted together with the report (1 year after the decision) |
+| Chats you deleted for yourself (which chat, when) | `private.hidden_conversations` | operator only | account deletion |
+| Apple / Google sign-in data: email (Apple may give a private relay address), name if shared, provider account ID | Supabase Auth | the user; the operator | account deletion; **sign-ups that never give consent: 7 days** |
 
 Clean-up runs every night (`private.run_retention()`, see
 docs/SUPABASE-SETUP.md).
@@ -39,6 +42,7 @@ docs/SUPABASE-SETUP.md).
 | **Supabase** | database, login, file storage, live updates | everything above | Choose an **EU region** (e.g. Frankfurt) when creating the project. Sign Supabase's DPA. |
 | **Expo (650 Industries, USA)** | push delivery (Expo Push Service) and app builds | push token + push text (e.g. "Lena M. liked your post") | **Third-country transfer (USA).** Check Expo's DPA / SCCs / DPF status. Message pushes never contain the message text. |
 | **Apple (APNs) / Google (FCM)** | delivering the push to the phone | push token + push text | standard for every app with push |
+| Apple / Google sign-in (optional, off until set up) | signing in | email (and name, if the user shares it) | Apple and Google are usually **separate controllers** for their own sign-in. Please confirm and mention it in the privacy policy. |
 | Supabase email (default sender) | sign-up and reset codes | email address | Replace with an EU email provider before launch (also for sending limits). |
 
 No analytics, advertising or tracking SDKs are included. No crash-reporting
@@ -49,7 +53,7 @@ service is active (Sentry etc. would need approval and a review).
 | Right (GDPR) | In the app |
 |---|---|
 | Access + data portability (Art. 15, 20) | Settings → **Download my data**: a JSON file with profile, settings, consents, vehicles, plates, posts, comments, likes, follows, blocks, messages in the user's conversations (sent **and received**, marked "from me"), notifications, reports made, account email and dates. |
-| Erasure (Art. 17) | Settings → **Delete account** (password needed): files deleted first, then all database rows and the login. |
+| Erasure (Art. 17) | Settings → **Delete account**: files deleted first, then all database rows and the login. Email accounts confirm with their password; Apple / Google accounts by typing their username. "Delete chat" only hides a chat for you: the messages stay with the other person and in your data export, because they are shared. |
 | Rectification (Art. 16) | edit profile, vehicles, settings |
 | Withdraw consent for push | Settings → Notifications, or the phone settings |
 | Objection / restriction (Art. 18, 21) | **no self-service**: handled by email to the operator |
@@ -98,7 +102,14 @@ service is active (Sentry etc. would need approval and a review).
 
     The app shows version numbers that users accept at sign-up (terms
     `2026-10-draft`). Each new version must be accepted again.
-12. **Company not founded / domain not confirmed.** These are still missing:
+12. **Sign in with Apple: revoking on deletion.** Apple requires that deleting
+    an account also revokes the Apple sign-in. This needs a server function
+    with an Apple key and is **not built yet**. It must be done before App Store
+    submission if Apple sign-in is offered.
+13. **Consent for social sign-ups** is collected in the app right after the
+    Apple / Google step, not on the sign-up form. The database blocks the
+    account until consent is given. Please confirm this order is acceptable.
+14. **Company not founded / domain not confirmed.** These are still missing:
     - the controller's name and address
     - a contact email
     - the DPAs with providers (they must be signed by the company)
@@ -115,5 +126,5 @@ service is active (Sentry etc. would need approval and a review).
 - Rate limits on searches, plate claims, messages and reports.
 - Blocking hides profiles, posts, comments, messages and notifications in both
   directions.
-- 355 automated database checks, including a security audit (every table
+- 401 automated database checks, including a security audit (every table
   protected, no anonymous access, no unprotected functions).

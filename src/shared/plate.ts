@@ -7,10 +7,12 @@
  * parts separately instead of one free-text field.
  */
 
+import { isGermanDistrict } from './plateDistricts';
+
 export type PlateSuffix = '' | 'E' | 'H';
 
 export type PlateParts = {
-  district: string; // Unterscheidungszeichen, 1–3 letters (Ä/Ö/Ü allowed)
+  district: string; // Unterscheidungszeichen, 1–3 letters (Ä/Ö/Ü allowed), must exist
   letters: string; // Erkennungsbuchstaben, 1–2 letters A–Z
   digits: string; // Erkennungszahl, 1–9999
   suffix: PlateSuffix; // E = electric, H = historic
@@ -18,7 +20,7 @@ export type PlateParts = {
 
 export const EMPTY_PLATE: PlateParts = { district: '', letters: '', digits: '', suffix: '' };
 
-export type PlateError = 'district' | 'letters' | 'digits' | 'suffix' | 'too_long';
+export type PlateError = 'district' | 'unknown_district' | 'letters' | 'digits' | 'suffix' | 'too_long';
 
 const DISTRICT_RE = /^[A-ZÄÖÜ]{1,3}$/;
 const LETTERS_RE = /^[A-Z]{1,2}$/;
@@ -37,6 +39,7 @@ function clean(parts: PlateParts) {
 export function plateError(parts: PlateParts): PlateError | null {
   const { d, l, n, s } = clean(parts);
   if (!DISTRICT_RE.test(d)) return 'district';
+  if (!isGermanDistrict(d)) return 'unknown_district';
   if (!LETTERS_RE.test(l)) return 'letters';
   if (!DIGITS_RE.test(n)) return 'digits';
   if (!/^[EH]?$/.test(s)) return 'suffix';

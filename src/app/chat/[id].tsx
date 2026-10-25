@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/features/auth/AuthProvider';
 import {
   useConversation,
+  useHideConversation,
   useMarkRead,
   useMessages,
   useRespondMessageRequest,
@@ -45,6 +46,7 @@ export default function ChatScreen() {
   const respond = useRespondMessageRequest(conversationId);
   const unsend = useUnsendMessage(conversationId);
   const block = useBlockUser();
+  const hide = useHideConversation();
   const ago = useTimeAgo();
   const [body, setBody] = useState('');
 
@@ -90,9 +92,20 @@ export default function ChatScreen() {
       },
     ]);
 
+  const confirmDelete = () =>
+    Alert.alert(t('chat.deleteChatTitle'), t('chat.deleteChatBody', { name: c.other_display_name }), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('chat.deleteChat'),
+        style: 'destructive',
+        onPress: () => hide.mutate(c.conversation_id, { onSuccess: () => router.back(), onError }),
+      },
+    ]);
+
   const chatMenu = () =>
     Alert.alert(c.other_display_name, undefined, [
       { text: t('report.reportUser', { username: c.other_username }), onPress: () => openReport('user', c.other_id) },
+      { text: t('chat.deleteChat'), style: 'destructive', onPress: confirmDelete },
       { text: t('profile.block'), style: 'destructive', onPress: confirmBlock },
       { text: t('common.cancel'), style: 'cancel' },
     ]);

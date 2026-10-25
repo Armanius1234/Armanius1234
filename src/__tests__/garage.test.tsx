@@ -107,6 +107,16 @@ describe('PL8 Search screen', () => {
     expect(mockRpc).not.toHaveBeenCalled();
   });
 
+  it('rejects a district code that does not exist, without searching', async () => {
+    await wrap(<PlateSearchScreen />);
+    await typePlate('ffm', 'ab', '1');
+    await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
+    expect(
+      await screen.findByText('This district code does not exist in Germany. Check the letters before the first hyphen.'),
+    ).toBeTruthy();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
   it('searches with the plate parts and shows the car, hiding the owner by default', async () => {
     mockRpc.mockResolvedValue({
       data: [

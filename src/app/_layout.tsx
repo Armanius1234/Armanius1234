@@ -91,8 +91,9 @@ function RootNavigator() {
   const profile = useMyProfile();
   const settings = useMySettings();
 
-  // The saved language wins over the device language once signed in.
-  const savedLocale = settings.data?.locale;
+  // The saved language wins over the device language once the profile exists.
+  // (During sign-up the device language is used; it is saved along the way.)
+  const savedLocale = profile.data ? settings.data?.locale : undefined;
   useEffect(() => {
     if (savedLocale) setLocale(savedLocale);
   }, [savedLocale, setLocale]);
@@ -131,6 +132,9 @@ function RootNavigator() {
         headerBackButtonDisplayMode: 'minimal',
       }}
     >
+      {/* Return address for Apple / Google sign-in; open in every state. */}
+      <Stack.Screen name="auth/callback" />
+
       <Stack.Protected guard={!signedIn}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
@@ -163,6 +167,8 @@ function RootNavigator() {
         <Stack.Screen name="admin/[requestId]" options={{ headerShown: true, title: t('admin.title') }} />
         <Stack.Screen name="admin/reports" options={{ headerShown: true, title: t('moderation.title') }} />
         <Stack.Screen name="admin/report/[id]" options={{ headerShown: true, title: t('moderation.title') }} />
+        <Stack.Screen name="admin/suspended" options={{ headerShown: true, title: t('moderation.suspendedTitle') }} />
+        <Stack.Screen name="post/edit" options={{ headerShown: true, title: t('post.editTitle') }} />
         <Stack.Screen name="notifications" options={{ headerShown: true, title: t('notifications.title') }} />
         <Stack.Screen
           name="report"

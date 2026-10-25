@@ -98,6 +98,8 @@ export default function SettingsScreen() {
           <ListRow icon="shield-outline" label={t('admin.settingsRow')} onPress={() => router.push('/admin')} />
           <Divider />
           <ListRow icon="flag-outline" label={t('moderation.settingsRow')} onPress={() => router.push('/admin/reports')} />
+          <Divider />
+          <ListRow icon="person-remove-outline" label={t('moderation.suspendedRow')} onPress={() => router.push('/admin/suspended')} />
         </Section>
       ) : null}
 

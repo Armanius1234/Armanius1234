@@ -209,12 +209,12 @@ describe('PostCard', () => {
     alert.mockRestore();
   });
 
-  it('offers "Delete" (not "Report") on your own posts', async () => {
+  it('offers "Edit" and "Delete" (not "Report") on your own posts', async () => {
     const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
     await wrap(<PostCard post={{ ...post, author_id: 'me' }} />);
     await fireEvent.press(screen.getByRole('button', { name: 'Options' }));
     const labels = (alert.mock.calls[0]?.[2] ?? []).map((b) => b.text);
-    expect(labels).toEqual(['Delete post', 'Cancel']);
+    expect(labels).toEqual(['Edit caption', 'Delete post', 'Cancel']);
     alert.mockRestore();
   });
 });

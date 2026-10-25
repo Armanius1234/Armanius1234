@@ -25,8 +25,14 @@ if (looksLikeSecretKey(key)) {
   );
 }
 
+// Sign in with Apple / Google stay hidden until they are set up in Supabase
+// (docs/SOCIAL-LOGIN-SETUP.md). Set to "on" to show the buttons.
+const flag = (v: string | undefined) => v === 'on';
+
 export const env = {
   supabaseUrl: url,
   supabaseKey: key,
   isConfigured: /^https:\/\/.+/.test(url) && key.length > 20,
+  authApple: flag(process.env.EXPO_PUBLIC_AUTH_APPLE),
+  authGoogle: flag(process.env.EXPO_PUBLIC_AUTH_GOOGLE),
 } as const;

@@ -8,6 +8,7 @@ import {
   plateInputFilters,
   type PlateSuffix,
 } from '@/shared/plate';
+import { DE_DISTRICTS } from '@/shared/plateDistricts';
 
 type Vector = { d: string; l: string; n: string; s: string; expected: string | null };
 
@@ -26,6 +27,26 @@ describe('plateError', () => {
     expect(plateError({ district: 'F', letters: 'AB', digits: '0', suffix: '' })).toBe('digits');
     expect(plateError({ district: 'MTK', letters: 'AB', digits: '1234', suffix: '' })).toBe('too_long');
     expect(plateError({ district: 'F', letters: 'AB', digits: '1', suffix: '' })).toBeNull();
+  });
+
+  it('rejects district codes that do not exist, before checking the rest', () => {
+    expect(plateError({ district: 'XX', letters: '', digits: '', suffix: '' })).toBe('unknown_district');
+    expect(plateError({ district: 'FFM', letters: 'AB', digits: '1', suffix: '' })).toBe('unknown_district');
+    expect(plateError({ district: 'mtk', letters: 'AB', digits: '1', suffix: '' })).toBeNull();
+  });
+});
+
+describe('district list', () => {
+  it('has 727 unique codes in the allowed format', () => {
+    expect(DE_DISTRICTS.size).toBe(727);
+    for (const code of DE_DISTRICTS) expect(code).toMatch(/^[A-ZÄÖÜ]{1,3}$/);
+  });
+
+  it('has the big cities, umlaut codes, reintroduced old codes and official codes', () => {
+    for (const code of ['B', 'HH', 'M', 'K', 'F', 'S', 'WI', 'MTK', 'LÖ', 'MÜ', 'AÖ', 'SÄK', 'UER', 'ZZ', 'Y', 'BP']) {
+      expect(DE_DISTRICTS.has(code)).toBe(true);
+    }
+    for (const code of ['XX', 'FFM', 'QQ', 'KÖ', 'Ä']) expect(DE_DISTRICTS.has(code)).toBe(false);
   });
 });
 

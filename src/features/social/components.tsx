@@ -199,6 +199,7 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
   const mine = post.author_id === uid;
   const options = () =>
     Alert.alert(t('post.options'), undefined, mine ? [
+      { text: t('post.edit'), onPress: () => router.push({ pathname: '/post/edit', params: { id: post.post_id } }) },
       {
         text: t('post.delete'),
         style: 'destructive',

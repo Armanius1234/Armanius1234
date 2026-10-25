@@ -8,6 +8,7 @@ export const moderationKeys = {
   mine: ['reports', 'mine'] as const,
   queue: ['admin', 'reports'] as const,
   orphans: ['admin', 'orphans'] as const,
+  suspended: ['admin', 'suspended'] as const,
 };
 
 /** Opens the report screen for any reportable item. */
@@ -101,4 +102,27 @@ export function useStorageCleanup(enabled: boolean) {
     onSettled: () => void qc.invalidateQueries({ queryKey: moderationKeys.orphans }),
   });
   return { orphans, run };
+}
+
+export function useSuspendedUsers(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.suspended,
+    enabled,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('admin_suspended_users');
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+export function useUnsuspendUser() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { userId: string; note: string }) => {
+      const { error } = await supabase.rpc('admin_unsuspend_user', { p_user: input.userId, p_note: input.note.trim() });
+      if (error) throw error;
+    },
+    onSettled: () => void qc.invalidateQueries({ queryKey: moderationKeys.suspended }),
+  });
 }

@@ -12,7 +12,8 @@
       "supportsTablet": false,
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -48,7 +49,9 @@
         {
           "color": "#087CFF"
         }
-      ]
+      ],
+      "expo-web-browser",
+      "expo-apple-authentication"
     ],
     "experiments": {
       "reactCompiler": true

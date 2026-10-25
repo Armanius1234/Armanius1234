@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { SocialButtons } from '@/features/auth/SocialButtons';
 import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { fieldErrors, registerSchema, type FieldErrors } from '@/shared/validation';
@@ -53,6 +54,7 @@ export default function RegisterScreen() {
         <AppText variant="title">{t('auth.registerTitle')}</AppText>
         <AppText color="textSecondary">{t('auth.registerSubtitle')}</AppText>
       </View>
+      <SocialButtons />
       <TextField
         label={t('auth.email')}
         value={email}

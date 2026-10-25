@@ -106,6 +106,36 @@ end $$;
 
 Their cars become visible again, except any a moderator removed separately.
 
+### Milestone 6 update (district codes, social sign-in, chats, moderation)
+
+Run the sixth file: **SQL Editor → New query**, paste everything from
+`supabase/migrations/20261030090000_store_prep.sql`, then **Run**. Run it
+**before** switching on Google or Apple sign-in.
+
+Check:
+
+- `select count(*) from private.de_districts;` returns **727**.
+- **Database → Cron Jobs**: `pl8-retention` is still there (the nightly
+  clean-up function was updated).
+
+**A German district code is missing?** New codes appear now and then. Until
+the next app update, add it like this (replace `XYZ`), and tell the developer
+so the app's list can be updated too:
+
+```sql
+insert into private.de_districts (code) values ('XYZ');
+```
+
+The database accepts the new code at once. The app also checks the code
+before sending, so users with that code can claim their plate once the app's
+list is updated in the next app release.
+
+Suspended accounts can now be lifted in the app: Settings → Admin →
+**Suspended accounts**. The SQL snippet in the Milestone 5 section still
+works.
+
+Google and Apple sign-in: see **docs/SOCIAL-LOGIN-SETUP.md**.
+
 ### Make yourself the reviewer (admin)
 
 Plate verifications are approved by hand in the app. Give your own account the

@@ -136,6 +136,21 @@ export function useUnsendMessage(id: string) {
   });
 }
 
+/** Deletes the chat for you only. A new message brings it back. */
+export function useHideConversation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.rpc('hide_conversation', { p_conversation: id });
+      if (error) throw error;
+    },
+    onSuccess: (_d, id) => {
+      qc.removeQueries({ queryKey: messageKeys.messages(id) });
+      void qc.invalidateQueries({ queryKey: messageKeys.inbox });
+    },
+  });
+}
+
 /**
  * One live subscription for the whole signed-in app. Supabase Realtime only
  * delivers messages the user is allowed to read (same RLS as normal reads).

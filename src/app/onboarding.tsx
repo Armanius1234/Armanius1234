@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { useMyConsent } from '@/features/auth/consent';
+import { ConsentStep } from '@/features/auth/ConsentStep';
 import { useCreateProfile, useUpdateSettings } from '@/features/profile/api';
 import { pickAvatar, removeAvatar, uploadAvatar } from '@/features/profile/avatar';
 import { AvatarPicker, StepHeader, UsernameField } from '@/features/profile/components';
@@ -12,7 +14,7 @@ import { errorKey } from '@/lib/errors';
 import { avatarUrl } from '@/lib/supabase';
 import { bioSchema, citySchema, displayNameSchema, usernameSchema } from '@/shared/validation';
 import { spacing } from '@/theme/tokens';
-import { AppText, Button, ChoiceGroup, FormMessage, Screen, Section, SwitchRow, TextField } from '@/ui';
+import { AppText, Button, ChoiceGroup, ErrorView, FormMessage, LoadingView, Screen, Section, SwitchRow, TextField } from '@/ui';
 
 const TOTAL = 3;
 
@@ -25,7 +27,8 @@ export default function OnboardingScreen() {
 
   const [step, setStep] = useState(1);
   const [username, setUsername] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  // Apple / Google may share a name: use it as a starting point.
+  const [displayName, setDisplayName] = useState(() => suggestedName(session?.user.user_metadata));
   const [displayNameError, setDisplayNameError] = useState<string | undefined>();
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -37,6 +40,7 @@ export default function OnboardingScreen() {
   const [formError, setFormError] = useState<string | null>(null);
 
   const usernameStatus = useUsernameCheck(username);
+  const consent = useMyConsent();
 
   function nextFromIdentity() {
     setFormError(null);
@@ -102,6 +106,10 @@ export default function OnboardingScreen() {
   }
 
   const busy = createProfile.isPending || updateSettings.isPending;
+
+  if (consent.isPending) return <LoadingView />;
+  if (consent.isError) return <ErrorView onRetry={() => void consent.refetch()} retrying={consent.isFetching} />;
+  if (!consent.data) return <ConsentStep />;
 
   return (
     <Screen
@@ -225,3 +233,8 @@ const styles = StyleSheet.create({
   back: { minWidth: 110 },
   flex: { flex: 1 },
 });
+
+function suggestedName(meta: Record<string, unknown> | undefined): string {
+  const name = meta?.full_name ?? meta?.name;
+  return typeof name === 'string' ? name.trim().slice(0, 50) : '';
+}

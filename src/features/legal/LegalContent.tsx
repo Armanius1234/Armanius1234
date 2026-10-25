@@ -8,6 +8,7 @@ const SECTIONS: [TKey, TKey][] = [
   ['legal.impressumTitle', 'legal.impressumBody'],
   ['legal.privacyTitle', 'legal.privacyBody'],
   ['legal.termsTitle', 'legal.termsBody'],
+  ['legal.sourcesTitle', 'legal.sourcesBody'],
 ];
 
 /** Placeholder legal texts until the lawyer-reviewed versions exist. */

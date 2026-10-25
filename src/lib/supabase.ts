@@ -26,6 +26,9 @@ export const supabase = createClient<Database>(
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: false,
+      // PKCE: a sign-in code caught by another app on the phone is useless
+      // without the secret kept in this app's secure storage.
+      flowType: 'pkce',
     },
   },
 );

@@ -324,6 +324,7 @@ const queueItem: ReportQueueItem = {
   owner_username: 'cleo',
   open_reports: 2,
   preview: { caption: 'Cheap rims, DM me', media_paths: [] },
+  snapshot: { caption: 'Cheap rims, DM me', media_paths: [] },
 };
 
 describe('Admin reports', () => {

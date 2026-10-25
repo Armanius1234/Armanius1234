@@ -5,6 +5,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 
 import { useIsAdmin, useSignedUrls, type PrivateBucket } from '@/features/garage/api';
 import { useReportsQueue, useResolveReport } from '@/features/moderation/api';
+import { changedSinceReport } from '@/features/moderation/snapshot';
 import { useI18n } from '@/i18n';
 import type { ReportQueueItem } from '@/lib/database.types';
 import { errorKey } from '@/lib/errors';
@@ -15,9 +16,11 @@ import { AppText, Avatar, Button, EmptyView, FormMessage, LoadingView, Screen, T
 const str = (v: unknown) => (typeof v === 'string' ? v : '');
 const strList = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
 
-function Preview({ item }: { item: ReportQueueItem }) {
+type Content = NonNullable<ReportQueueItem['preview']>;
+
+function Preview({ item, content }: { item: ReportQueueItem; content: Content | null }) {
   const { t } = useI18n();
-  const p = item.preview ?? {};
+  const p = content ?? {};
   const bucket: PrivateBucket = item.target_type === 'vehicle' ? 'vehicle-photos' : 'post-media';
   const paths = strList(item.target_type === 'vehicle' ? p.photo_paths : p.media_paths);
   const urls = useSignedUrls(bucket, paths);
@@ -102,7 +105,18 @@ export default function ReportDetailScreen() {
         </AppText>
       ) : null}
 
-      <Preview item={item} />
+      {changedSinceReport(item) ? (
+        <>
+          <AppText variant="overline" color="warning">
+            {t('moderation.atReport').toUpperCase()}
+          </AppText>
+          <Preview item={item} content={item.snapshot} />
+          <AppText variant="overline" color="textSecondary">
+            {t('moderation.now').toUpperCase()}
+          </AppText>
+        </>
+      ) : null}
+      <Preview item={item} content={item.preview} />
 
       <TextField label={t('moderation.note')} value={note} onChangeText={setNote} multiline maxLength={1000} />
       <FormMessage message={error} />

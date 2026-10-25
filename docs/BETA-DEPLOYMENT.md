@@ -52,9 +52,11 @@ Android Studio.
    npx eas-cli@latest env:push preview --path .env
    npx eas-cli@latest env:push production --path .env
    ```
-   Your `.env` must contain only `EXPO_PUBLIC_SUPABASE_URL` and
-   `EXPO_PUBLIC_SUPABASE_KEY` (the **publishable** key). **Never** put the
-   Supabase secret or service-role key there. The app refuses to start if you do.
+   Your `.env` contains only public values: `EXPO_PUBLIC_SUPABASE_URL`,
+   `EXPO_PUBLIC_SUPABASE_KEY` (the **publishable** key) and, once set up, the
+   sign-in switches `EXPO_PUBLIC_AUTH_GOOGLE` / `EXPO_PUBLIC_AUTH_APPLE`
+   (docs/SOCIAL-LOGIN-SETUP.md). **Never** put the Supabase secret or
+   service-role key there. The app refuses to start if you do.
 
 ## 2. Android beta (free)
 

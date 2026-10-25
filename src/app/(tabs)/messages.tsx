@@ -1,12 +1,13 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useInbox } from '@/features/messaging/api';
+import { useHideConversation, useInbox } from '@/features/messaging/api';
 import { useTimeAgo } from '@/features/social/components';
 import { useI18n } from '@/i18n';
 import type { InboxItem } from '@/lib/database.types';
+import { errorKey } from '@/lib/errors';
 import { avatarUrl } from '@/lib/supabase';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar, EmptyView, ErrorView, Logo, Skeleton } from '@/ui';
@@ -77,10 +78,27 @@ function InboxRow({ item }: { item: InboxItem }) {
   const ago = useTimeAgo();
   const unread = item.unread_count > 0;
   const pending = item.status === 'request' && !item.is_request_for_me;
+  const hide = useHideConversation();
+  const confirmDelete = () =>
+    Alert.alert(t('chat.deleteChatTitle'), t('chat.deleteChatBody', { name: item.other_display_name }), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('chat.deleteChat'),
+        style: 'destructive',
+        onPress: () =>
+          hide.mutate(item.conversation_id, { onError: (e) => Alert.alert(t('states.errorTitle'), t(errorKey(e))) }),
+      },
+    ]);
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${item.other_display_name}${unread ? `, ${item.unread_count}` : ''}`}
+      accessibilityHint={t('chat.deleteChat')}
+      accessibilityActions={[{ name: 'delete', label: t('chat.deleteChat') }]}
+      onAccessibilityAction={(e) => {
+        if (e.nativeEvent.actionName === 'delete') confirmDelete();
+      }}
+      onLongPress={confirmDelete}
       onPress={() => router.push({ pathname: '/chat/[id]', params: { id: item.conversation_id } })}
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}
     >

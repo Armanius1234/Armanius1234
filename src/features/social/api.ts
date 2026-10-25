@@ -233,6 +233,20 @@ export function useDeletePost() {
   });
 }
 
+export function useUpdateCaption(postId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (caption: string) => {
+      const { error } = await supabase.from('posts').update({ caption: caption.trim() }).eq('id', postId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: socialKeys.post(postId) });
+      void qc.invalidateQueries({ queryKey: ['feed'] });
+    },
+  });
+}
+
 export function useToggleLike() {
   const uid = useUid();
   return useMutation({

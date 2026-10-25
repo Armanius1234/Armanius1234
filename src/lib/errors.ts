@@ -61,6 +61,7 @@ export function errorKey(error: unknown): TKey {
   if (e.name === 'PhotoPermissionError') return 'errors.photo_permission';
   if (e.name === 'CameraPermissionError') return 'errors.camera_permission';
   if (e.name === 'UploadError') return 'errors.upload_failed';
+  if (e.name === 'SocialSignInError') return 'errors.social_failed';
   if (code && AUTH_CODES[code]) return AUTH_CODES[code];
 
   const pl8 = /PL8_([A-Z_]+)/.exec(message)?.[1];

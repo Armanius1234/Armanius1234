@@ -41,14 +41,26 @@ export async function deleteAllMyFiles(uid: string): Promise<void> {
   for (const p of posts ?? []) await removeAll('post-media', await listAll('post-media', p.id));
 }
 
+export type DeleteConfirmation =
+  | { kind: 'password'; email: string; password: string }
+  // Apple / Google accounts have no password; the screen asks for the username.
+  | { kind: 'social' };
+
 /**
- * Permanently deletes the account after re-checking the password.
+ * Permanently deletes the account after the confirmation step.
  * Files first (only the owner may delete them), then all database rows.
  */
-export async function deleteMyAccount(email: string, password: string): Promise<void> {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw error;
-  const uid = data.user.id;
+export async function deleteMyAccount(confirm: DeleteConfirmation): Promise<void> {
+  let uid: string;
+  if (confirm.kind === 'password') {
+    const { data, error } = await supabase.auth.signInWithPassword({ email: confirm.email, password: confirm.password });
+    if (error) throw error;
+    uid = data.user.id;
+  } else {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) throw error ?? new Error('not signed in');
+    uid = data.user.id;
+  }
 
   await unregisterPush().catch(() => undefined);
   await deleteAllMyFiles(uid);

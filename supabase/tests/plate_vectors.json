@@ -9,7 +9,6 @@
   { "d": "mü", "l": "C", "n": "77", "s": "", "expected": "MÜ-C-77" },
   { "d": "TÜ", "l": "XY", "n": "999", "s": "", "expected": "TÜ-XY-999" },
   { "d": "OF", "l": "M", "n": "3", "s": "E", "expected": "OF-M-3E" },
-
   { "d": "", "l": "AB", "n": "123", "s": "", "expected": null },
   { "d": "ABCD", "l": "A", "n": "1", "s": "", "expected": null },
   { "d": "F", "l": "", "n": "123", "s": "", "expected": null },
@@ -24,5 +23,11 @@
   { "d": "MTK", "l": "AB", "n": "1234", "s": "", "expected": null },
   { "d": "MTK", "l": "AB", "n": "123", "s": "E", "expected": null },
   { "d": "F", "l": "A-B", "n": "123", "s": "", "expected": null },
-  { "d": "F'", "l": "AB", "n": "1", "s": "", "expected": null }
+  { "d": "F'", "l": "AB", "n": "1", "s": "", "expected": null },
+  { "d": "XX", "l": "AB", "n": "123", "s": "", "expected": null },
+  { "d": "FFM", "l": "A", "n": "1", "s": "", "expected": null },
+  { "d": "KÖ", "l": "AB", "n": "1", "s": "", "expected": null },
+  { "d": "sÄk", "l": "AB", "n": "12", "s": "", "expected": "SÄK-AB-12" },
+  { "d": "UER", "l": "X", "n": "7", "s": "H", "expected": "UER-X-7H" },
+  { "d": "ZZ", "l": "AB", "n": "99", "s": "", "expected": "ZZ-AB-99" }
 ]
