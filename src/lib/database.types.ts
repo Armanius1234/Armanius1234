@@ -12,6 +12,46 @@ export type RequestStatus = 'awaiting_evidence' | 'submitted' | 'approved' | 're
 
 type NoArgs = Record<PropertyKey, never>;
 
+export type FeedMode = 'home' | 'discover' | 'user' | 'saved' | 'single';
+
+export type FeedPost = {
+  post_id: string;
+  author_id: string;
+  author_username: string;
+  author_display_name: string;
+  author_avatar_path: string | null;
+  vehicle_id: string | null;
+  vehicle_make: string | null;
+  vehicle_model: string | null;
+  vehicle_generation: string | null;
+  caption: string;
+  media_paths: string[];
+  like_count: number;
+  comment_count: number;
+  liked: boolean;
+  saved: boolean;
+  published_at: string;
+};
+
+export type PostComment = {
+  comment_id: string;
+  author_id: string;
+  author_username: string;
+  author_display_name: string;
+  author_avatar_path: string | null;
+  body: string;
+  created_at: string;
+  can_delete: boolean;
+};
+
+export type FollowListItem = {
+  user_id: string;
+  username: string;
+  display_name: string;
+  avatar_path: string | null;
+  followed_at: string;
+};
+
 export type Database = {
   __InternalSupabase: {
     PostgrestVersion: '12';
@@ -31,6 +71,9 @@ export type Database = {
           linkedin_url: string | null;
           facebook_url: string | null;
           is_private: boolean;
+          follower_count: number;
+          following_count: number;
+          post_count: number;
           created_at: string;
           updated_at: string;
         };
@@ -161,6 +204,67 @@ export type Database = {
           },
         ];
       };
+      follows: {
+        Row: { follower_id: string; followee_id: string; created_at: string };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      follow_requests: {
+        Row: { requester_id: string; target_id: string; created_at: string };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      posts: {
+        Row: {
+          id: string;
+          author_id: string;
+          vehicle_id: string | null;
+          caption: string;
+          like_count: number;
+          comment_count: number;
+          published_at: string | null;
+          is_removed: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: { author_id: string; vehicle_id?: string | null; caption?: string };
+        Update: { caption?: string; vehicle_id?: string | null };
+        Relationships: [];
+      };
+      post_media: {
+        Row: {
+          id: string;
+          post_id: string;
+          storage_path: string;
+          position: number;
+          width: number | null;
+          height: number | null;
+          created_at: string;
+        };
+        Insert: { post_id: string; storage_path: string; position?: number; width?: number | null; height?: number | null };
+        Update: never;
+        Relationships: [];
+      };
+      likes: {
+        Row: { user_id: string; post_id: string; created_at: string };
+        Insert: { user_id: string; post_id: string };
+        Update: never;
+        Relationships: [];
+      };
+      comments: {
+        Row: { id: string; post_id: string; author_id: string; body: string; created_at: string };
+        Insert: { post_id: string; author_id: string; body: string };
+        Update: never;
+        Relationships: [];
+      };
+      saved_posts: {
+        Row: { user_id: string; post_id: string; created_at: string };
+        Insert: { user_id: string; post_id: string };
+        Update: never;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {
@@ -262,6 +366,37 @@ export type Database = {
       admin_pending_evidence_cleanup: {
         Args: NoArgs;
         Returns: { request_id: string; evidence_paths: string[] }[];
+      };
+      follow_user: { Args: { p_target: string }; Returns: 'following' | 'requested' };
+      unfollow_user: { Args: { p_target: string }; Returns: undefined };
+      respond_follow_request: { Args: { p_requester: string; p_accept: boolean }; Returns: undefined };
+      relationship: {
+        Args: { p_target: string };
+        Returns: { following: boolean; requested: boolean; follows_me: boolean; requested_me: boolean }[];
+      };
+      list_follows: {
+        Args: { p_user: string; p_kind: 'followers' | 'following'; p_before?: string | null; p_limit?: number };
+        Returns: FollowListItem[];
+      };
+      my_follow_requests: {
+        Args: NoArgs;
+        Returns: { user_id: string; username: string; display_name: string; avatar_path: string | null; requested_at: string }[];
+      };
+      publish_post: { Args: { p_post_id: string }; Returns: undefined };
+      get_posts: {
+        Args: {
+          p_mode: FeedMode;
+          p_user?: string | null;
+          p_post?: string | null;
+          p_before?: string | null;
+          p_before_id?: string | null;
+          p_limit?: number;
+        };
+        Returns: FeedPost[];
+      };
+      get_comments: {
+        Args: { p_post: string; p_after?: string | null; p_limit?: number };
+        Returns: PostComment[];
       };
       admin_revoke_claim: { Args: { p_claim_id: string; p_reason: string }; Returns: undefined };
     };

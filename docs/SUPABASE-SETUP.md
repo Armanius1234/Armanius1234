@@ -39,6 +39,14 @@ If you already ran the first file, run only the second one:
    **Storage** shows two new **private** buckets: `vehicle-photos` and
    `verification-evidence`.
 
+### Milestone 3 update (following, posts, feed)
+
+Run only the third file: **SQL Editor → New query**, paste everything from
+`supabase/migrations/20261027090000_social.sql`, then **Run**.
+Check: **Table Editor** shows `follows`, `follow_requests`, `posts`,
+`post_media`, `likes`, `comments`, `saved_posts`. **Storage** shows a new
+**private** bucket `post-media`.
+
 ### Make yourself the reviewer (admin)
 
 Plate verifications are approved by hand in the app. Give your own account the

@@ -211,7 +211,9 @@ export function useMakeCover(vehicleId: string) {
 }
 
 /** Short-lived links for photos in private buckets (1 hour). */
-export function useSignedUrls(bucket: 'vehicle-photos' | 'verification-evidence', paths: string[]) {
+export type PrivateBucket = 'vehicle-photos' | 'verification-evidence' | 'post-media';
+
+export function useSignedUrls(bucket: PrivateBucket, paths: string[]) {
   return useQuery({
     queryKey: garageKeys.signed(bucket, paths),
     enabled: paths.length > 0,

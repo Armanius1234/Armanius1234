@@ -52,12 +52,32 @@ export async function pickImage({ source, square, maxSize }: PickOptions): Promi
     source === 'camera' ? await ImagePicker.launchCameraAsync(options) : await ImagePicker.launchImageLibraryAsync(options);
   const asset = result.canceled ? null : result.assets[0];
   if (!asset) return null;
+  return prepare(asset, maxSize);
+}
 
+async function prepare(asset: ImagePicker.ImagePickerAsset, maxSize: number): Promise<PreparedImage> {
   const landscape = asset.width >= asset.height;
   const resize = landscape ? { width: Math.min(maxSize, asset.width) } : { height: Math.min(maxSize, asset.height) };
   const rendered = await ImageManipulator.manipulate(asset.uri).resize(resize).renderAsync();
   const saved = await rendered.saveAsync({ format: SaveFormat.JPEG, compress: 0.8 });
   return { uri: saved.uri, width: saved.width, height: saved.height };
+}
+
+/** Several photos from the library at once (posts). Empty if cancelled. */
+export async function pickImages(maxCount: number, maxSize: number): Promise<PreparedImage[]> {
+  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (!permission.granted) throw new PhotoPermissionError('library');
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ['images'],
+    allowsMultipleSelection: true,
+    selectionLimit: maxCount,
+    quality: 1,
+    exif: false,
+  });
+  if (result.canceled) return [];
+  const out: PreparedImage[] = [];
+  for (const asset of result.assets.slice(0, maxCount)) out.push(await prepare(asset, maxSize));
+  return out;
 }
 
 export function randomFileName(): string {

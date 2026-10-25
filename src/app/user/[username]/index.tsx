@@ -1,18 +1,17 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
-import { GarageSection } from '@/features/garage/GarageSection';
 import { useBlockUser, useProfileByUsername } from '@/features/profile/api';
-import { ProfileHeader } from '@/features/profile/ProfileHeader';
+import { ProfileBody } from '@/features/social/ProfileBody';
 import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { normalizeUsername } from '@/shared/validation';
 import { colors, hitSize, spacing } from '@/theme/tokens';
 import { EmptyView, ErrorView, LoadingView } from '@/ui';
 
-/** Another member's public profile. Opened via pl8://user/<username>. */
+/** Another member's profile. Opened via pl8://user/<username>. */
 export default function UserProfileScreen() {
   const { t } = useI18n();
   const params = useLocalSearchParams<{ username: string }>();
@@ -67,10 +66,14 @@ export default function UserProfileScreen() {
               ),
         }}
       />
-      <ScrollView style={styles.root} contentContainerStyle={styles.content}>
-        <ProfileHeader profile={target} />
-        <View style={styles.divider} />
-        <GarageSection ownerId={target.id} isMe={isMe} />
+      <ScrollView
+        style={styles.root}
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={profile.isRefetching} onRefresh={() => void profile.refetch()} tintColor={colors.accent} />
+        }
+      >
+        <ProfileBody profile={target} isMe={isMe} />
       </ScrollView>
     </>
   );
@@ -78,7 +81,6 @@ export default function UserProfileScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgPrimary },
-  content: { padding: spacing.md, gap: spacing.md },
-  divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.border },
+  content: { padding: spacing.md, paddingBottom: spacing.xxl },
   headerButton: { width: hitSize, height: hitSize, alignItems: 'center', justifyContent: 'center' },
 });

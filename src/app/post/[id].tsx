@@ -1,0 +1,169 @@
+import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { useAddComment, useComments, useDeleteComment, usePost } from '@/features/social/api';
+import { PostCard, useTimeAgo } from '@/features/social/components';
+import { useI18n } from '@/i18n';
+import { errorKey } from '@/lib/errors';
+import { avatarUrl } from '@/lib/supabase';
+import { colors, fonts, hitSize, radius, spacing } from '@/theme/tokens';
+import { AppText, Avatar, EmptyView, ErrorView, LoadingView } from '@/ui';
+
+export default function PostScreen() {
+  const { t } = useI18n();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const postId = String(id);
+  const post = usePost(postId);
+  const comments = useComments(postId);
+  const add = useAddComment(postId);
+  const remove = useDeleteComment(postId);
+  const ago = useTimeAgo();
+  const [body, setBody] = useState('');
+
+  if (post.isPending) return <LoadingView />;
+  if (post.isError) return <ErrorView onRetry={() => void post.refetch()} retrying={post.isFetching} />;
+  if (!post.data) return <EmptyView icon="images-outline" title={t('post.notFound')} />;
+
+  const send = () => {
+    const text = body.trim();
+    if (!text) return;
+    add.mutate(text, {
+      onSuccess: () => setBody(''),
+      onError: (e) => Alert.alert(t('states.errorTitle'), t(errorKey(e))),
+    });
+  };
+
+  return (
+    <SafeAreaView style={styles.root} edges={['bottom']}>
+      <KeyboardAvoidingView
+        style={styles.root}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      >
+        <FlatList
+          data={comments.data ?? []}
+          keyExtractor={(c) => c.comment_id}
+          refreshing={comments.isRefetching}
+          onRefresh={() => {
+            void post.refetch();
+            void comments.refetch();
+          }}
+          ListHeaderComponent={
+            <View>
+              <PostCard key={post.data.post_id} post={post.data} />
+              <AppText variant="overline" color="textSecondary" style={styles.sectionTitle}>
+                {t('post.comments').toUpperCase()}
+              </AppText>
+            </View>
+          }
+          ListEmptyComponent={
+            comments.isPending ? undefined : (
+              <AppText color="textSecondary" style={styles.empty}>
+                {t('post.noComments')}
+              </AppText>
+            )
+          }
+          renderItem={({ item }) => (
+            <Pressable
+              onLongPress={
+                item.can_delete
+                  ? () =>
+                      Alert.alert(t('post.deleteCommentTitle'), undefined, [
+                        { text: t('common.cancel'), style: 'cancel' },
+                        {
+                          text: t('post.deleteComment'),
+                          style: 'destructive',
+                          onPress: () =>
+                            remove.mutate(item.comment_id, {
+                              onError: (e) => Alert.alert(t('states.errorTitle'), t(errorKey(e))),
+                            }),
+                        },
+                      ])
+                  : undefined
+              }
+              accessibilityHint={item.can_delete ? t('post.deleteComment') : undefined}
+              style={styles.comment}
+            >
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={`@${item.author_username}`}
+                onPress={() => router.push({ pathname: '/user/[username]', params: { username: item.author_username } })}
+              >
+                <Avatar uri={avatarUrl(item.author_avatar_path)} name={item.author_display_name} size={32} />
+              </Pressable>
+              <View style={styles.commentBody}>
+                <AppText variant="callout">
+                  <AppText variant="callout" style={styles.bold}>
+                    {item.author_username}{' '}
+                  </AppText>
+                  {item.body}
+                </AppText>
+                <AppText variant="caption" color="textSecondary">
+                  {ago(item.created_at)}
+                </AppText>
+              </View>
+            </Pressable>
+          )}
+        />
+        <View style={styles.inputBar}>
+          <TextInput
+            value={body}
+            onChangeText={setBody}
+            placeholder={t('post.addComment')}
+            placeholderTextColor={colors.textDisabled}
+            selectionColor={colors.accent}
+            style={styles.input}
+            multiline
+            maxLength={1000}
+            accessibilityLabel={t('post.addComment')}
+          />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('post.send')}
+            onPress={send}
+            disabled={!body.trim() || add.isPending}
+            style={styles.send}
+          >
+            <AppText variant="bodyStrong" color={body.trim() && !add.isPending ? 'accent' : 'textDisabled'}>
+              {t('post.send')}
+            </AppText>
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.bgPrimary },
+  sectionTitle: { paddingHorizontal: spacing.md, paddingTop: spacing.md, paddingBottom: spacing.xs },
+  empty: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
+  comment: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.md, paddingVertical: spacing.xs },
+  commentBody: { flex: 1, gap: 2 },
+  bold: { fontFamily: fonts.semibold },
+  inputBar: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+    backgroundColor: colors.bgPrimary,
+  },
+  input: {
+    flex: 1,
+    minHeight: hitSize,
+    maxHeight: 120,
+    borderRadius: radius.lg,
+    backgroundColor: colors.bgSecondary,
+    color: colors.textPrimary,
+    fontFamily: fonts.regular,
+    fontSize: 15,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  send: { minHeight: hitSize, justifyContent: 'center', paddingHorizontal: spacing.xs },
+});

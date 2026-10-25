@@ -40,6 +40,8 @@ const PL8_CODES: Record<string, TKey> = {
   SELF_REVIEW: 'errors.self_review',
   REASON_REQUIRED: 'errors.reason_required',
   INVALID_STATE: 'errors.invalid_state',
+  MEDIA_REQUIRED: 'errors.media_required',
+  PRIVATE: 'errors.private_account',
   EVIDENCE_REMAINS: 'errors.upload_failed',
   NOT_FOUND: 'errors.permission_denied',
   NOT_YOUR_VEHICLE: 'errors.permission_denied',

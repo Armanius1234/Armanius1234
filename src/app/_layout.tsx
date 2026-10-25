@@ -127,7 +127,13 @@ function RootNavigator() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="profile/edit" options={{ headerShown: true, title: t('profile.editTitle') }} />
         <Stack.Screen name="settings" />
-        <Stack.Screen name="user/[username]" options={{ headerShown: true, title: '' }} />
+        <Stack.Screen name="user/[username]/index" options={{ headerShown: true, title: '' }} />
+        <Stack.Screen name="user/[username]/followers" options={{ headerShown: true, title: t('social.followers') }} />
+        <Stack.Screen name="user/[username]/following" options={{ headerShown: true, title: t('social.followingTitle') }} />
+        <Stack.Screen name="follow-requests" options={{ headerShown: true, title: t('social.requestsTitle') }} />
+        <Stack.Screen name="post/new" options={{ headerShown: true, title: t('post.newTitle') }} />
+        <Stack.Screen name="post/[id]" options={{ headerShown: true, title: t('post.title') }} />
+        <Stack.Screen name="saved" options={{ headerShown: true, title: t('post.savedTitle') }} />
         <Stack.Screen name="vehicle/new" options={{ headerShown: true, title: t('vehicle.newTitle') }} />
         <Stack.Screen name="vehicle/[id]/index" options={{ headerShown: true, title: '' }} />
         <Stack.Screen name="vehicle/[id]/edit" options={{ headerShown: true, title: t('vehicle.editTitle') }} />
