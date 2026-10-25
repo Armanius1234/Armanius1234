@@ -9,3 +9,6 @@ jest.mock('@expo/vector-icons/Ionicons', () => {
   Icon.glyphMap = {};
   return { __esModule: true, default: Icon };
 });
+
+// Network state is native; use the library's own mock (always online).
+jest.mock('@react-native-community/netinfo', () => require('@react-native-community/netinfo/jest/netinfo-mock.js'));

@@ -2,11 +2,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
 import { latestClaimFor, useMyClaims, useSignedUrls, useVehicle } from '@/features/garage/api';
 import { PlateBadge, StatusPill, VerifiedBadge } from '@/features/garage/components';
+import { openReport } from '@/features/moderation/api';
 import { useProfileById } from '@/features/profile/api';
 import { useI18n } from '@/i18n';
 import { avatarUrl } from '@/lib/supabase';
@@ -64,7 +65,21 @@ export default function VehicleProfileScreen() {
                   <Ionicons name="create-outline" size={22} color={colors.textPrimary} />
                 </Pressable>
               )
-            : undefined,
+            : () => (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('report.reportVehicle')}
+                  onPress={() =>
+                    Alert.alert(t('report.reportVehicle'), undefined, [
+                      { text: t('common.cancel'), style: 'cancel' },
+                      { text: t('report.action'), style: 'destructive', onPress: () => openReport('vehicle', v.id) },
+                    ])
+                  }
+                  style={styles.headerButton}
+                >
+                  <Ionicons name="flag-outline" size={22} color={colors.textPrimary} />
+                </Pressable>
+              ),
         }}
       />
       <ScrollView

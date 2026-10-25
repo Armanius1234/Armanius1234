@@ -78,6 +78,7 @@ const profile: Profile = {
   follower_count: 1234,
   following_count: 56,
   post_count: 7,
+  suspended_at: null,
   created_at: '',
   updated_at: '',
 };
@@ -199,9 +200,22 @@ describe('PostCard', () => {
     expect(screen.getByText('4')).toBeTruthy();
   });
 
-  it('shows the options menu only on your own posts', async () => {
+  it('offers only "Report" on other people\'s posts', async () => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
     await wrap(<PostCard post={post} />);
-    expect(screen.queryByRole('button', { name: 'Options' })).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Options' }));
+    const labels = (alert.mock.calls[0]?.[2] ?? []).map((b) => b.text);
+    expect(labels).toEqual(['Report post', 'Cancel']);
+    alert.mockRestore();
+  });
+
+  it('offers "Delete" (not "Report") on your own posts', async () => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
+    await wrap(<PostCard post={{ ...post, author_id: 'me' }} />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Options' }));
+    const labels = (alert.mock.calls[0]?.[2] ?? []).map((b) => b.text);
+    expect(labels).toEqual(['Delete post', 'Cancel']);
+    alert.mockRestore();
   });
 });
 

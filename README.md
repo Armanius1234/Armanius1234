@@ -7,11 +7,13 @@ verified license plates to digital vehicle profiles.
 
 | | |
 |---|---|
-| Status | **Milestone 4 — Messaging** (awaiting founder approval) |
+| Status | **Milestone 5 — Beta readiness** (complete) |
 | App | React Native + Expo SDK 58 + TypeScript (strict), iOS & Android |
 | Backend | Supabase (Postgres + Row Level Security, Auth, Storage), EU region |
 | Plan | [docs/MILESTONE-0-PLAN.md](docs/MILESTONE-0-PLAN.md) |
-| Latest report | [docs/MILESTONE-4-REPORT.md](docs/MILESTONE-4-REPORT.md) |
+| Latest report | [docs/MILESTONE-5-REPORT.md](docs/MILESTONE-5-REPORT.md) |
+| Beta builds | [docs/BETA-DEPLOYMENT.md](docs/BETA-DEPLOYMENT.md) (installable app with push) |
+| Legal review | [docs/PRIVACY-NOTES.md](docs/PRIVACY-NOTES.md) (open points before public launch) |
 
 ---
 
@@ -54,6 +56,8 @@ A QR code appears in the terminal.
 - **Android**: open Expo Go → **Scan QR code**.
 
 PL8 opens inside Expo Go. Code changes reload automatically.
+Push notifications need an installed beta build instead of Expo Go: see
+[docs/BETA-DEPLOYMENT.md](docs/BETA-DEPLOYMENT.md).
 
 **Not loading?** Phone and computer must be on the same Wi-Fi. If they are, or on
 office/guest networks, run `npm run start:tunnel` instead (the first time it

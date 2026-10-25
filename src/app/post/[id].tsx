@@ -1,8 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, FlatList, type AlertButton, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useAuth } from '@/features/auth/AuthProvider';
+import { openReport } from '@/features/moderation/api';
 import { useAddComment, useComments, useDeleteComment, usePost } from '@/features/social/api';
 import { PostCard, useTimeAgo } from '@/features/social/components';
 import { useI18n } from '@/i18n';
@@ -20,6 +22,7 @@ export default function PostScreen() {
   const add = useAddComment(postId);
   const remove = useDeleteComment(postId);
   const ago = useTimeAgo();
+  const uid = useAuth().session?.user.id;
   const [body, setBody] = useState('');
 
   if (post.isPending) return <LoadingView />;
@@ -67,23 +70,25 @@ export default function PostScreen() {
           }
           renderItem={({ item }) => (
             <Pressable
-              onLongPress={
-                item.can_delete
-                  ? () =>
-                      Alert.alert(t('post.deleteCommentTitle'), undefined, [
-                        { text: t('common.cancel'), style: 'cancel' },
-                        {
-                          text: t('post.deleteComment'),
-                          style: 'destructive',
-                          onPress: () =>
-                            remove.mutate(item.comment_id, {
-                              onError: (e) => Alert.alert(t('states.errorTitle'), t(errorKey(e))),
-                            }),
-                        },
-                      ])
-                  : undefined
-              }
-              accessibilityHint={item.can_delete ? t('post.deleteComment') : undefined}
+              onLongPress={() => {
+                const actions: AlertButton[] = [];
+                if (item.can_delete) {
+                  actions.push({
+                    text: t('post.deleteComment'),
+                    style: 'destructive',
+                    onPress: () =>
+                      remove.mutate(item.comment_id, {
+                        onError: (e) => Alert.alert(t('states.errorTitle'), t(errorKey(e))),
+                      }),
+                  });
+                }
+                if (item.author_id !== uid) {
+                  actions.push({ text: t('report.reportComment'), onPress: () => openReport('comment', item.comment_id) });
+                }
+                if (!actions.length) return;
+                Alert.alert(t('post.commentOptions'), undefined, [...actions, { text: t('common.cancel'), style: 'cancel' }]);
+              }}
+              accessibilityHint={t('post.commentOptions')}
               style={styles.comment}
             >
               <Pressable

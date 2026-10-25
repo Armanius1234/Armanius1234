@@ -12,6 +12,58 @@ export type RequestStatus = 'awaiting_evidence' | 'submitted' | 'approved' | 're
 
 type NoArgs = Record<PropertyKey, never>;
 
+export type NotificationType =
+  | 'follow'
+  | 'follow_request'
+  | 'follow_accepted'
+  | 'like'
+  | 'comment'
+  | 'verification_approved'
+  | 'verification_rejected'
+  | 'plate_transferred'
+  | 'plate_revoked'
+  | 'report_resolved'
+  | 'content_removed';
+
+export type ReportTarget = 'user' | 'post' | 'comment' | 'message' | 'vehicle';
+export type ReportReason =
+  | 'spam'
+  | 'harassment'
+  | 'hate'
+  | 'nudity'
+  | 'violence'
+  | 'impersonation'
+  | 'privacy'
+  | 'illegal'
+  | 'other';
+
+export type NotificationItem = {
+  notification_id: string;
+  type: NotificationType;
+  actor_username: string | null;
+  actor_display_name: string | null;
+  actor_avatar_path: string | null;
+  post_id: string | null;
+  vehicle_id: string | null;
+  data: { [key: string]: Json | undefined };
+  read: boolean;
+  created_at: string;
+};
+
+export type ReportQueueItem = {
+  report_id: string;
+  target_type: ReportTarget;
+  target_id: string;
+  reason: ReportReason;
+  details: string;
+  created_at: string;
+  reporter_username: string | null;
+  owner_id: string | null;
+  owner_username: string | null;
+  open_reports: number;
+  preview: { [key: string]: Json | undefined } | null;
+};
+
 export type ConversationStatus = 'request' | 'active' | 'declined';
 
 export type InboxItem = {
@@ -102,6 +154,7 @@ export type Database = {
           follower_count: number;
           following_count: number;
           post_count: number;
+          suspended_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -137,12 +190,14 @@ export type Database = {
           user_id: string;
           messaging_policy: MessagingPolicy;
           locale: 'de' | 'en';
+          push_enabled: boolean;
           updated_at: string;
         };
         Insert: never;
         Update: {
           messaging_policy?: MessagingPolicy;
           locale?: 'de' | 'en';
+          push_enabled?: boolean;
         };
         Relationships: [];
       };
@@ -312,6 +367,47 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
+      notifications: {
+        Row: {
+          id: string;
+          recipient_id: string;
+          actor_id: string | null;
+          type: NotificationType;
+          post_id: string | null;
+          vehicle_id: string | null;
+          data: Json;
+          read_at: string | null;
+          created_at: string;
+        };
+        Insert: never;
+        Update: { read_at?: string | null };
+        Relationships: [];
+      };
+      push_tokens: {
+        Row: { token: string; user_id: string; platform: 'ios' | 'android'; updated_at: string };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      reports: {
+        Row: {
+          id: string;
+          reporter_id: string | null;
+          target_type: ReportTarget;
+          target_id: string;
+          target_owner_id: string | null;
+          reason: ReportReason;
+          details: string;
+          status: 'open' | 'actioned' | 'dismissed';
+          resolution_note: string | null;
+          handled_by: string | null;
+          handled_at: string | null;
+          created_at: string;
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
       saved_posts: {
         Row: { user_id: string; post_id: string; created_at: string };
         Insert: { user_id: string; post_id: string };
@@ -458,6 +554,34 @@ export type Database = {
       my_conversations: { Args: NoArgs; Returns: InboxItem[] };
       unread_message_count: { Args: NoArgs; Returns: number };
       conversation_info: { Args: { p_conversation: string }; Returns: ConversationInfo[] };
+      register_push_token: { Args: { p_token: string; p_platform: 'ios' | 'android' }; Returns: undefined };
+      mark_notifications_read: { Args: NoArgs; Returns: undefined };
+      my_notifications: { Args: { p_before?: string | null; p_limit?: number }; Returns: NotificationItem[] };
+      unread_notification_count: { Args: NoArgs; Returns: number };
+      report_content: {
+        Args: { p_type: ReportTarget; p_target: string; p_reason: ReportReason; p_details?: string };
+        Returns: string;
+      };
+      my_reports: {
+        Args: NoArgs;
+        Returns: {
+          report_id: string;
+          target_type: ReportTarget;
+          reason: ReportReason;
+          status: 'open' | 'actioned' | 'dismissed';
+          created_at: string;
+          handled_at: string | null;
+        }[];
+      };
+      admin_reports_queue: { Args: NoArgs; Returns: ReportQueueItem[] };
+      admin_resolve_report: {
+        Args: { p_report: string; p_action: 'dismiss' | 'remove' | 'suspend'; p_note?: string | null };
+        Returns: undefined;
+      };
+      admin_unsuspend_user: { Args: { p_user: string; p_note: string }; Returns: undefined };
+      admin_orphaned_files: { Args: { p_limit?: number }; Returns: { bucket: string; path: string }[] };
+      delete_my_account: { Args: NoArgs; Returns: undefined };
+      export_my_data: { Args: NoArgs; Returns: Json };
       admin_revoke_claim: { Args: { p_claim_id: string; p_reason: string }; Returns: undefined };
     };
     Enums: {

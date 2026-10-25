@@ -3,6 +3,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { openReport } from '@/features/moderation/api';
 import { useBlockUser, useProfileByUsername } from '@/features/profile/api';
 import { ProfileBody } from '@/features/social/ProfileBody';
 import { useI18n } from '@/i18n';
@@ -46,6 +47,13 @@ export default function UserProfileScreen() {
     ]);
   }
 
+  const menu = () =>
+    Alert.alert(`@${target.username}`, undefined, [
+      { text: t('report.reportUser', { username: target.username }), onPress: () => openReport('user', target.id) },
+      { text: t('profile.block'), style: 'destructive', onPress: confirmBlock },
+      { text: t('common.cancel'), style: 'cancel' },
+    ]);
+
   return (
     <>
       <Stack.Screen
@@ -56,12 +64,12 @@ export default function UserProfileScreen() {
             : () => (
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel={t('profile.block')}
-                  onPress={confirmBlock}
+                  accessibilityLabel={t('profile.options')}
+                  onPress={menu}
                   style={styles.headerButton}
                   disabled={block.isPending}
                 >
-                  <Ionicons name="ban-outline" size={22} color={colors.textPrimary} />
+                  <Ionicons name="ellipsis-horizontal" size={22} color={colors.textPrimary} />
                 </Pressable>
               ),
         }}

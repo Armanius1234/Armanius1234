@@ -14,12 +14,17 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 import { useMyProfile, useMySettings } from '@/features/profile/api';
+import { CrashScreen } from '@/features/system/CrashScreen';
+import { OfflineBanner } from '@/features/system/OfflineBanner';
 import { I18nProvider, useI18n } from '@/i18n';
 import { env } from '@/lib/env';
 import { colors, fonts } from '@/theme/tokens';
 import { ErrorView, LoadingView } from '@/ui';
 
 void SplashScreen.preventAutoHideAsync();
+
+// Catches crashes in any screen so the app shows a retry screen instead of closing.
+export const ErrorBoundary = CrashScreen;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -70,6 +75,7 @@ export default function RootLayout() {
             <ThemeProvider value={navTheme}>
               <StatusBar style="light" />
               <RootNavigator />
+              <OfflineBanner />
             </ThemeProvider>
           </AuthProvider>
         </I18nProvider>
@@ -155,6 +161,13 @@ function RootNavigator() {
         />
         <Stack.Screen name="admin/index" options={{ headerShown: true, title: t('admin.title') }} />
         <Stack.Screen name="admin/[requestId]" options={{ headerShown: true, title: t('admin.title') }} />
+        <Stack.Screen name="admin/reports" options={{ headerShown: true, title: t('moderation.title') }} />
+        <Stack.Screen name="admin/report/[id]" options={{ headerShown: true, title: t('moderation.title') }} />
+        <Stack.Screen name="notifications" options={{ headerShown: true, title: t('notifications.title') }} />
+        <Stack.Screen
+          name="report"
+          options={{ headerShown: true, title: t('report.title'), presentation: 'modal' }}
+        />
       </Stack.Protected>
     </Stack>
   );

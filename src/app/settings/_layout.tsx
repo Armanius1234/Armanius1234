@@ -21,6 +21,9 @@ export default function SettingsLayout() {
       <Stack.Screen name="blocked" options={{ title: t('privacy.blockedUsers') }} />
       <Stack.Screen name="language" options={{ title: t('settings.language') }} />
       <Stack.Screen name="legal" options={{ title: t('settings.legal') }} />
+      <Stack.Screen name="notifications" options={{ title: t('notifications.settingsTitle') }} />
+      <Stack.Screen name="reports" options={{ title: t('report.myReports') }} />
+      <Stack.Screen name="delete-account" options={{ title: t('account.deleteTitle') }} />
     </Stack>
   );
 }

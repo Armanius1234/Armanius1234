@@ -1,0 +1,119 @@
+# Privacy and legal notes: for qualified review before public launch
+
+**Status:** technical notes written by the developer. **This is not legal
+advice.** A qualified lawyer or data-protection officer must review it before PL8
+opens to the public. It is meant to make that review faster: it lists what the
+app actually stores, where, for how long, and which questions are still open.
+
+---
+
+## 1. What PL8 stores
+
+| Data | Where | Who can see it | Kept until |
+|---|---|---|---|
+| Email, password (hashed by Supabase Auth) | Supabase Auth | the user; the operator via the Supabase dashboard | account deletion |
+| 18+ confirmation, accepted terms/privacy versions + time | `private.user_consents` | operator only | account deletion |
+| Profile: username, display name, bio, profile picture | `profiles`, `avatars` bucket (**public** files) | everyone signed in (private profiles: limited) | account deletion |
+| Settings: language, who may message, push on/off | `user_settings` | the user | account deletion |
+| Vehicles + photos | `vehicles`, `vehicle-photos` (private, signed links) | according to visibility | account deletion |
+| **License plate** (normalised text) | `private.plate_claims` | owner; others only if the owner made it findable | plate removal / account deletion |
+| Verification evidence photos (live photos, challenge code) | `verification-evidence` (private) | owner + admins | **deleted right after the decision** |
+| Posts, photos, comments, likes, saves | `posts`, `post-media` etc. | according to profile visibility | account deletion |
+| Follows, follow requests, blocks | tables of the same name | the people involved (blocks: only the blocker) | account deletion |
+| **Messages** | `messages` | the two participants; moderators see a reported message | account deletion (see §4.3) |
+| In-app notifications | `notifications` | the recipient | 90 days after read, 180 days at most |
+| Push tokens (device addresses for push) | `push_tokens` | the user | sign-out / account deletion |
+| Push send log | `private.push_outbox` | operator only | 7 days |
+| Plate search log (**hash** of the searched plate, found yes/no) | `private.search_log` | operator only | 30 days |
+| Plate claim attempts (rate limiting) | `private.claim_log` | operator only | 30 days |
+| Reports (who reported what, reason, decision) | `reports` | the reporter (own reports), moderators | 1 year after the decision |
+| Moderator actions (decision, reason, who decided) | `private.admin_actions` | operator only | **no automatic deletion yet** (see §4.8) |
+
+Clean-up runs every night (`private.run_retention()`, see
+docs/SUPABASE-SETUP.md).
+
+## 2. Service providers (processors) and data transfers
+
+| Provider | What for | Data | Notes for review |
+|---|---|---|---|
+| **Supabase** | database, login, file storage, live updates | everything above | Choose an **EU region** (e.g. Frankfurt) when creating the project. Sign Supabase's DPA. |
+| **Expo (650 Industries, USA)** | push delivery (Expo Push Service) and app builds | push token + push text (e.g. "Lena M. liked your post") | **Third-country transfer (USA).** Check Expo's DPA / SCCs / DPF status. Message pushes never contain the message text. |
+| **Apple (APNs) / Google (FCM)** | delivering the push to the phone | push token + push text | standard for every app with push |
+| Supabase email (default sender) | sign-up and reset codes | email address | Replace with an EU email provider before launch (also for sending limits). |
+
+No analytics, advertising or tracking SDKs are included. No crash-reporting
+service is active (Sentry etc. would need approval and a review).
+
+## 3. Rights of the user: what the app already does
+
+| Right (GDPR) | In the app |
+|---|---|
+| Access + data portability (Art. 15, 20) | Settings → **Download my data**: a JSON file with profile, settings, consents, vehicles, plates, posts, comments, likes, follows, blocks, messages in the user's conversations (sent **and received**, marked "from me"), notifications, reports made, account email and dates. |
+| Erasure (Art. 17) | Settings → **Delete account** (password needed): files deleted first, then all database rows and the login. |
+| Rectification (Art. 16) | edit profile, vehicles, settings |
+| Withdraw consent for push | Settings → Notifications, or the phone settings |
+| Objection / restriction (Art. 18, 21) | **no self-service**: handled by email to the operator |
+
+## 4. Open points that need a qualified decision
+
+1. **DPIA (Art. 35).** PL8 links license plates (personal data in Germany) to
+   profiles and makes them searchable on an opt-in basis. A data protection
+   impact assessment is probably required. Please confirm.
+2. **Other people's plates in photos.** Posts and vehicle photos can show the
+   plates of uninvolved cars. Reporting ("shares private information, e.g.
+   someone's plate") exists. Automatic blurring does not. Is that enough?
+3. **Messages are not end-to-end encrypted.** They are encrypted in transit
+   and stored in the database. Moderators see the text of a message that was
+   reported to them. This must be stated clearly in the privacy policy.
+4. **Deleted accounts in conversations.** Messages a deleted user sent stay
+   visible to the other person, **without name or profile**. Please confirm this
+   is acceptable or require full deletion.
+5. **Received messages in the data export.** The export contains the text of
+   messages the user received, which is the other person's data too
+   (Art. 15(4)). Keep, or export only the user's own messages?
+6. **Search log hashes.** A hash of a plate is pseudonymous, not anonymous,
+   because there are few possible plates. It is kept 30 days for abuse
+   prevention. Please confirm the legal basis (legitimate interest?) and duration.
+7. **Age 18+** is a self-declaration with a checkbox. There is no age verification.
+8. **EU Digital Services Act (DSA).** In place: a notice-and-action flow
+   (report button on every profile, post, comment, message and vehicle), a
+   **statement of reasons** to the affected person (reason category shown), and
+   a log of every decision.
+   **Not in place yet:**
+   - an internal complaint / appeal system (Art. 20). An appeal can only be
+     made by email; lifting a suspension needs the SQL Editor.
+   - a single point of contact (Art. 11/12).
+   - transparency reporting.
+   - terms that describe moderation.
+   Small companies may be exempt from some duties. Please check which apply.
+9. **Moderator log** (`private.admin_actions`) has no deletion period yet.
+   Please decide one, e.g. 3 years.
+10. **Backups.** Deleted data can remain in Supabase backups for a limited
+   time. Check the plan's backup retention and mention it in the privacy policy.
+11. **Legal texts are placeholders.** These are still to be written:
+    - privacy policy
+    - terms of use
+    - imprint (Impressum)
+    - community rules
+
+    The app shows version numbers that users accept at sign-up (terms
+    `2026-10-draft`). Each new version must be accepted again.
+12. **Company not founded / domain not confirmed.** These are still missing:
+    - the controller's name and address
+    - a contact email
+    - the DPAs with providers (they must be signed by the company)
+    - store listings
+
+## 5. Security measures (summary for the privacy policy, Art. 32)
+
+- Row-level security on every table. The app only has the public
+  "publishable" key; no privileged key is in the app (checked automatically in
+  CI).
+- Private files only through short-lived signed links. Evidence photos are
+  visible only to the owner and admins.
+- Sensitive tables live in a separate `private` schema that the app cannot reach.
+- Rate limits on searches, plate claims, messages and reports.
+- Blocking hides profiles, posts, comments, messages and notifications in both
+  directions.
+- 355 automated database checks, including a security audit (every table
+  protected, no anonymous access, no unprotected functions).

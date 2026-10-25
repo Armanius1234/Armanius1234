@@ -23,6 +23,7 @@ import {
   useSendMessage,
   useUnsendMessage,
 } from '@/features/messaging/api';
+import { openReport } from '@/features/moderation/api';
 import { useBlockUser } from '@/features/profile/api';
 import { useTimeAgo } from '@/features/social/components';
 import { useI18n } from '@/i18n';
@@ -89,6 +90,13 @@ export default function ChatScreen() {
       },
     ]);
 
+  const chatMenu = () =>
+    Alert.alert(c.other_display_name, undefined, [
+      { text: t('report.reportUser', { username: c.other_username }), onPress: () => openReport('user', c.other_id) },
+      { text: t('profile.block'), style: 'destructive', onPress: confirmBlock },
+      { text: t('common.cancel'), style: 'cancel' },
+    ]);
+
   const openProfile = () => router.push({ pathname: '/user/[username]', params: { username: c.other_username } });
 
   return (
@@ -104,8 +112,8 @@ export default function ChatScreen() {
             </Pressable>
           ),
           headerRight: () => (
-            <Pressable accessibilityRole="button" accessibilityLabel={t('chat.block')} onPress={confirmBlock} style={styles.headerButton}>
-              <Ionicons name="ban-outline" size={22} color={colors.textPrimary} />
+            <Pressable accessibilityRole="button" accessibilityLabel={t('chat.options')} onPress={chatMenu} style={styles.headerButton}>
+              <Ionicons name="ellipsis-horizontal" size={22} color={colors.textPrimary} />
             </Pressable>
           ),
         }}
@@ -168,6 +176,12 @@ export default function ChatScreen() {
                 mine={item.sender_id === uid}
                 time={ago(item.created_at)}
                 seen={!!seen && item.id === lastMine?.id}
+                onReport={() =>
+                  Alert.alert(t('report.reportMessage'), undefined, [
+                    { text: t('common.cancel'), style: 'cancel' },
+                    { text: t('report.action'), style: 'destructive', onPress: () => openReport('message', item.id) },
+                  ])
+                }
                 onUnsend={() =>
                   Alert.alert(t('chat.unsendTitle'), undefined, [
                     { text: t('common.cancel'), style: 'cancel' },
@@ -228,19 +242,21 @@ function Bubble({
   time,
   seen,
   onUnsend,
+  onReport,
 }: {
   message: Message;
   mine: boolean;
   time: string;
   seen: boolean;
   onUnsend: () => void;
+  onReport: () => void;
 }) {
   const { t } = useI18n();
   return (
     <View style={[styles.bubbleRow, mine && styles.bubbleRowMine]}>
       <Pressable
-        onLongPress={mine ? onUnsend : undefined}
-        accessibilityHint={mine ? t('chat.unsend') : undefined}
+        onLongPress={mine ? onUnsend : onReport}
+        accessibilityHint={mine ? t('chat.unsend') : t('report.reportMessage')}
         style={[styles.bubble, mine ? styles.bubbleMine : styles.bubbleTheirs]}
       >
         <AppText>{message.body}</AppText>

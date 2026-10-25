@@ -55,6 +55,57 @@ Check: **Table Editor** shows `conversations`, `conversation_participants`,
 `messages`. Then **Database → Publications → supabase_realtime**: `messages`
 should be switched on (the file does this; switch it on by hand if not).
 
+### Milestone 5 update (notifications, reports, account deletion)
+
+1. **Switch on two free extensions first:** **Database → Extensions**, search
+   for **pg_net** and switch it on. Do the same for **pg_cron**. pg_net sends
+   push notifications; pg_cron runs the nightly data clean-up. Both are
+   included in the free plan.
+2. Run the fifth file: **SQL Editor → New query**, paste everything from
+   `supabase/migrations/20261029090000_beta_readiness.sql`, then **Run**.
+3. Check:
+   - **Table Editor** shows `notifications`, `push_tokens` and `reports`.
+   - **Database → Publications → supabase_realtime**: `notifications` is on.
+   - **Integrations → Cron** (or **Database → Cron Jobs**) lists `pl8-retention`.
+4. If you ran the file **before** switching on the extensions, it still works,
+   but the Results panel shows a notice such as "pg_cron not available". Then
+   switch the extensions on and run only this part again:
+
+   ```sql
+   select cron.schedule('pl8-retention', '17 3 * * *', 'select private.run_retention()');
+   ```
+
+   Push notifications start working once pg_net is on. Nothing else needs to be
+   run again.
+
+What the nightly clean-up deletes (03:17 server time):
+
+| Data | Kept for |
+|---|---|
+| Read notifications | 90 days (unread: 180 days) |
+| Push send log | 7 days |
+| Plate search log and claim log (hashed) | 30 days |
+| Unfinished post drafts | 1 day |
+| Unused verification codes | expire after 7 days |
+| Closed reports (record of moderation decisions) | 1 year |
+
+**Suspended accounts** can't sign in. To lift a suspension, paste this into the
+SQL Editor, replace both emails and the reason, then **Run**. The change is
+logged under your admin account:
+
+```sql
+do $$
+declare
+  target uuid := (select id from auth.users where email = 'USER-EMAIL@example.com');
+  admin uuid := (select id from auth.users where email = 'YOUR-ADMIN-EMAIL@example.com');
+begin
+  perform set_config('request.jwt.claims', json_build_object('sub', admin, 'role', 'authenticated')::text, true);
+  perform public.admin_unsuspend_user(target, 'Reason for lifting the suspension');
+end $$;
+```
+
+Their cars become visible again, except any a moderator removed separately.
+
 ### Make yourself the reviewer (admin)
 
 Plate verifications are approved by hand in the app. Give your own account the

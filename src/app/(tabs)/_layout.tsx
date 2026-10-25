@@ -4,6 +4,9 @@ import type { ComponentProps } from 'react';
 import { StyleSheet, View, type ColorValue } from 'react-native';
 
 import { useMessagesRealtime, useUnreadCount } from '@/features/messaging/api';
+import { useNotificationsRealtime } from '@/features/notifications/api';
+import { usePushSetup } from '@/features/notifications/push';
+import { useMySettings } from '@/features/profile/api';
 import { useFollowRequests } from '@/features/social/api';
 import { useI18n } from '@/i18n';
 import { colors, fonts } from '@/theme/tokens';
@@ -28,6 +31,8 @@ function SearchIcon({ focused }: { focused: boolean }) {
 export default function TabsLayout() {
   const { t } = useI18n();
   useMessagesRealtime();
+  useNotificationsRealtime();
+  usePushSetup(useMySettings().data?.push_enabled === true);
   const { unread, requests } = useUnreadCount();
   const followRequests = useFollowRequests().data?.length ?? 0;
   const messageBadge = unread + requests;

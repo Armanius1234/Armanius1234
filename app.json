@@ -41,6 +41,13 @@
           "cameraPermission": "PL8 uses the camera to take live photos of your car, for your garage and to verify your license plate.",
           "microphonePermission": false
         }
+      ],
+      "expo-sharing",
+      [
+        "expo-notifications",
+        {
+          "color": "#087CFF"
+        }
       ]
     ],
     "experiments": {

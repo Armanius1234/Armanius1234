@@ -123,7 +123,7 @@ export function useUpdateSettings() {
   const uid = useUid();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (patch: { messaging_policy?: MessagingPolicy; locale?: 'de' | 'en' }) => {
+    mutationFn: async (patch: { messaging_policy?: MessagingPolicy; locale?: 'de' | 'en'; push_enabled?: boolean }) => {
       if (!uid) throw new Error('Not signed in');
       const { data, error } = await supabase
         .from('user_settings')

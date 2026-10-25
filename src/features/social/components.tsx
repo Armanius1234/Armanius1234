@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { openReport } from '@/features/moderation/api';
 import { useSignedUrls } from '@/features/garage/api';
 import { useI18n } from '@/i18n';
 import type { FeedPost, Profile } from '@/lib/database.types';
@@ -195,8 +196,9 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
     setSaved(next);
     saveMutation.mutate({ postId: post.post_id, save: next }, { onError: () => setSaved(!next) });
   };
+  const mine = post.author_id === uid;
   const options = () =>
-    Alert.alert(t('post.options'), undefined, [
+    Alert.alert(t('post.options'), undefined, mine ? [
       {
         text: t('post.delete'),
         style: 'destructive',
@@ -216,6 +218,9 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
             },
           ]),
       },
+      { text: t('common.cancel'), style: 'cancel' },
+    ] : [
+      { text: t('report.reportPost'), style: 'destructive', onPress: () => openReport('post', post.post_id) },
       { text: t('common.cancel'), style: 'cancel' },
     ]);
 
@@ -260,11 +265,9 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
         <AppText variant="caption" color="textSecondary">
           {ago(post.published_at)}
         </AppText>
-        {post.author_id === uid ? (
-          <Pressable accessibilityRole="button" accessibilityLabel={t('post.options')} onPress={options} style={styles.icon}>
-            <Ionicons name="ellipsis-horizontal" size={20} color={colors.textSecondary} />
-          </Pressable>
-        ) : null}
+        <Pressable accessibilityRole="button" accessibilityLabel={t('post.options')} onPress={options} style={styles.icon}>
+          <Ionicons name="ellipsis-horizontal" size={20} color={colors.textSecondary} />
+        </Pressable>
       </View>
 
       <Pressable onPress={onOpen} disabled={!onOpen} accessibilityLabel={t('post.title')}>
