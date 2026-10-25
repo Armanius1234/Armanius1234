@@ -2,8 +2,24 @@
 
 > *Every car has a story.* — *See it. Search it. Connect.*
 
-Status: **Draft for founder approval.** No application code has been written.
-Implementation starts only after the founder writes `APPROVED — START MILESTONE 1`.
+Status: **Approved.** Milestone 1 started on 2026-10-25.
+
+### Founder decisions (2026-10-25)
+
+1. Branding: PL8 only (Concept 1). CLMD and DRV are dropped.
+2. Minimum age: **18** for the initial beta.
+3. Verification: live vehicle photos + randomized challenge code + manual admin
+   approval. This shows apparent access, not legal ownership. **No registration
+   documents** in the beta. Evidence is private, with a defined retention period.
+4. Plate search shows the **vehicle first**. Username/driver profile only when the
+   owner explicitly opted in (`show_owner_in_search`, default off).
+5. Welcome tagline: "Every car has a story."
+6. Company and domain: not confirmed. Do not assume either exists.
+7. Environment: Claude Code, React Native, Expo, TypeScript, Supabase, GitHub (not Replit).
+8. Platforms: iOS and Android.
+9. Budget: €1,000–€3,000 total. Minimize costs.
+10. All plate discovery is opt-in; server-side authorization, RLS, blocking,
+    reporting and account deletion are required.
 
 ---
 
@@ -383,7 +399,7 @@ The wording in the app will say "verified access to this vehicle", **not**
 | Right to erasure | In-app **Delete account**: account hidden immediately, data deleted by an Edge Function within 30 days (claims revoked, media removed, messages anonymized for the other person) |
 | Right of access | "Download my data" (JSON export) in Milestone 5 |
 | Retention | Evidence 30 days after decision; search logs 30 days; deleted accounts purged in ≤ 30 days |
-| Minimum age | **16** proposed (German age of digital consent), shown at sign-up. Needs founder decision. |
+| Minimum age | **18** (founder decision), confirmed at sign-up and enforced by the database |
 | Required legal pages | Impressum, privacy policy (Datenschutzerklärung), terms, community guidelines |
 | Processors | Data processing agreements (AVV/DPA) with Supabase, Resend, Expo (and Sentry if used) |
 | DPIA | A Data Protection Impact Assessment is **strongly advised** for plate search. It must be reviewed by a qualified person before public launch |
