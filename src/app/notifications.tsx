@@ -21,6 +21,8 @@ const SYSTEM_ICONS: Partial<Record<NotificationItem['type'], React.ComponentProp
   plate_revoked: 'remove-circle',
   report_resolved: 'shield-checkmark',
   content_removed: 'alert-circle',
+  account_suspended: 'lock-closed',
+  appeal_decided: 'git-pull-request',
 };
 
 function open(n: NotificationItem) {
@@ -43,7 +45,13 @@ function open(n: NotificationItem) {
       if (n.vehicle_id) router.push({ pathname: '/vehicle/[id]/plate', params: { id: n.vehicle_id } });
       break;
     case 'report_resolved':
-      router.push('/settings/reports');
+      // "No violation" decisions can be appealed; the rest is just a status.
+      router.push(n.data.outcome === 'dismissed' ? '/settings/decisions' : '/settings/reports');
+      break;
+    case 'content_removed':
+    case 'account_suspended':
+    case 'appeal_decided':
+      router.push('/settings/decisions');
       break;
     default:
       break;

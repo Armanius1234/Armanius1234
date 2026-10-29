@@ -65,7 +65,7 @@ export default function TabsLayout() {
           title: t('tabs.messages'),
           tabBarIcon: icon('chatbubbles', 'chatbubbles-outline'),
           tabBarBadge: messageBadge > 0 ? (messageBadge > 99 ? '99+' : messageBadge) : undefined,
-          tabBarBadgeStyle: { backgroundColor: colors.accent, color: '#fff', fontFamily: fonts.semibold, fontSize: 11 },
+          tabBarBadgeStyle: { backgroundColor: colors.accentSolid, color: '#fff', fontFamily: fonts.semibold, fontSize: 11 },
         }}
       />
       <Tabs.Screen
@@ -74,7 +74,7 @@ export default function TabsLayout() {
           title: t('tabs.profile'),
           tabBarIcon: icon('person-circle', 'person-circle-outline'),
           tabBarBadge: followRequests > 0 ? followRequests : undefined,
-          tabBarBadgeStyle: { backgroundColor: colors.accent, color: '#fff', fontFamily: fonts.semibold, fontSize: 11 },
+          tabBarBadgeStyle: { backgroundColor: colors.accentSolid, color: '#fff', fontFamily: fonts.semibold, fontSize: 11 },
         }}
       />
     </Tabs>

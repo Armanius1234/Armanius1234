@@ -1,56 +1,15 @@
-import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 
-import { useIsAdmin, useSignedUrls, type PrivateBucket } from '@/features/garage/api';
+import { useIsAdmin } from '@/features/garage/api';
 import { useReportsQueue, useResolveReport } from '@/features/moderation/api';
+import { ContentPreview } from '@/features/moderation/ContentPreview';
 import { changedSinceReport } from '@/features/moderation/snapshot';
 import { useI18n } from '@/i18n';
-import type { ReportQueueItem } from '@/lib/database.types';
 import { errorKey } from '@/lib/errors';
-import { avatarUrl } from '@/lib/supabase';
-import { colors, radius, spacing } from '@/theme/tokens';
-import { AppText, Avatar, Button, EmptyView, FormMessage, LoadingView, Screen, TextField } from '@/ui';
-
-const str = (v: unknown) => (typeof v === 'string' ? v : '');
-const strList = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
-
-type Content = NonNullable<ReportQueueItem['preview']>;
-
-function Preview({ item, content }: { item: ReportQueueItem; content: Content | null }) {
-  const { t } = useI18n();
-  const p = content ?? {};
-  const bucket: PrivateBucket = item.target_type === 'vehicle' ? 'vehicle-photos' : 'post-media';
-  const paths = strList(item.target_type === 'vehicle' ? p.photo_paths : p.media_paths);
-  const urls = useSignedUrls(bucket, paths);
-
-  return (
-    <View style={styles.preview}>
-      {item.target_type === 'user' ? (
-        <View style={styles.userRow}>
-          <Avatar uri={avatarUrl(str(p.avatar_path) || null)} name={str(p.display_name) || '?'} size={56} />
-          <View style={styles.flex}>
-            <AppText variant="bodyStrong">{str(p.display_name)}</AppText>
-            <AppText color="textSecondary">@{str(p.username)}</AppText>
-          </View>
-        </View>
-      ) : null}
-      {str(p.caption) || str(p.body) || str(p.bio) ? <AppText>{str(p.caption) || str(p.body) || str(p.bio)}</AppText> : null}
-      {item.target_type === 'vehicle' ? <AppText variant="bodyStrong">{`${str(p.make)} ${str(p.model)}`}</AppText> : null}
-      {p.removed === true || p.restricted === true ? (
-        <AppText variant="caption" color="warning">
-          {t('moderation.removed')}
-        </AppText>
-      ) : null}
-      {paths.map((path) => (
-        <View key={path} style={styles.photo}>
-          {urls.data?.[path] ? <Image source={{ uri: urls.data[path] }} style={StyleSheet.absoluteFill} contentFit="contain" /> : null}
-        </View>
-      ))}
-    </View>
-  );
-}
+import { spacing } from '@/theme/tokens';
+import { AppText, Button, EmptyView, FormMessage, LoadingView, Screen, TextField } from '@/ui';
 
 export default function ReportDetailScreen() {
   const { t } = useI18n();
@@ -110,13 +69,13 @@ export default function ReportDetailScreen() {
           <AppText variant="overline" color="warning">
             {t('moderation.atReport').toUpperCase()}
           </AppText>
-          <Preview item={item} content={item.snapshot} />
+          <ContentPreview targetType={item.target_type} content={item.snapshot} />
           <AppText variant="overline" color="textSecondary">
             {t('moderation.now').toUpperCase()}
           </AppText>
         </>
       ) : null}
-      <Preview item={item} content={item.preview} />
+      <ContentPreview targetType={item.target_type} content={item.preview} />
 
       <TextField label={t('moderation.note')} value={note} onChangeText={setNote} multiline maxLength={1000} />
       <FormMessage message={error} />
@@ -133,15 +92,4 @@ export default function ReportDetailScreen() {
 
 const styles = StyleSheet.create({
   content: { paddingTop: spacing.md, gap: spacing.sm },
-  flex: { flex: 1 },
-  preview: {
-    gap: spacing.sm,
-    padding: spacing.md,
-    borderRadius: radius.lg,
-    backgroundColor: colors.bgSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  userRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  photo: { height: 240, borderRadius: radius.md, overflow: 'hidden', backgroundColor: colors.bgElevated },
 });

@@ -136,6 +136,27 @@ works.
 
 Google and Apple sign-in: see **docs/SOCIAL-LOGIN-SETUP.md**.
 
+### Milestone 7 update (appeals, statistics, speed)
+
+Run the seventh file: **SQL Editor → New query**, paste everything from
+`supabase/migrations/20261031090000_launch_hardening.sql`, then **Run**.
+
+Check: **Table Editor** shows `appeals`. Settings → Admin now has
+**Appeals** and **Statistics** (restart the app).
+
+What changes:
+
+- **Suspended people can sign in again**, but only see the suspension, the
+  reason and the appeal form, plus "Download my data" and "Delete account".
+  Everyone else still can't see or reach them. Anyone suspended before this
+  update is switched to this mode automatically.
+- **Appeals:** within 6 months, people can appeal a removal or suspension, and
+  reporters can appeal a "no violation" decision. Decide them under Settings →
+  Admin → Appeals. Nobody can decide their own appeal.
+- **Statistics** (Settings → Admin → Statistics): numbers for the EU Digital
+  Services Act transparency report, which you can share as a CSV file.
+- **Faster:** new indexes and a faster home feed. Nothing to do.
+
 ### Make yourself the reviewer (admin)
 
 Plate verifications are approved by hand in the app. Give your own account the

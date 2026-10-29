@@ -60,10 +60,10 @@ const styles = StyleSheet.create({
 });
 
 const variantStyles = StyleSheet.create({
-  primary: { backgroundColor: colors.accent },
+  primary: { backgroundColor: colors.accentSolid },
   secondary: { backgroundColor: colors.bgSecondary, borderWidth: 1, borderColor: colors.border },
   ghost: { backgroundColor: 'transparent' },
-  destructive: { backgroundColor: colors.danger },
+  destructive: { backgroundColor: colors.dangerSolid },
 });
 
 const pressedStyles = StyleSheet.create({

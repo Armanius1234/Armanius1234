@@ -53,6 +53,7 @@ export function GarageSection({ ownerId, isMe }: { ownerId: string; isMe: boolea
               key={v.id}
               vehicle={v}
               coverUrl={cover ? covers.data?.[cover] : null}
+              coverPath={cover}
               onPress={() => router.push({ pathname: '/vehicle/[id]', params: { id: v.id } })}
             />
           );

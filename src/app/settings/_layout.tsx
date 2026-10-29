@@ -24,6 +24,8 @@ export default function SettingsLayout() {
       <Stack.Screen name="notifications" options={{ title: t('notifications.settingsTitle') }} />
       <Stack.Screen name="reports" options={{ title: t('report.myReports') }} />
       <Stack.Screen name="delete-account" options={{ title: t('account.deleteTitle') }} />
+      <Stack.Screen name="decisions" options={{ title: t('appeal.decisionsTitle') }} />
+      <Stack.Screen name="appeal" options={{ title: t('appeal.formTitle') }} />
     </Stack>
   );
 }

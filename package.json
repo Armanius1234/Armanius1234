@@ -61,7 +61,8 @@
     "test": "jest",
     "test:db": "bash scripts/test-db.sh",
     "test:all": "npm run typecheck && npm run lint && npm test && npm run test:db",
-    "db:types": "supabase gen types typescript --linked --schema public > src/lib/database.types.ts"
+    "db:types": "supabase gen types typescript --linked --schema public > src/lib/database.types.ts",
+    "perf:db": "bash scripts/perf-db.sh"
   },
   "private": true,
   "jest": {

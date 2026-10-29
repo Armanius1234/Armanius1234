@@ -105,6 +105,7 @@ function ResultCard({ result, plate }: { result: SearchResult; plate: string }) 
       <VehicleCard
         vehicle={{ ...result, is_verified: true }}
         coverUrl={result.cover_path ? cover.data?.[result.cover_path] : null}
+        coverPath={result.cover_path}
         onPress={
           result.vehicle_id
             ? () => router.push({ pathname: '/vehicle/[id]', params: { id: result.vehicle_id! } })

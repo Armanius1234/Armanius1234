@@ -209,11 +209,14 @@ type CardVehicle = {
 export function VehicleCard({
   vehicle,
   coverUrl,
+  coverPath,
   onPress,
   footer,
 }: {
   vehicle: CardVehicle;
   coverUrl: string | null | undefined;
+  /** Storage path of the cover: the cache key, so new signed links don't re-download it. */
+  coverPath?: string | null;
   onPress?: () => void;
   footer?: React.ReactNode;
 }) {
@@ -222,7 +225,12 @@ export function VehicleCard({
     <>
       <View style={styles.cover}>
         {coverUrl ? (
-          <Image source={{ uri: coverUrl }} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} />
+          <Image
+            source={{ uri: coverUrl, cacheKey: coverPath ?? undefined }}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            transition={150}
+          />
         ) : (
           <Ionicons name="car-sport-outline" size={40} color={colors.textDisabled} />
         )}

@@ -7,6 +7,9 @@ export const colors = {
   bgSecondary: '#121722',
   bgElevated: '#1A2030',
   accent: '#087CFF',
+  // Filled backgrounds behind white text: slightly deeper, for WCAG AA contrast
+  // (white on accent is 3.9:1, on accentSolid 4.6:1).
+  accentSolid: '#0070EF',
   accentPressed: '#0066D6',
   accentSubtle: 'rgba(8, 124, 255, 0.12)',
   textPrimary: '#FFFFFF',
@@ -16,6 +19,8 @@ export const colors = {
   success: '#22C55E',
   warning: '#F59E0B',
   danger: '#EF4444',
+  // White text on danger is 3.8:1; on dangerSolid 4.8:1.
+  dangerSolid: '#DC2626',
   dangerSubtle: 'rgba(239, 68, 68, 0.12)',
   overlay: 'rgba(0, 0, 0, 0.6)',
 } as const;

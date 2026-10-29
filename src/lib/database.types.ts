@@ -23,7 +23,9 @@ export type NotificationType =
   | 'plate_transferred'
   | 'plate_revoked'
   | 'report_resolved'
-  | 'content_removed';
+  | 'content_removed'
+  | 'account_suspended'
+  | 'appeal_decided';
 
 export type ReportTarget = 'user' | 'post' | 'comment' | 'message' | 'vehicle';
 export type ReportReason =
@@ -64,6 +66,58 @@ export type ReportQueueItem = {
   preview: { [key: string]: Json | undefined } | null;
   /** The content as it was when it was reported. */
   snapshot: { [key: string]: Json | undefined } | null;
+};
+
+export type ModerationAction = 'dismiss' | 'remove' | 'suspend';
+export type AppealStatus = 'open' | 'upheld' | 'reversed';
+
+/** A moderation decision that affected the user (owner) or answered their report (reporter). */
+export type Decision = {
+  report_id: string;
+  role: 'owner' | 'reporter';
+  target_type: ReportTarget;
+  reason: ReportReason;
+  action: ModerationAction;
+  note: string | null;
+  decided_at: string;
+  appeal_until: string;
+  appeal_id: string | null;
+  appeal_status: AppealStatus | null;
+  appeal_note: string | null;
+};
+
+export type AppealQueueItem = {
+  appeal_id: string;
+  created_at: string;
+  appellant_username: string | null;
+  role: 'owner' | 'reporter';
+  appeal_reason: string;
+  report_id: string;
+  target_type: ReportTarget;
+  report_reason: ReportReason;
+  action: ModerationAction;
+  decision_note: string | null;
+  decided_at: string;
+  owner_username: string | null;
+  preview: { [key: string]: Json | undefined } | null;
+  snapshot: { [key: string]: Json | undefined } | null;
+  /** False when the content was deleted and cannot be brought back. */
+  restorable: boolean;
+};
+
+export type ModerationStats = {
+  from: string;
+  to: string;
+  reports_received: number;
+  reports_by_reason: Partial<Record<ReportReason, number>>;
+  reports_by_target: Partial<Record<ReportTarget, number>>;
+  decisions: Partial<Record<ModerationAction, number>>;
+  median_hours_to_decision: number | null;
+  appeals_received: number;
+  appeals_upheld: number;
+  appeals_reversed: number;
+  appeals_open: number;
+  accounts_suspended_now: number;
 };
 
 export type SuspendedUser = {
@@ -202,6 +256,10 @@ export type Database = {
           messaging_policy: MessagingPolicy;
           locale: 'de' | 'en';
           push_enabled: boolean;
+          push_likes: boolean;
+          push_comments: boolean;
+          push_follows: boolean;
+          push_messages: boolean;
           updated_at: string;
         };
         Insert: never;
@@ -209,6 +267,10 @@ export type Database = {
           messaging_policy?: MessagingPolicy;
           locale?: 'de' | 'en';
           push_enabled?: boolean;
+          push_likes?: boolean;
+          push_comments?: boolean;
+          push_follows?: boolean;
+          push_messages?: boolean;
         };
         Relationships: [];
       };
@@ -410,6 +472,7 @@ export type Database = {
           reason: ReportReason;
           details: string;
           status: 'open' | 'actioned' | 'dismissed';
+          action: ModerationAction | null;
           resolution_note: string | null;
           handled_by: string | null;
           handled_at: string | null;
@@ -600,6 +663,11 @@ export type Database = {
         Returns: undefined;
       };
       hide_conversation: { Args: { p_conversation: string }; Returns: undefined };
+      my_decisions: { Args: NoArgs; Returns: Decision[] };
+      submit_appeal: { Args: { p_report: string; p_reason: string }; Returns: string };
+      admin_appeals_queue: { Args: NoArgs; Returns: AppealQueueItem[] };
+      admin_decide_appeal: { Args: { p_appeal: string; p_outcome: 'upheld' | 'reversed'; p_note: string }; Returns: undefined };
+      admin_moderation_stats: { Args: { p_from: string; p_to: string }; Returns: Json };
       admin_suspended_users: { Args: NoArgs; Returns: SuspendedUser[] };
     };
     Enums: {

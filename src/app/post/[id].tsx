@@ -88,6 +88,8 @@ export default function PostScreen() {
                 if (!actions.length) return;
                 Alert.alert(t('post.commentOptions'), undefined, [...actions, { text: t('common.cancel'), style: 'cancel' }]);
               }}
+              accessibilityRole="button"
+              accessibilityLabel={`${item.author_username}: ${item.body}`}
               accessibilityHint={t('post.commentOptions')}
               style={styles.comment}
             >

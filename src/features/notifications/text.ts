@@ -26,5 +26,6 @@ export function notificationText(t: (k: TKey, p?: TParams) => string, n: Notific
     // Unknown values (e.g. from a newer server) fall back to a neutral word, never a raw key.
     target: t(`report.target_${pick(TARGETS, n.data.target_type, 'post')}`),
     reason: t(`report.reason_${pick(REASONS, n.data.reason, 'other')}`),
+    outcome: t(n.data.outcome === 'reversed' ? 'appeal.outcome_reversed' : 'appeal.outcome_upheld'),
   });
 }

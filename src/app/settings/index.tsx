@@ -63,6 +63,8 @@ export default function SettingsScreen() {
         <ListRow icon="ban-outline" label={t('privacy.blockedUsers')} onPress={() => router.push('/settings/blocked')} />
         <Divider />
         <ListRow icon="flag-outline" label={t('report.myReports')} onPress={() => router.push('/settings/reports')} />
+        <Divider />
+        <ListRow icon="shield-checkmark-outline" label={t('appeal.decisionsRow')} onPress={() => router.push('/settings/decisions')} />
       </Section>
 
       <Section footer={t('account.exportBody')}>
@@ -100,6 +102,10 @@ export default function SettingsScreen() {
           <ListRow icon="flag-outline" label={t('moderation.settingsRow')} onPress={() => router.push('/admin/reports')} />
           <Divider />
           <ListRow icon="person-remove-outline" label={t('moderation.suspendedRow')} onPress={() => router.push('/admin/suspended')} />
+          <Divider />
+          <ListRow icon="git-pull-request-outline" label={t('moderation.appealsRow')} onPress={() => router.push('/admin/appeals')} />
+          <Divider />
+          <ListRow icon="stats-chart-outline" label={t('moderation.statsRow')} onPress={() => router.push('/admin/stats')} />
         </Section>
       ) : null}
 

@@ -119,6 +119,10 @@ function RootNavigator() {
   }
 
   const hasProfile = !!profile.data;
+  // Suspended accounts only get the suspension screen (reason, appeal, data rights).
+  const suspended = hasProfile && !!profile.data?.suspended_at;
+  // Where a locked screen sends the user, for each kind of account.
+  const landing = !signedIn ? '/welcome' : !hasProfile ? '/onboarding' : suspended ? '/suspended' : '/';
 
   return (
     <Stack
@@ -135,18 +139,26 @@ function RootNavigator() {
       {/* Return address for Apple / Google sign-in; open in every state. */}
       <Stack.Screen name="auth/callback" />
 
-      <Stack.Protected guard={!signedIn}>
+      <Stack.Protected guard={!signedIn} redirectTo={landing}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
 
-      <Stack.Protected guard={signedIn && !hasProfile}>
+      <Stack.Protected guard={signedIn && !hasProfile} redirectTo={landing}>
         <Stack.Screen name="onboarding" />
       </Stack.Protected>
 
-      <Stack.Protected guard={signedIn && hasProfile}>
+      <Stack.Protected guard={signedIn && suspended} redirectTo={landing}>
+        <Stack.Screen name="suspended" />
+      </Stack.Protected>
+
+      {/* Settings stay reachable while suspended (data download, account deletion). */}
+      <Stack.Protected guard={signedIn && hasProfile} redirectTo={landing}>
+        <Stack.Screen name="settings" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={signedIn && hasProfile && !suspended} redirectTo={landing}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="profile/edit" options={{ headerShown: true, title: t('profile.editTitle') }} />
-        <Stack.Screen name="settings" />
         <Stack.Screen name="user/[username]/index" options={{ headerShown: true, title: '' }} />
         <Stack.Screen name="user/[username]/followers" options={{ headerShown: true, title: t('social.followers') }} />
         <Stack.Screen name="user/[username]/following" options={{ headerShown: true, title: t('social.followingTitle') }} />
@@ -168,6 +180,9 @@ function RootNavigator() {
         <Stack.Screen name="admin/reports" options={{ headerShown: true, title: t('moderation.title') }} />
         <Stack.Screen name="admin/report/[id]" options={{ headerShown: true, title: t('moderation.title') }} />
         <Stack.Screen name="admin/suspended" options={{ headerShown: true, title: t('moderation.suspendedTitle') }} />
+        <Stack.Screen name="admin/appeals" options={{ headerShown: true, title: t('moderation.appealsTitle') }} />
+        <Stack.Screen name="admin/appeal/[id]" options={{ headerShown: true, title: t('moderation.appealsTitle') }} />
+        <Stack.Screen name="admin/stats" options={{ headerShown: true, title: t('stats.title') }} />
         <Stack.Screen name="post/edit" options={{ headerShown: true, title: t('post.editTitle') }} />
         <Stack.Screen name="notifications" options={{ headerShown: true, title: t('notifications.title') }} />
         <Stack.Screen

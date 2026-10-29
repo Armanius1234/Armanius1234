@@ -119,11 +119,22 @@ export function useMySettings() {
   });
 }
 
+/** Fields a user may change in their settings (matches the database grants). */
+export type SettingsPatch = {
+  messaging_policy?: MessagingPolicy;
+  locale?: 'de' | 'en';
+  push_enabled?: boolean;
+  push_likes?: boolean;
+  push_comments?: boolean;
+  push_follows?: boolean;
+  push_messages?: boolean;
+};
+
 export function useUpdateSettings() {
   const uid = useUid();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (patch: { messaging_policy?: MessagingPolicy; locale?: 'de' | 'en'; push_enabled?: boolean }) => {
+    mutationFn: async (patch: SettingsPatch) => {
       if (!uid) throw new Error('Not signed in');
       const { data, error } = await supabase
         .from('user_settings')

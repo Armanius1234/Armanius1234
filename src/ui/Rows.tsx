@@ -85,6 +85,8 @@ export function SwitchRow({ label, hint, value, onChange, disabled }: SwitchRowP
       </View>
       <Switch
         accessibilityLabel={label}
+        // Screen readers need the state spelled out (the native switch alone does not say "disabled").
+        accessibilityState={{ disabled: !!disabled, checked: value }}
         value={value}
         onValueChange={onChange}
         disabled={disabled}

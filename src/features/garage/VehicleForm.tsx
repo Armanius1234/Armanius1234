@@ -263,7 +263,11 @@ function PhotoManager({ vehicle, onError }: { vehicle: VehicleWithImages; onErro
             style={styles.thumb}
           >
             {urls.data?.[img.storage_path] ? (
-              <Image source={{ uri: urls.data[img.storage_path] }} style={StyleSheet.absoluteFill} contentFit="cover" />
+              <Image
+                source={{ uri: urls.data[img.storage_path], cacheKey: img.storage_path }}
+                style={StyleSheet.absoluteFill}
+                contentFit="cover"
+              />
             ) : (
               <ActivityIndicator color={colors.textSecondary} />
             )}

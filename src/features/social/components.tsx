@@ -248,6 +248,7 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
                 variant="caption"
                 color="accent"
                 numberOfLines={1}
+                accessibilityRole={post.vehicle_id ? 'link' : undefined}
                 onPress={
                   post.vehicle_id
                     ? () => router.push({ pathname: '/vehicle/[id]', params: { id: post.vehicle_id! } })
@@ -271,7 +272,12 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
         </Pressable>
       </View>
 
-      <Pressable onPress={onOpen} disabled={!onOpen} accessibilityLabel={t('post.title')}>
+      <Pressable
+        onPress={onOpen}
+        disabled={!onOpen}
+        accessibilityRole={onOpen ? 'button' : 'image'}
+        accessibilityLabel={post.caption ? `${t('post.title')}: ${post.caption}` : t('post.title')}
+      >
         <ScrollView
           horizontal
           pagingEnabled

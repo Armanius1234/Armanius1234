@@ -92,9 +92,10 @@ export default function ReviewScreen() {
 
       {item.evidence_paths.length === 0 ? <AppText color="textSecondary">{t('admin.noPhotos')}</AppText> : null}
       {item.evidence_paths.map((p) => (
+        // Evidence photos stay in memory only, never in the phone's disk cache.
         <View key={p} style={[styles.photo, { height: (width - spacing.md * 2) * 0.75 }]}>
           {photos.data?.[p] ? (
-            <Image source={{ uri: photos.data[p] }} style={StyleSheet.absoluteFill} contentFit="contain" />
+            <Image source={{ uri: photos.data[p] }} style={StyleSheet.absoluteFill} contentFit="contain" cachePolicy="memory" />
           ) : (
             <ActivityIndicator color={colors.textSecondary} />
           )}

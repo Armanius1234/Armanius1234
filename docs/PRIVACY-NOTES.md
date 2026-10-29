@@ -29,6 +29,7 @@ app actually stores, where, for how long, and which questions are still open.
 | Reports (who reported what, reason, decision) | `reports` | the reporter (own reports), moderators | 1 year after the decision |
 | Moderator actions (decision, reason, who decided) | `private.admin_actions` | operator only | **no automatic deletion yet** (see §4.8) |
 | Copy of reported content at the time of the report | `private.report_snapshots` | moderators | deleted together with the report (1 year after the decision) |
+| Appeals (who appealed which decision, their explanation, the outcome and the moderator's answer) | `appeals` | the appellant; moderators | deleted together with the report (1 year after the decision) |
 | Chats you deleted for yourself (which chat, when) | `private.hidden_conversations` | operator only | account deletion |
 | Apple / Google sign-in data: email (Apple may give a private relay address), name if shared, provider account ID | Supabase Auth | the user; the operator | account deletion; **sign-ups that never give consent: 7 days** |
 
@@ -79,16 +80,26 @@ service is active (Sentry etc. would need approval and a review).
    because there are few possible plates. It is kept 30 days for abuse
    prevention. Please confirm the legal basis (legitimate interest?) and duration.
 7. **Age 18+** is a self-declaration with a checkbox. There is no age verification.
-8. **EU Digital Services Act (DSA).** In place: a notice-and-action flow
-   (report button on every profile, post, comment, message and vehicle), a
-   **statement of reasons** to the affected person (reason category shown), and
-   a log of every decision.
+8. **EU Digital Services Act (DSA).** In place:
+   - a notice-and-action flow (report button on every profile, post, comment,
+     message and vehicle)
+   - a **statement of reasons** to the affected person, for removals and
+     suspensions (reason category and the moderator's note)
+   - an **internal complaint system** (Art. 20): appeals in the app within
+     6 months, by the affected person and by reporters whose report was found
+     "no violation"; decided by a person, never by the same person who appealed;
+     the result is sent with an explanation and a pointer to out-of-court
+     settlement and courts
+   - a log of every decision
+   - **statistics** for transparency reporting (shareable CSV)
+   Suspended accounts can still sign in, but only see the suspension, the
+   appeal, data download and account deletion. Nobody else can see or reach
+   them.
    **Not in place yet:**
-   - an internal complaint / appeal system (Art. 20). An appeal can only be
-     made by email; lifting a suspension needs the SQL Editor.
    - a single point of contact (Art. 11/12).
-   - transparency reporting.
-   - terms that describe moderation.
+   - terms that describe moderation and appeals.
+   - the wording of the out-of-court settlement pointer.
+   Deleted comments and messages cannot be restored after a successful appeal.
    Small companies may be exempt from some duties. Please check which apply.
 9. **Moderator log** (`private.admin_actions`) has no deletion period yet.
    Please decide one, e.g. 3 years.
@@ -120,11 +131,15 @@ service is active (Sentry etc. would need approval and a review).
 - Row-level security on every table. The app only has the public
   "publishable" key; no privileged key is in the app (checked automatically in
   CI).
+- Verification evidence and reported photos are kept only in memory on the
+  moderator's phone, never in its disk cache. Push messages carry only IDs,
+  never texts or moderator notes.
+- Locked accounts (suspended, or no consent yet) cannot upload files.
 - Private files only through short-lived signed links. Evidence photos are
   visible only to the owner and admins.
 - Sensitive tables live in a separate `private` schema that the app cannot reach.
 - Rate limits on searches, plate claims, messages and reports.
 - Blocking hides profiles, posts, comments, messages and notifications in both
   directions.
-- 401 automated database checks, including a security audit (every table
+- 450 automated database checks, including a security audit (every table
   protected, no anonymous access, no unprotected functions).

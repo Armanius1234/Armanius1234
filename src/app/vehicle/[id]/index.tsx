@@ -109,7 +109,8 @@ export default function VehicleProfileScreen() {
                 <View key={img.id} style={[styles.photo, { width, height: photoHeight }]}>
                   {urls.data?.[img.storage_path] ? (
                     <Image
-                      source={{ uri: urls.data[img.storage_path] }}
+                      source={{ uri: urls.data[img.storage_path], cacheKey: img.storage_path }}
+                      recyclingKey={img.storage_path}
                       style={StyleSheet.absoluteFill}
                       contentFit="cover"
                       transition={150}

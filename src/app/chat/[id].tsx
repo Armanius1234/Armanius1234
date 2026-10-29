@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   bubbleRow: { alignItems: 'flex-start', gap: 2 },
   bubbleRowMine: { alignItems: 'flex-end' },
   bubble: { maxWidth: '80%', paddingHorizontal: spacing.sm, paddingVertical: spacing.xs, borderRadius: radius.lg },
-  bubbleMine: { backgroundColor: colors.accent, borderBottomRightRadius: radius.sm },
+  bubbleMine: { backgroundColor: colors.accentSolid, borderBottomRightRadius: radius.sm },
   bubbleTheirs: { backgroundColor: colors.bgSecondary, borderBottomLeftRadius: radius.sm },
   meta: { paddingHorizontal: spacing.xxs },
   notice: { padding: spacing.md },

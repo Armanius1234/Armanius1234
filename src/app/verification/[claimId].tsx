@@ -114,7 +114,7 @@ function EvidenceStep({ requestId, code, plate }: { requestId: string; code: str
             style={styles.tile}
           >
             {urls.data?.[p] ? (
-              <Image source={{ uri: urls.data[p] }} style={StyleSheet.absoluteFill} contentFit="cover" />
+              <Image source={{ uri: urls.data[p] }} style={StyleSheet.absoluteFill} contentFit="cover" cachePolicy="memory" />
             ) : (
               <ActivityIndicator color={colors.textSecondary} />
             )}
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 1,

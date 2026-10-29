@@ -274,7 +274,10 @@ select set_config('request.jwt.claims', json_build_object('sub', :'mod', 'role',
 set local role authenticated;
 select public.admin_resolve_report(:'rep3', 'suspend', 'Repeated spam');
 reset role;
-select tests.ok((select banned_until = 'infinity' from auth.users where id = :'dirk'), 'suspended account cannot sign in');
+-- Since Milestone 7 a suspension locks the account instead of blocking sign-in,
+-- so the person can read the reason and appeal (see 08_launch_hardening).
+select tests.ok(private.is_locked(:'dirk') and (select banned_until is null from auth.users where id = :'dirk'),
+  'suspended account is locked (sign-in stays possible, only to appeal)');
 select set_config('request.jwt.claims', json_build_object('sub', :'ben', 'role', 'authenticated')::text, true);
 set local role authenticated;
 select tests.ok((select count(*) from public.profiles where id = :'dirk') = 0, 'suspended profile is hidden from others');
@@ -283,7 +286,8 @@ select set_config('request.jwt.claims', json_build_object('sub', :'mod', 'role',
 set local role authenticated;
 select public.admin_unsuspend_user(:'dirk', 'Appeal accepted');
 reset role;
-select tests.ok((select banned_until is null from auth.users where id = :'dirk'), 'unsuspending restores sign-in');
+select tests.ok(not private.is_locked(:'dirk') and (select banned_until is null from auth.users where id = :'dirk'),
+  'unsuspending unlocks the account');
 select tests.ok(
   (select not is_restricted from public.vehicles where id = 'f2000000-0000-0000-0000-0000000000d1')
   and (select is_restricted from public.vehicles where id = 'f2000000-0000-0000-0000-0000000000d2'),
