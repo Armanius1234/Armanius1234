@@ -25,7 +25,8 @@ export type NotificationType =
   | 'report_resolved'
   | 'content_removed'
   | 'account_suspended'
-  | 'appeal_decided';
+  | 'appeal_decided'
+  | 'mention';
 
 export type ReportTarget = 'user' | 'post' | 'comment' | 'message' | 'vehicle';
 export type ReportReason =
@@ -66,6 +67,40 @@ export type ReportQueueItem = {
   preview: { [key: string]: Json | undefined } | null;
   /** The content as it was when it was reported. */
   snapshot: { [key: string]: Json | undefined } | null;
+};
+
+export type PersonResult = {
+  user_id: string;
+  username: string;
+  display_name: string;
+  avatar_path: string | null;
+  is_private: boolean;
+  follower_count: number;
+  i_follow: boolean;
+};
+
+export type VehicleResult = {
+  vehicle_id: string;
+  make: string;
+  model: string;
+  generation: string | null;
+  model_year: number;
+  is_verified: boolean;
+  cover_path: string | null;
+  owner_username: string;
+  owner_display_name: string;
+};
+
+export type Suggestion = {
+  user_id: string;
+  username: string;
+  display_name: string;
+  avatar_path: string | null;
+  is_private: boolean;
+  reason: 'followed_by' | 'same_make' | 'popular';
+  mutual_count: number;
+  mutual_example: string | null;
+  shared_make: string | null;
 };
 
 export type ModerationAction = 'dismiss' | 'remove' | 'suspend';
@@ -668,6 +703,9 @@ export type Database = {
       admin_appeals_queue: { Args: NoArgs; Returns: AppealQueueItem[] };
       admin_decide_appeal: { Args: { p_appeal: string; p_outcome: 'upheld' | 'reversed'; p_note: string }; Returns: undefined };
       admin_moderation_stats: { Args: { p_from: string; p_to: string }; Returns: Json };
+      search_people: { Args: { p_query: string; p_limit?: number }; Returns: PersonResult[] };
+      search_vehicles: { Args: { p_query: string; p_limit?: number }; Returns: VehicleResult[] };
+      suggested_people: { Args: { p_limit?: number }; Returns: Suggestion[] };
       admin_suspended_users: { Args: NoArgs; Returns: SuspendedUser[] };
     };
     Enums: {

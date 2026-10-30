@@ -113,14 +113,24 @@ service is active (Sentry etc. would need approval and a review).
 
     The app shows version numbers that users accept at sign-up (terms
     `2026-10-draft`). Each new version must be accepted again.
-12. **Sign in with Apple: revoking on deletion.** Apple requires that deleting
+12. **Being found by name.** Since Milestone 8, signed-in members can search
+    people by username or display name. The search shows only what profiles
+    already show: name, username, picture, private or not. Blocked, suspended
+    and not-yet-consented accounts never appear. There is **no "don't show me
+    in search" setting** yet. Please decide if one is needed. Name and car
+    search have no rate limit; each search returns at most 50 results.
+13. **Suggestions** ("followed by people you follow", "also drives a Porsche")
+    use follow relationships and the makes of public cars. Nothing is shown
+    that the person couldn't see anyway. Please confirm the legal basis
+    (legitimate interest?) and whether an opt-out is needed.
+14. **Sign in with Apple: revoking on deletion.** Apple requires that deleting
     an account also revokes the Apple sign-in. This needs a server function
     with an Apple key and is **not built yet**. It must be done before App Store
     submission if Apple sign-in is offered.
-13. **Consent for social sign-ups** is collected in the app right after the
+15. **Consent for social sign-ups** is collected in the app right after the
     Apple / Google step, not on the sign-up form. The database blocks the
     account until consent is given. Please confirm this order is acceptable.
-14. **Company not founded / domain not confirmed.** These are still missing:
+16. **Company not founded / domain not confirmed.** These are still missing:
     - the controller's name and address
     - a contact email
     - the DPAs with providers (they must be signed by the company)
@@ -141,5 +151,5 @@ service is active (Sentry etc. would need approval and a review).
 - Rate limits on searches, plate claims, messages and reports.
 - Blocking hides profiles, posts, comments, messages and notifications in both
   directions.
-- 450 automated database checks, including a security audit (every table
+- 492 automated database checks, including a security audit (every table
   protected, no anonymous access, no unprotected functions).

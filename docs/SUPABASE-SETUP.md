@@ -157,6 +157,19 @@ What changes:
   Services Act transparency report, which you can share as a CSV file.
 - **Faster:** new indexes and a faster home feed. Nothing to do.
 
+### Milestone 8 update (search, suggestions, mentions)
+
+Run the eighth file: **SQL Editor → New query**, paste everything from
+`supabase/migrations/20261102090000_discovery.sql`, then **Run**.
+
+The file switches on the free **pg_trgm** extension for fast name and car
+search. If the Results panel says "pg_trgm not available", switch it on under
+**Database → Extensions → pg_trgm** and run the file again. Search works
+without it, just more slowly as the app grows.
+
+Nothing else to set up. Search → People / Cars, "Suggested for you" on
+Discover, and @mentions work right away.
+
 ### Make yourself the reviewer (admin)
 
 Plate verifications are approved by hand in the app. Give your own account the

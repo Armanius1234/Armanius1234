@@ -36,6 +36,7 @@ function open(n: NotificationItem) {
       break;
     case 'like':
     case 'comment':
+    case 'mention':
       if (n.post_id) router.push({ pathname: '/post/[id]', params: { id: n.post_id } });
       break;
     case 'verification_approved':

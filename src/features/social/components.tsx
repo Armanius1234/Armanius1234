@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { MentionText } from '@/features/discovery/mentions';
 import { openReport } from '@/features/moderation/api';
 import { useSignedUrls } from '@/features/garage/api';
 import { useI18n } from '@/i18n';
@@ -41,7 +42,7 @@ export function useTimeAgo() {
 
 // -------------------------------------------------------------- follow -----
 
-export function FollowButton({ profile }: { profile: Profile }) {
+export function FollowButton({ profile }: { profile: Pick<Profile, 'id' | 'username'> & Partial<Profile> }) {
   const { t } = useI18n();
   const rel = useRelationship(profile.id);
   const follow = useFollow();
@@ -333,7 +334,7 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
       {post.caption ? (
         <AppText style={styles.caption}>
           <AppText variant="bodyStrong">{post.author_username} </AppText>
-          {post.caption}
+          <MentionText text={post.caption} />
         </AppText>
       ) : null}
     </View>

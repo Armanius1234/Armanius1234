@@ -7,11 +7,11 @@ verified license plates to digital vehicle profiles.
 
 | | |
 |---|---|
-| Status | **Milestone 7 — Launch hardening** (awaiting founder approval) |
+| Status | **Milestone 8 — Discovery** (awaiting founder approval) |
 | App | React Native + Expo SDK 58 + TypeScript (strict), iOS & Android |
 | Backend | Supabase (Postgres + Row Level Security, Auth, Storage), EU region |
 | Plan | [docs/MILESTONE-0-PLAN.md](docs/MILESTONE-0-PLAN.md) |
-| Latest report | [docs/MILESTONE-7-REPORT.md](docs/MILESTONE-7-REPORT.md) |
+| Latest report | [docs/MILESTONE-8-REPORT.md](docs/MILESTONE-8-REPORT.md) |
 | Beta builds | [docs/BETA-DEPLOYMENT.md](docs/BETA-DEPLOYMENT.md) (installable app with push) |
 | Google / Apple sign-in | [docs/SOCIAL-LOGIN-SETUP.md](docs/SOCIAL-LOGIN-SETUP.md) (off until set up) |
 | Legal review | [docs/PRIVACY-NOTES.md](docs/PRIVACY-NOTES.md) (open points before public launch) |

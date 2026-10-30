@@ -15,6 +15,7 @@ import SuspendedUsersScreen from '@/app/admin/suspended';
 import LoginScreen from '@/app/(auth)/login';
 import RegisterScreen from '@/app/(auth)/register';
 import WelcomeScreen from '@/app/(auth)/welcome';
+import DiscoverScreen from '@/app/(tabs)/discover';
 import HomeScreen from '@/app/(tabs)/index';
 import MessagesScreen from '@/app/(tabs)/messages';
 import PlateSearchScreen from '@/app/(tabs)/search';
@@ -98,6 +99,20 @@ const mockRpcData: Record<string, unknown> = {
     },
   ],
   unread_notification_count: 1,
+  suggested_people: [
+    {
+      user_id: 'u5',
+      username: 'mia_maier',
+      display_name: 'Mia Maier',
+      avatar_path: null,
+      is_private: false,
+      reason: 'followed_by',
+      mutual_count: 2,
+      mutual_example: 'lena_m',
+      shared_make: null,
+    },
+  ],
+  relationship: [{ following: false, requested: false, follows_me: false, requested_me: false }],
   my_decisions: [
     {
       report_id: 'r1',
@@ -267,6 +282,7 @@ const SCREENS: [string, ComponentType, string | RegExp][] = [
   ['Register', RegisterScreen, 'Create your account'],
   ['Consent step', ConsentStep, 'One more step'],
   ['Home feed', HomeScreen, /Golden hour/],
+  ['Discover with suggestions', DiscoverScreen, 'Followed by @lena_m and 1 more'],
   ['Post with comments', PostScreen, /Clean!/],
   ['Edit caption', EditPostScreen, 'Caption'],
   ['Plate search', PlateSearchScreen, 'District'],

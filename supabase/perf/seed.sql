@@ -69,9 +69,14 @@ from (select i, 1 + floor(random() * 5000)::int as un, 1 + floor(random() * 3000
 join u on u.n = r.un
 join pp on pp.n = r.pn;
 
--- One very popular post (300 comments) to test long comment threads.
+-- One very popular post (300 comments) by the measured member, so it is
+-- always visible to them (post ids are random, so no random pick here).
+insert into public.posts (author_id, caption, created_at)
+values ((select id from u where n = 1), 'Popular thread', now() - interval '1 day');
+update public.posts set published_at = created_at where caption = 'Popular thread';
 insert into public.comments (post_id, author_id, body)
-select (select id from pp where n = 1), u.id, 'Thread reply ' || u.n from u where u.n between 2 and 301;
+select (select id from public.posts where caption = 'Popular thread'), u.id, 'Thread reply ' || u.n
+from u where u.n between 2 and 301;
 
 -- Conversations: user 1 has 60 chats; 1,000 chats between others. 20 messages each.
 create temporary table pairs as

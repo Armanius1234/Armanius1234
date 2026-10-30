@@ -105,7 +105,7 @@ export function pushHref(data: PushData) {
   const post = asUuid(data.post_id);
   const vehicle = asUuid(data.vehicle_id);
   if (type === 'message' && conversation) return { pathname: '/chat/[id]', params: { id: conversation } } as const;
-  if ((type === 'like' || type === 'comment') && post) return { pathname: '/post/[id]', params: { id: post } } as const;
+  if ((type === 'like' || type === 'comment' || type === 'mention') && post) return { pathname: '/post/[id]', params: { id: post } } as const;
   if ((type.startsWith('verification') || type.startsWith('plate')) && vehicle) {
     return { pathname: '/vehicle/[id]/plate', params: { id: vehicle } } as const;
   }

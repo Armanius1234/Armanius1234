@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import { MentionSuggestions } from '@/features/discovery/mentions';
 import { useMyVehicles } from '@/features/garage/api';
 import { useCreatePost } from '@/features/social/api';
 import { useI18n } from '@/i18n';
@@ -140,6 +141,7 @@ export default function NewPostScreen() {
         maxLength={2200}
         editable={!create.isPending}
       />
+      <MentionSuggestions text={caption} onPick={setCaption} />
 
       {vehicles.data && vehicles.data.length > 0 ? (
         <View style={styles.vehicles}>

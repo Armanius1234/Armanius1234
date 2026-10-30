@@ -2,6 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 
+import { MentionSuggestions } from '@/features/discovery/mentions';
 import { usePost, useUpdateCaption } from '@/features/social/api';
 import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
@@ -55,6 +56,7 @@ function EditForm({ postId, initial }: { postId: string; initial: string }) {
         autoFocus
         editable={!update.isPending}
       />
+      <MentionSuggestions text={caption} onPick={setCaption} />
       <FormMessage message={error} />
     </Screen>
   );

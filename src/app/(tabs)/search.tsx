@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { CarSearchPanel, PeopleSearchPanel } from '@/features/discovery/components';
 import { useSearchPlate, useSignedUrls } from '@/features/garage/api';
 import { PlateBadge, PlateInput, VehicleCard } from '@/features/garage/components';
 import { MessageButton } from '@/features/messaging/MessageButton';
@@ -15,6 +16,9 @@ import { avatarUrl } from '@/lib/supabase';
 import { EMPTY_PLATE, normalizePlateDE, plateError, type PlateParts } from '@/shared/plate';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar, Button, EmptyView, FormMessage, Logo, Screen } from '@/ui';
+import { Segmented } from '@/ui/Segmented';
+
+type Mode = 'plate' | 'people' | 'cars';
 
 type Outcome =
   | { kind: 'idle' }
@@ -29,6 +33,7 @@ export default function PlateSearchScreen() {
   const [inputError, setInputError] = useState<string | undefined>();
   const [outcome, setOutcome] = useState<Outcome>({ kind: 'idle' });
   const [formError, setFormError] = useState<string | null>(null);
+  const [mode, setMode] = useState<Mode>('plate');
 
   async function run() {
     setFormError(null);
@@ -60,37 +65,52 @@ export default function PlateSearchScreen() {
         <AppText variant="title">{t('tabs.search')}</AppText>
         <Logo width={64} framed={false} />
       </View>
-      <AppText color="textSecondary">{t('search.subtitle')}</AppText>
-
-      <PlateInput value={plate} onChange={setPlate} onSubmit={run} error={inputError} disabled={search.isPending} />
-      <Button
-        label={t('search.button')}
-        onPress={run}
-        loading={search.isPending}
-        icon={<Ionicons name="search" size={18} color="#fff" />}
+      <Segmented<Mode>
+        value={mode}
+        onChange={setMode}
+        options={[
+          { value: 'plate', label: t('search.modePlate') },
+          { value: 'people', label: t('search.modePeople') },
+          { value: 'cars', label: t('search.modeCars') },
+        ]}
       />
-      <FormMessage message={formError} />
+      {mode === 'people' ? <PeopleSearchPanel /> : null}
+      {mode === 'cars' ? <CarSearchPanel /> : null}
+      {mode === 'plate' ? (
+        <>
+        <AppText color="textSecondary">{t('search.subtitle')}</AppText>
 
-      {outcome.kind === 'found' ? <ResultCard result={outcome.result} plate={outcome.plate} /> : null}
-      {outcome.kind === 'not_found' ? (
-        <View style={styles.state}>
-          <PlateBadge plate={outcome.plate} size="sm" />
-          <EmptyView icon="help-circle-outline" title={t('search.notFound')} body={t('search.notFoundBody')} />
-        </View>
-      ) : null}
-      {outcome.kind === 'limited' ? (
-        <View style={styles.state}>
-          <EmptyView icon="hourglass-outline" title={t('search.limited')} body={t('search.limitedBody')} />
-        </View>
-      ) : null}
-      {outcome.kind !== 'idle' ? <Button label={t('search.newSearch')} variant="ghost" onPress={reset} /> : null}
+        <PlateInput value={plate} onChange={setPlate} onSubmit={run} error={inputError} disabled={search.isPending} />
+        <Button
+          label={t('search.button')}
+          onPress={run}
+          loading={search.isPending}
+          icon={<Ionicons name="search" size={18} color="#fff" />}
+        />
+        <FormMessage message={formError} />
 
-      <View style={styles.hint}>
-        <Ionicons name="shield-checkmark-outline" size={16} color={colors.textSecondary} />
-        <AppText variant="caption" color="textSecondary" style={styles.flex}>
-          {t('search.hint')}
-        </AppText>
-      </View>
+        {outcome.kind === 'found' ? <ResultCard result={outcome.result} plate={outcome.plate} /> : null}
+        {outcome.kind === 'not_found' ? (
+          <View style={styles.state}>
+            <PlateBadge plate={outcome.plate} size="sm" />
+            <EmptyView icon="help-circle-outline" title={t('search.notFound')} body={t('search.notFoundBody')} />
+          </View>
+        ) : null}
+        {outcome.kind === 'limited' ? (
+          <View style={styles.state}>
+            <EmptyView icon="hourglass-outline" title={t('search.limited')} body={t('search.limitedBody')} />
+          </View>
+        ) : null}
+        {outcome.kind !== 'idle' ? <Button label={t('search.newSearch')} variant="ghost" onPress={reset} /> : null}
+
+        <View style={styles.hint}>
+          <Ionicons name="shield-checkmark-outline" size={16} color={colors.textSecondary} />
+          <AppText variant="caption" color="textSecondary" style={styles.flex}>
+            {t('search.hint')}
+          </AppText>
+        </View>
+        </>
+      ) : null}
     </Screen>
   );
 }

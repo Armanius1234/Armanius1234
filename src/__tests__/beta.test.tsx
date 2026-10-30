@@ -215,6 +215,9 @@ describe('Notification texts', () => {
       'plate_revoked',
       'report_resolved',
       'content_removed',
+      'account_suspended',
+      'appeal_decided',
+      'mention',
     ];
     for (const type of kinds) {
       for (const tr of [t, tDe]) {

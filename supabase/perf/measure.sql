@@ -42,9 +42,8 @@ $$;
 \set other '00000000-0000-4000-8000-000000000002'
 \set admin '00000000-0000-4000-8000-000000001388'
 insert into private.user_roles (user_id, role) values (:'admin', 'admin');
-select id as popular_post from public.posts p
- where exists (select 1 from public.comments c where c.post_id = p.id and c.body like 'Thread reply%') limit 1 \gset
-select id as some_post from public.posts order by id limit 1 \gset
+select id as popular_post from public.posts where caption = 'Popular thread' \gset
+select id as some_post from public.posts where caption = 'Popular thread' \gset
 select conversation_id as chat from public.conversation_participants where user_id = :'me' limit 1 \gset
 
 begin;
@@ -65,6 +64,11 @@ select perf.bench('Profile by username', $q$select * from public.profiles where 
 select perf.bench('Relationship (follow button)', format($q$select * from public.relationship(%L)$q$, :'other'), :'me', 20);
 select perf.bench('Followers list', format($q$select * from public.follows where followee_id = %L limit 50$q$, :'other'), :'me', 20);
 select perf.bench('Plate search', $q$select * from public.search_plate('DE', 'F', 'PF', '7')$q$, :'me', 50, 9);
+select perf.bench('People search, exact name', $q$select * from public.search_people('member_42')$q$, :'me', 50);
+select perf.bench('People search, matches everyone', $q$select * from public.search_people('member')$q$, :'me', 50);
+select perf.bench('Car search, one make', $q$select * from public.search_vehicles('porsche')$q$, :'me', 50);
+select perf.bench('Car search, two words', $q$select * from public.search_vehicles('bmw model 1')$q$, :'me', 50);
+select perf.bench('Suggested people', $q$select * from public.suggested_people()$q$, :'me', 100);
 select perf.bench('My moderation decisions', $q$select * from public.my_decisions()$q$, :'me', 20);
 select perf.bench('Admin: reports queue (500 open)', $q$select * from public.admin_reports_queue()$q$, :'admin', 200, 5);
 select perf.bench('Admin: statistics (30 days)',

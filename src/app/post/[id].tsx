@@ -4,6 +4,7 @@ import { Alert, FlatList, type AlertButton, KeyboardAvoidingView, Platform, Pres
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { MentionSuggestions, MentionText } from '@/features/discovery/mentions';
 import { openReport } from '@/features/moderation/api';
 import { useAddComment, useComments, useDeleteComment, usePost } from '@/features/social/api';
 import { PostCard, useTimeAgo } from '@/features/social/components';
@@ -105,7 +106,7 @@ export default function PostScreen() {
                   <AppText variant="callout" style={styles.bold}>
                     {item.author_username}{' '}
                   </AppText>
-                  {item.body}
+                  <MentionText text={item.body} />
                 </AppText>
                 <AppText variant="caption" color="textSecondary">
                   {ago(item.created_at)}
@@ -114,6 +115,9 @@ export default function PostScreen() {
             </Pressable>
           )}
         />
+        <View style={styles.mentionBar}>
+          <MentionSuggestions text={body} onPick={setBody} />
+        </View>
         <View style={styles.inputBar}>
           <TextInput
             value={body}
@@ -144,6 +148,7 @@ export default function PostScreen() {
 }
 
 const styles = StyleSheet.create({
+  mentionBar: { paddingHorizontal: spacing.md },
   root: { flex: 1, backgroundColor: colors.bgPrimary },
   sectionTitle: { paddingHorizontal: spacing.md, paddingTop: spacing.md, paddingBottom: spacing.xs },
   empty: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm },

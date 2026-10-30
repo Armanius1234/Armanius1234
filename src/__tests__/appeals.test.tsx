@@ -381,3 +381,27 @@ describe('Tapping a moderation notification', () => {
     expect(mockPush).toHaveBeenCalledWith(target);
   });
 });
+
+describe('Tapping a mention notification', () => {
+  it('opens the post', async () => {
+    mockRpcResults = {
+      my_notifications: [
+        {
+          notification_id: 'n1',
+          type: 'mention',
+          actor_username: 'ann_porsche',
+          actor_display_name: 'Ann',
+          actor_avatar_path: null,
+          post_id: 'p1',
+          vehicle_id: null,
+          data: { excerpt: 'Hi @me' },
+          read: false,
+          created_at: new Date().toISOString(),
+        },
+      ],
+    };
+    await wrap(<NotificationsScreen />);
+    await fireEvent.press(await screen.findByRole('button', { name: 'Ann mentioned you: Hi @me' }));
+    expect(mockPush).toHaveBeenCalledWith({ pathname: '/post/[id]', params: { id: 'p1' } });
+  });
+});

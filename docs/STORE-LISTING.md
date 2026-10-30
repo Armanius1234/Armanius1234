@@ -51,7 +51,8 @@ Auto,Autos,Kennzeichen,Nummernschild,Autoszene,Tuning,Treffen,Garage,Car Spottin
 >
 > **Deine Garage und deine Beiträge**
 > Zeig deine Autos mit Fotos und Details, teile Beiträge, folge anderen,
-> kommentiere und speichere, was dir gefällt.
+> kommentiere und speichere, was dir gefällt. Finde Leute und Autos nach Name,
+> Marke oder Modell und erwähne Freunde mit @.
 >
 > **Nachrichten mit Anfragen**
 > Fremde schicken zuerst eine Anfrage, die du annehmen oder ablehnen kannst. Du
@@ -92,7 +93,8 @@ car,cars,license plate,number plate,car community,car meet,tuning,garage,car spo
 >
 > **Your garage and your posts**
 > Show your cars with photos and details, share posts, follow others, comment
-> and save what you like.
+> and save what you like. Find people and cars by name, make or model, and
+> mention friends with @.
 >
 > **Messages with requests**
 > Strangers first send a request you can accept or decline. You choose who may

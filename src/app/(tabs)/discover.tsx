@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SuggestedPeople } from '@/features/discovery/components';
 import { GridFeedScreen } from '@/features/social/GridFeedScreen';
 import { useI18n } from '@/i18n';
 import { colors, spacing } from '@/theme/tokens';
@@ -23,6 +24,7 @@ export default function DiscoverScreen() {
             <AppText variant="callout" color="textSecondary">
               {t('feed.discoverHint')}
             </AppText>
+            <SuggestedPeople />
           </View>
         }
       />
