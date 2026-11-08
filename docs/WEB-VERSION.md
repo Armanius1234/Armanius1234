@@ -38,6 +38,40 @@ The result is the folder **`dist-web/`** (about 90 files, 5 MB):
 If a `.env` file with the Supabase values exists when you build, those values
 are built in and `pl8-config.js` is ignored.
 
+## 2b. The single-file version (one `index.html`)
+
+If you prefer **one file** instead of a folder:
+
+```bash
+npm run build:web:single
+```
+
+The result is **`dist-web-single/index.html`** (about 5 MB). It contains
+everything: the app, fonts and icons.
+
+1. **Fill in the settings.** Open the file in a text editor (Notepad, TextEdit),
+   find the block **"PL8 SETTINGS"** near the top, and enter the two values
+   between the quotes:
+
+   ```json
+   {
+     "supabaseUrl": "https://abcdefghijkl.supabase.co",
+     "supabaseKey": "sb_publishable_..."
+   }
+   ```
+
+   Keep the quotes and the comma. Don't change anything else in the file.
+2. **Upload it** as `index.html` to the top folder of your (sub)domain (see
+   section 3, steps 1–3).
+3. **Optional `.htaccess`:** without it, the app works, but reloading the
+   browser on an inner page (e.g. `/settings`) shows "Not found". Upload the
+   `.htaccess` from the folder version (section 2) next to `index.html` to fix
+   that.
+
+Like the folder version, the single file only runs from a web address. Opened
+by double-click, or pasted into a website builder, it shows a message saying
+so.
+
 ## 3. Put it online (IONOS web hosting)
 
 The names of menu items in your IONOS account may differ slightly.
@@ -113,7 +147,9 @@ Old files in `_expo/` can be deleted: each build gets new file names.
 
 ```bash
 npm run build:web
-npm run test:web   # opens the built site in Chromium with a mocked Supabase project
+npm run test:web          # opens the built site in Chromium with a mocked Supabase project
+npm run build:web:single
+npm run test:web:single   # the same tests for the single-file version
 ```
 
 CI runs both on every push.

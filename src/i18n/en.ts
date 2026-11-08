@@ -618,7 +618,10 @@ export const en = {
     setupBody:
       'Add EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_KEY to your .env file, then restart the app. See README.md.',
     setupBodyWeb:
-      'Add your Supabase Project URL and publishable key to pl8-config.js on your web space, then reload the page. See docs/WEB-VERSION.md.',
+      'Add your Supabase Project URL and publishable key to pl8-config.js (single-file version: at the top of index.html), then reload the page. See docs/WEB-VERSION.md.',
+    webAddressTitle: 'PL8 needs a web address',
+    webAddressBody:
+      'Open PL8 from your website (https://…). It does not run when the file is opened directly on a computer or shown inside another page. Upload index.html to your web space; see docs/WEB-VERSION.md.',
   },
   errors: {
     required: 'This field is required.',

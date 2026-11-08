@@ -118,6 +118,11 @@ function RootNavigator() {
     if (ready || !env.isConfigured) void SplashScreen.hideAsync();
   }, [ready]);
 
+  // Web: the app only runs from a web address (https://…), not from a file
+  // opened on the computer or a preview inside another page.
+  if (Platform.OS === 'web' && typeof location !== 'undefined' && !/^https?:$/.test(location.protocol)) {
+    return <ErrorView title={t('states.webAddressTitle')} message={t('states.webAddressBody')} />;
+  }
   if (!env.isConfigured) {
     return (
       <ErrorView

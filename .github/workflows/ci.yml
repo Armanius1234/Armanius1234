@@ -32,6 +32,8 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run build:web
       - run: npm run test:web
+      - run: npm run build:web:single
+      - run: npm run test:web:single
 
   database:
     name: Database security tests (RLS)

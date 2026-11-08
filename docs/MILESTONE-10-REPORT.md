@@ -72,6 +72,22 @@ project with the web version and the phone app:
 
 Tick each line. If one fails, send me a screenshot and the step number.
 
+## 3b. Web version as one file (added on your request)
+
+`npm run build:web:single` packs the whole web version into **one
+`index.html`** of about 5 MB: the app, fonts, icons and the browser icon.
+
+- **Settings:** your two Supabase values go into a clearly marked block at the
+  top of the file.
+- **Security:** the security policy still allows only exactly this code to
+  run. Each embedded script is pinned by its fingerprint.
+- **Opened by double-click or inside another page:** a clear message explains
+  that PL8 needs a web address. Before, this showed a blank page.
+- **Opened as `…/index.html`:** works too.
+- **Tests:** the same browser test runs against it, with 2 extra checks:
+  **18 / 18 passed**. CI now builds and tests both versions.
+- **Mutation check:** the "needs a web address" message switched off → caught.
+
 ## 4. Performance
 
 `npm run perf:db`: **all 23 queries are within budget.**
@@ -113,7 +129,7 @@ new switch adds one quick lookup per person and stays far within budget.
 | Lint | ✅ 0 errors, 0 warnings |
 | App tests | ✅ **269 / 269 passed** (17 suites; 4 new) |
 | Database tests | ✅ **506 / 506 passed** (14 new) |
-| Browser test of the web version | ✅ **16 / 16 passed** (1 new) |
+| Browser test of the web version | ✅ **16 / 16 passed** (1 new); single-file version **18 / 18** |
 | Performance check | ✅ **23 / 23 within budget** |
 | Mutation checks | **4 deliberate bugs, all caught.** Details below |
 | iOS, Android and web builds | ✅ all built after the Expo update; no secret keys; flagged packages not included |

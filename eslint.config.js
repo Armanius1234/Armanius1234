@@ -5,7 +5,7 @@ const expoConfig = require('eslint-config-expo/flat');
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ['dist/*', 'dist-web/*', '.expo/*', 'node_modules/*', 'coverage/*'],
+    ignores: ['dist/*', 'dist-web/*', 'dist-web-single/*', '.expo/*', 'node_modules/*', 'coverage/*'],
   },
   {
     // React Native's Alert does nothing in the browser; @/ui/alert works on both.

@@ -3,9 +3,10 @@
 //
 //   node scripts/web-e2e/serve.mjs dist-web 8790
 //
-// With PL8_TEST_SUPABASE_URL / PL8_TEST_SUPABASE_KEY set, /pl8-config.js is
-// replaced by one pointing there (the browser test uses a mocked project).
-import { createReadStream, existsSync, statSync } from 'node:fs';
+// With PL8_TEST_SUPABASE_URL / PL8_TEST_SUPABASE_KEY set, /pl8-config.js (or,
+// in the single-file version, the settings block in index.html) points there
+// (the browser test uses a mocked project).
+import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve } from 'node:path';
 
@@ -58,6 +59,19 @@ export function startServer(rootDir, port = 0) {
       file = join(root, 'index.html');
     }
     res.setHeader('Content-Type', TYPES[extname(file)] ?? 'application/octet-stream');
+    // Single-file version: the settings are a block inside index.html.
+    if (extname(file) === '.html' && process.env.PL8_TEST_SUPABASE_URL !== undefined) {
+      const config = JSON.stringify({
+        supabaseUrl: process.env.PL8_TEST_SUPABASE_URL,
+        supabaseKey: process.env.PL8_TEST_SUPABASE_KEY ?? '',
+      });
+      const html = readFileSync(file, 'utf8').replace(
+        /(<script type="application\/json" id="pl8-config">)[\s\S]*?(<\/script>)/,
+        `$1${config}$2`,
+      );
+      res.end(html);
+      return;
+    }
     createReadStream(file).pipe(res);
   });
   return new Promise((ok) => server.listen(port, '127.0.0.1', () => ok(server)));

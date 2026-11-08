@@ -3,7 +3,7 @@
 // project. The database rules themselves are covered by `npm run test:db`.
 //
 //   npm run build:web && npm run test:web
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -12,7 +12,9 @@ import { chromium } from 'playwright';
 import { startServer } from './serve.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const DIST = join(here, '..', '..', 'dist-web');
+// npm run test:web tests dist-web/; npm run test:web:single tests dist-web-single/.
+const DIST = join(here, '..', '..', process.env.PL8_WEB_DIR ?? 'dist-web');
+const SINGLE = existsSync(join(DIST, '.htaccess')) === false;
 const SUPABASE = 'https://pl8test.supabase.co';
 const KEY = 'sb_publishable_test_key_for_the_browser_test';
 const ME = '11111111-1111-4111-8111-111111111111';
@@ -206,7 +208,22 @@ async function main() {
   const empty = await startServer(DIST);
   const emptyBase = `http://127.0.0.1:${empty.address().port}`;
 
-  console.log('▸ Web version (browser test)');
+  console.log(`▸ Web version (browser test): ${SINGLE ? 'single file' : 'folder'} ${DIST}`);
+
+  if (SINGLE) {
+    await check('opened as a file on the computer, the page explains it needs a web address', async () => {
+      const page = await browser.newPage({ locale: 'de-DE' });
+      await page.goto(`file://${join(DIST, 'index.html')}`);
+      await page.getByText('PL8 braucht eine Webadresse').waitFor({ timeout: 15000 });
+      await page.close();
+    });
+    await check('opened as /index.html, the app starts normally', async () => {
+      const page = await browser.newPage({ locale: 'de-DE' });
+      await page.goto(`${emptyBase}/index.html`);
+      await page.getByText('pl8-config.js').first().waitFor({ timeout: 15000 });
+      await page.close();
+    });
+  }
 
   // 1. Before pl8-config.js is filled in.
   await check('without pl8-config.js values, the page explains what to fill in', async () => {

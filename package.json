@@ -65,7 +65,9 @@
     "db:types": "supabase gen types typescript --linked --schema public > src/lib/database.types.ts",
     "perf:db": "bash scripts/perf-db.sh",
     "build:web": "bash scripts/build-web.sh",
-    "test:web": "node scripts/web-e2e/run.mjs"
+    "test:web": "node scripts/web-e2e/run.mjs",
+    "build:web:single": "node scripts/build-web-single.mjs",
+    "test:web:single": "PL8_WEB_DIR=dist-web-single node scripts/web-e2e/run.mjs"
   },
   "private": true,
   "jest": {
