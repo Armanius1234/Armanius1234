@@ -64,6 +64,8 @@
     "test:all": "npm run typecheck && npm run lint && npm test && npm run test:db",
     "db:types": "supabase gen types typescript --linked --schema public > src/lib/database.types.ts",
     "perf:db": "bash scripts/perf-db.sh",
+    "db:combined": "node scripts/combine-migrations.mjs",
+    "test:db:combined": "node scripts/combine-migrations.mjs && PL8_COMBINED_SQL=dist-sql/PL8-Datenbank-komplett.sql bash scripts/test-db.sh",
     "build:web": "bash scripts/build-web.sh",
     "test:web": "node scripts/web-e2e/run.mjs",
     "build:web:single": "node scripts/build-web-single.mjs",

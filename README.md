@@ -14,6 +14,7 @@ verified license plates to digital vehicle profiles.
 | Latest report | [docs/MILESTONE-10-REPORT.md](docs/MILESTONE-10-REPORT.md) |
 | Beta builds | [docs/BETA-DEPLOYMENT.md](docs/BETA-DEPLOYMENT.md) (installable app with push) |
 | Web version | [docs/WEB-VERSION.md](docs/WEB-VERSION.md) (PL8 in the browser, upload to your web space) |
+| Supabase quick start (German) | [docs/SUPABASE-SCHNELLSTART.md](docs/SUPABASE-SCHNELLSTART.md) (project, the two values, database in one step) |
 | First real test | [docs/GO-LIVE-CHECKLIST.md](docs/GO-LIVE-CHECKLIST.md) (web + phone with your Supabase project) |
 | Google / Apple sign-in | [docs/SOCIAL-LOGIN-SETUP.md](docs/SOCIAL-LOGIN-SETUP.md) (off until set up) |
 | Legal review | [docs/PRIVACY-NOTES.md](docs/PRIVACY-NOTES.md) (open points before public launch) |

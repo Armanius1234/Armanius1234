@@ -617,6 +617,7 @@ export const en = {
     key: 'Publishable key',
     connect: 'Connect',
     secretWarning: 'Never enter the secret key.',
+    noProject: 'No Supabase project yet? Follow SUPABASE-SCHNELLSTART.md (in the PL8 folder, or docs/ in the code).',
     errorUrl: 'Enter the Project URL. It starts with https://',
     errorKey: 'Enter the publishable key (it starts with sb_publishable_).',
     errorSecret: 'This is a secret key. Use the publishable key, and create a new secret key in Supabase.',

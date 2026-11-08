@@ -44,7 +44,7 @@ function handle(req, res) {
     return res.end('Bad request');
   }
   // The starter files themselves are not part of the website.
-  const starterFile = path.dirname(file) === ROOT && /^(pl8-server\.js|.*\.bat|LIESMICH\.txt)$/i.test(path.basename(file));
+  const starterFile = path.dirname(file) === ROOT && /^(pl8-server\.js|.*\.bat|.*\.txt|.*\.md|.*\.sql)$/i.test(path.basename(file));
   const isFile = !starterFile && fs.existsSync(file) && fs.statSync(file).isFile();
   if (!isFile) {
     // Missing app files are real errors; every other address is a PL8 screen.

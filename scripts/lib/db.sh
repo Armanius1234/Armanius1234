@@ -43,6 +43,13 @@ apply_migrations() {
   PSQL=(psql "$DATABASE_URL" -X -q -v ON_ERROR_STOP=1)
   echo "▸ Applying Supabase shim"
   "${PSQL[@]}" -f "$ROOT/supabase/tests/_shim.sql" >/dev/null
+  # PL8_COMBINED_SQL: apply the one-file version instead, in one transaction
+  # (like pasting it into the Supabase SQL Editor).
+  if [ -n "${PL8_COMBINED_SQL:-}" ]; then
+    echo "▸ Applying $(basename "$PL8_COMBINED_SQL") (all migrations in one file)"
+    "${PSQL[@]}" -1 -f "$PL8_COMBINED_SQL" >/dev/null
+    return
+  fi
   for f in "$ROOT"/supabase/migrations/*.sql; do
     echo "▸ Applying migration $(basename "$f")"
     "${PSQL[@]}" -f "$f" >/dev/null

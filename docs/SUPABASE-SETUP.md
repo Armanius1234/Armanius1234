@@ -18,6 +18,13 @@ this once. Nothing here costs money: the **Free** plan is enough for development
 
 ## 2. Create the database tables and security rules
 
+> **New project? One step instead of nine:** run `npm run db:combined`. It puts
+> all files below into `dist-sql/PL8-Datenbank-komplett.sql`. Switch on
+> **pg_net** and **pg_cron** (Database → Extensions), then paste that one file
+> into the SQL Editor and click **Run**. Only for a new, empty project. German
+> step-by-step guide: docs/SUPABASE-SCHNELLSTART.md.
+
+
 1. Left menu → **SQL Editor** → **New query**.
 2. Open the file `supabase/migrations/20261025120000_foundation.sql` from this
    repository, copy **everything**, and paste it into the editor.

@@ -38,6 +38,9 @@ export function LocalSetup({ onSaved = restartApp }: { onSaved?: () => void }) {
       </View>
       <AppText variant="title">{t('local.title')}</AppText>
       <AppText color="textSecondary">{t('local.body')}</AppText>
+      <AppText variant="caption" color="accent">
+        {t('local.noProject')}
+      </AppText>
       <TextField
         label={t('local.url')}
         placeholder="https://abcdefghijkl.supabase.co"

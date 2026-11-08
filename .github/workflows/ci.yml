@@ -53,6 +53,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: bash scripts/test-db.sh
+      - name: The one-file database for new projects gives the same result
+        run: |
+          psql postgresql://postgres:postgres@localhost:5432/postgres -c "create database pl8_combined"
+          node scripts/combine-migrations.mjs
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pl8_combined \
+            PL8_COMBINED_SQL=dist-sql/PL8-Datenbank-komplett.sql bash scripts/test-db.sh
 
   secrets:
     name: No privileged keys in the repo

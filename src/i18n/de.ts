@@ -622,6 +622,7 @@ export const de: Translations = {
     key: 'Publishable Key',
     connect: 'Verbinden',
     secretWarning: 'Trag niemals den Secret-Key ein.',
+    noProject: 'Noch kein Supabase-Projekt? Folge der Anleitung SUPABASE-SCHNELLSTART.md (im PL8-Ordner bzw. unter docs/ im Code).',
     errorUrl: 'Trag die Project URL ein. Sie beginnt mit https://',
     errorKey: 'Trag den Publishable Key ein (er beginnt mit sb_publishable_).',
     errorSecret: 'Das ist ein geheimer Schlüssel. Nimm den Publishable Key und erstelle in Supabase einen neuen geheimen Schlüssel.',

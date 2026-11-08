@@ -1,6 +1,10 @@
 PL8 auf deinem Computer testen
 ==============================
 
+0. Noch kein Supabase-Projekt? Zuerst SUPABASE-SCHNELLSTART.md lesen
+   (mit dem Editor öffnen). Dort steht, wie du es anlegst, wo du die zwei
+   Werte findest und wie du die Datenbank mit PL8-Datenbank-komplett.sql
+   in einem Schritt einrichtest.
 1. Diesen Ordner entpacken (Rechtsklick auf die ZIP -> "Alle extrahieren").
 2. Doppelklick auf "PL8 starten.bat".
    - Fragt Windows "Der Computer wurde durch Windows geschützt":
@@ -22,5 +26,5 @@ Hinweise
   Webadresse. Deshalb gibt es "PL8 starten.bat".
 - Für deine echte Website lädst du nur index.html hoch und trägst die zwei
   Werte oben in der Datei ein (Block "PL8 SETTINGS").
-- In Supabase müssen alle Dateien aus supabase/migrations ausgeführt sein
-  (Anleitung: docs/SUPABASE-SETUP.md).
+- In Supabase muss die Datenbank eingerichtet sein
+  (PL8-Datenbank-komplett.sql, siehe SUPABASE-SCHNELLSTART.md).

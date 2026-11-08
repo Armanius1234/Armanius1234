@@ -67,6 +67,8 @@ async function main() {
     assert(missing.status === 404, `missing app file: ${missing.status}`);
     const own = await get('127.0.0.1', PORT, '/pl8-server.js');
     assert(!own.body.includes('createServer'), 'the server script was served');
+    const sql = await get('127.0.0.1', PORT, '/PL8-Datenbank-komplett.sql');
+    assert(!sql.body.includes('create table'), 'the database file was served');
     const escape = await get('127.0.0.1', PORT, '/..%2f..%2fpackage.json');
     assert(!escape.body.includes('"dependencies"'), 'a file outside the folder was served');
   });
