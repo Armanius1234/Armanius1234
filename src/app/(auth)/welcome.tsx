@@ -1,7 +1,9 @@
 import { router } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useI18n } from '@/i18n';
+import { env } from '@/lib/env';
+import { clearLocalConfig, restartApp } from '@/lib/localConfig';
 import { spacing } from '@/theme/tokens';
 import { AppText, Button, Logo, Screen } from '@/ui';
 
@@ -16,6 +18,7 @@ export default function WelcomeScreen() {
           <AppText variant="caption" color="textSecondary" center style={styles.note}>
             {t('welcome.legalNote')}
           </AppText>
+          {env.configSource === 'browser' ? <LocalConnection /> : null}
         </>
       }
     >
@@ -32,7 +35,33 @@ export default function WelcomeScreen() {
   );
 }
 
+/** Web version on localhost, connected through the local setup form: show where to, and allow changing it. */
+function LocalConnection() {
+  const { t } = useI18n();
+  const host = env.supabaseUrl.replace(/^https:\/\//, '');
+  return (
+    <View style={styles.local}>
+      <AppText variant="caption" color="textSecondary">
+        {t('local.connectedTo', { host })}
+      </AppText>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('local.change')}
+        onPress={() => {
+          clearLocalConfig();
+          restartApp();
+        }}
+      >
+        <AppText variant="caption" color="accent">
+          {t('local.change')}
+        </AppText>
+      </Pressable>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  local: { flexDirection: 'row', justifyContent: 'center', gap: spacing.xs, marginTop: spacing.xs },
   hero: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.md },
   tagline: { marginTop: spacing.lg },
   note: { marginTop: spacing.xs },

@@ -17,9 +17,59 @@ export function runtimeConfig(source: unknown = globalThis): { url: string; key:
   return { url: text(cfg?.supabaseUrl), key: text(cfg?.supabaseKey) };
 }
 
-const runtime = runtimeConfig();
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL || runtime.url;
-const key = process.env.EXPO_PUBLIC_SUPABASE_KEY || runtime.key;
+/** Testing the web version on this computer (http://localhost). */
+export function isLocalhost(hostname: string | undefined): boolean {
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]' || hostname === '::1';
+}
+
+/** Where the local setup form saves the two values (localhost only). */
+export const LOCAL_CONFIG_KEY = 'pl8.localConfig';
+
+/** The values saved by the local setup form; empty if none or unreadable. */
+export function browserConfig(storage: Pick<Storage, 'getItem'> | undefined): { url: string; key: string } {
+  try {
+    const raw = storage?.getItem(LOCAL_CONFIG_KEY);
+    return runtimeConfig({ PL8_CONFIG: raw ? JSON.parse(raw) : undefined });
+  } catch {
+    return { url: '', key: '' };
+  }
+}
+
+function browserStorage(): Storage | undefined {
+  try {
+    return globalThis.localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+export type ConfigSource = 'build' | 'file' | 'browser' | 'none';
+
+/**
+ * Which values the app uses, first match wins:
+ * 1. .env (built into the app)
+ * 2. pl8-config.js / the settings block in index.html (web version)
+ * 3. the local setup form (web version on localhost only)
+ */
+export function chooseConfig(
+  build: { url: string; key: string },
+  file: { url: string; key: string },
+  local: { url: string; key: string },
+): { url: string; key: string; source: ConfigSource } {
+  if (build.url) return { ...build, source: 'build' };
+  if (file.url) return { ...file, source: 'file' };
+  // A secret key can't be saved by the form; ignore one that got in some other way.
+  if (local.url && !looksLikeSecretKey(local.key)) return { ...local, source: 'browser' };
+  return { url: '', key: '', source: 'none' };
+}
+
+const chosen = chooseConfig(
+  { url: process.env.EXPO_PUBLIC_SUPABASE_URL ?? '', key: process.env.EXPO_PUBLIC_SUPABASE_KEY ?? '' },
+  runtimeConfig(),
+  isLocalhost(globalThis.location?.hostname) ? browserConfig(browserStorage()) : { url: '', key: '' },
+);
+const url = chosen.url;
+const key = chosen.key;
 
 export function looksLikeSecretKey(value: string): boolean {
   if (value.startsWith('sb_secret_')) return true;
@@ -47,6 +97,7 @@ const flag = (v: string | undefined) => v === 'on';
 export const env = {
   supabaseUrl: url,
   supabaseKey: key,
+  configSource: chosen.source,
   isConfigured: /^https:\/\/.+/.test(url) && key.length > 20,
   authApple: flag(process.env.EXPO_PUBLIC_AUTH_APPLE),
   authGoogle: flag(process.env.EXPO_PUBLIC_AUTH_GOOGLE),

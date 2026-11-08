@@ -610,6 +610,20 @@ export const en = {
     sourcesBody:
       'German district codes for plates: “Kfz-Kennzeichen Deutschland” by Senatsverwaltung für Wirtschaft, Technologie und Forschung Berlin (CC BY 3.0), combined with the kennzeichen list by canida-software (MIT licence).',
   },
+  local: {
+    title: 'Test PL8 on this computer',
+    body: 'Connect PL8 to your Supabase project. Enter the two public values from Supabase (Project Settings → Data API and API Keys). They are saved in this browser only.',
+    url: 'Project URL',
+    key: 'Publishable key',
+    connect: 'Connect',
+    secretWarning: 'Never enter the secret key.',
+    errorUrl: 'Enter the Project URL. It starts with https://',
+    errorKey: 'Enter the publishable key (it starts with sb_publishable_).',
+    errorSecret: 'This is a secret key. Use the publishable key, and create a new secret key in Supabase.',
+    alsoFile: 'For your website, put the values in pl8-config.js instead (single-file version: at the top of index.html).',
+    connectedTo: 'Local connection: {host}',
+    change: 'Change',
+  },
   states: {
     errorTitle: 'Something went wrong',
     errorBody: 'Please check your connection and try again.',

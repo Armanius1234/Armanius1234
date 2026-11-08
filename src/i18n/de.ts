@@ -615,6 +615,20 @@ export const de: Translations = {
     sourcesBody:
       'Unterscheidungszeichen der Kfz-Kennzeichen: „Kfz-Kennzeichen Deutschland“ der Senatsverwaltung für Wirtschaft, Technologie und Forschung Berlin (CC BY 3.0), ergänzt um die Liste kennzeichen von canida-software (MIT-Lizenz).',
   },
+  local: {
+    title: 'PL8 auf diesem Computer testen',
+    body: 'Verbinde PL8 mit deinem Supabase-Projekt. Trag die zwei öffentlichen Werte aus Supabase ein (Project Settings → Data API und API Keys). Sie werden nur in diesem Browser gespeichert.',
+    url: 'Project URL',
+    key: 'Publishable Key',
+    connect: 'Verbinden',
+    secretWarning: 'Trag niemals den Secret-Key ein.',
+    errorUrl: 'Trag die Project URL ein. Sie beginnt mit https://',
+    errorKey: 'Trag den Publishable Key ein (er beginnt mit sb_publishable_).',
+    errorSecret: 'Das ist ein geheimer Schlüssel. Nimm den Publishable Key und erstelle in Supabase einen neuen geheimen Schlüssel.',
+    alsoFile: 'Für deine Website trägst du die Werte stattdessen in pl8-config.js ein (Ein-Datei-Version: oben in index.html).',
+    connectedTo: 'Lokale Verbindung: {host}',
+    change: 'Ändern',
+  },
   states: {
     errorTitle: 'Etwas ist schiefgelaufen',
     errorBody: 'Bitte prüfe deine Verbindung und versuche es erneut.',

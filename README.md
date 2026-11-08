@@ -83,6 +83,7 @@ npm run test:all    # everything above
 npm run build:web   # web version into dist-web/ (see docs/WEB-VERSION.md)
 npm run test:web    # browser test of the built web version (Chromium via Playwright)
 npm run build:web:single  # the web version as one index.html (dist-web-single/)
+npm run build:web:local   # index.html + Windows starter to try it on a computer (dist-web-local/)
 ```
 
 ### Project structure

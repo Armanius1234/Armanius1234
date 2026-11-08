@@ -111,7 +111,7 @@ How to build it, upload it to IONOS and connect it to Supabase:
 | Check | Result |
 |---|---|
 | TypeScript strict | ✅ 0 errors |
-| Lint | ✅ 0 errors, 0 warnings |
+| Lint | ✅ 0 errors. **Correction:** this said "0 warnings", but one warning (an unneeded comment in a test file) was missed because only the exit code was checked. Fixed after Milestone 10. |
 | App tests | ✅ **265 / 265 passed** (16 suites; 11 new) |
 | Database tests | ✅ **492 / 492 passed** (unchanged) |
 | **Browser test of the web version** (Chromium, mocked Supabase) | ✅ **15 / 15 passed** |

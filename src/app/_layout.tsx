@@ -15,9 +15,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 import { useMyProfile, useMySettings } from '@/features/profile/api';
 import { CrashScreen } from '@/features/system/CrashScreen';
+import { LocalSetup } from '@/features/system/LocalSetup';
 import { OfflineBanner } from '@/features/system/OfflineBanner';
 import { I18nProvider, useI18n } from '@/i18n';
-import { env } from '@/lib/env';
+import { env, isLocalhost } from '@/lib/env';
 import { colors, fonts } from '@/theme/tokens';
 import { ErrorView, LoadingView } from '@/ui';
 import { DialogHost } from '@/ui/alert';
@@ -122,6 +123,9 @@ function RootNavigator() {
   // opened on the computer or a preview inside another page.
   if (Platform.OS === 'web' && typeof location !== 'undefined' && !/^https?:$/.test(location.protocol)) {
     return <ErrorView title={t('states.webAddressTitle')} message={t('states.webAddressBody')} />;
+  }
+  if (!env.isConfigured && Platform.OS === 'web' && isLocalhost(globalThis.location?.hostname)) {
+    return <LocalSetup />;
   }
   if (!env.isConfigured) {
     return (

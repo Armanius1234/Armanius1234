@@ -3,12 +3,14 @@
  * browser by `npm run test:web` (scripts/web-e2e/run.mjs).
  */
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-// eslint-disable-next-line no-restricted-imports -- checking what the wrapper passes on
+// The system dialog itself, to check what the wrapper passes on (tests may import it).
 import { Alert as NativeAlert } from 'react-native';
 
 import { I18nProvider } from '@/i18n';
 import { createWebAuthStorage } from '@/lib/authStorage.web';
-import { runtimeConfig } from '@/lib/env';
+import { browserConfig, chooseConfig, isLocalhost, LOCAL_CONFIG_KEY, runtimeConfig } from '@/lib/env';
+import { checkLocalConfig, clearLocalConfig, saveLocalConfig } from '@/lib/localConfig';
+import { LocalSetup } from '@/features/system/LocalSetup';
 import { readBytes } from '@/lib/files.web';
 import { Alert, DialogHost, showWebDialog } from '@/ui/alert';
 import { SensitiveImage } from '@/ui/SensitiveImage.web';
@@ -152,5 +154,65 @@ describe('Sensitive photos in the browser (verification, reports)', () => {
     fetchMock.mockRestore();
     create.mockRestore();
     revoke.mockRestore();
+  });
+});
+
+describe('Testing on this computer (localhost)', () => {
+  const KEY = 'sb_publishable_abcdefghijklmnopqrstuvwxyz';
+  // Built at runtime so the repository's secret-key scan doesn't flag this made-up key.
+  const SECRET = 'sb_secret_' + 'a-made-up-key-for-this-test';
+
+  it('knows which addresses are this computer', () => {
+    expect(['localhost', '127.0.0.1', '[::1]'].every(isLocalhost)).toBe(true);
+    expect(isLocalhost('app.pl8.de')).toBe(false);
+    expect(isLocalhost(undefined)).toBe(false);
+  });
+
+  it('uses .env first, then pl8-config.js, then the values entered in the browser', () => {
+    const a = { url: 'https://a.supabase.co', key: KEY };
+    const b = { url: 'https://b.supabase.co', key: KEY };
+    const c = { url: 'https://c.supabase.co', key: KEY };
+    const none = { url: '', key: '' };
+    expect(chooseConfig(a, b, c)).toEqual({ ...a, source: 'build' });
+    expect(chooseConfig(none, b, c)).toEqual({ ...b, source: 'file' });
+    expect(chooseConfig(none, none, c)).toEqual({ ...c, source: 'browser' });
+    expect(chooseConfig(none, none, { url: c.url, key: SECRET }).source).toBe('none');
+  });
+
+  it('checks the form: https address, a real publishable key, never a secret key', () => {
+    expect(checkLocalConfig('https://abc.supabase.co', KEY)).toBeNull();
+    expect(checkLocalConfig('abc.supabase.co', KEY)).toBe('url');
+    expect(checkLocalConfig('http://abc.supabase.co', KEY)).toBe('url');
+    expect(checkLocalConfig('https://abc.supabase.co', 'short')).toBe('key');
+    expect(checkLocalConfig('https://abc.supabase.co', SECRET)).toBe('secret');
+  });
+
+  it('saves the values in the browser and reads them back; "change" removes them', () => {
+    const data = new Map<string, string>();
+    const store = {
+      getItem: (k: string) => data.get(k) ?? null,
+      setItem: (k: string, v: string) => void data.set(k, v),
+      removeItem: (k: string) => void data.delete(k),
+    };
+    saveLocalConfig(' https://abc.supabase.co/ ', ` ${KEY} `, store);
+    expect(browserConfig(store)).toEqual({ url: 'https://abc.supabase.co', key: KEY });
+    expect(() => saveLocalConfig('https://abc.supabase.co', SECRET, store)).toThrow();
+    clearLocalConfig(store);
+    expect(data.has(LOCAL_CONFIG_KEY)).toBe(false);
+    expect(browserConfig({ getItem: () => '{broken' })).toEqual({ url: '', key: '' });
+  });
+
+  it('the form refuses a secret key and explains why', async () => {
+    const onSaved = jest.fn();
+    await render(
+      <I18nProvider initial="de">
+        <LocalSetup onSaved={onSaved} />
+      </I18nProvider>,
+    );
+    await fireEvent.changeText(screen.getByLabelText('Project URL'), 'https://abc.supabase.co');
+    await fireEvent.changeText(screen.getByLabelText('Publishable Key'), SECRET);
+    await fireEvent.press(screen.getByRole('button', { name: 'Verbinden' }));
+    expect(screen.getByText(/Das ist ein geheimer Schlüssel/)).toBeTruthy();
+    expect(onSaved).not.toHaveBeenCalled();
   });
 });

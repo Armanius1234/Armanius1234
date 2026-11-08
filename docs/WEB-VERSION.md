@@ -72,6 +72,32 @@ Like the folder version, the single file only runs from a web address. Opened
 by double-click, or pasted into a website builder, it shows a message saying
 so.
 
+## 2c. Try it on your computer (localhost)
+
+```bash
+npm run build:web:local
+```
+
+The result is the folder **`dist-web-local/`**: `index.html` (the single-file
+version), **`PL8 starten.bat`**, `pl8-server.js` and `LIESMICH.txt`.
+
+1. On Windows, double-click **`PL8 starten.bat`**. It needs Node.js; if it is
+   missing, the window says so. If Windows warns "Windows protected your PC",
+   click *More info → Run anyway*.
+2. The browser opens **http://localhost:8080**. If 8080 is taken, it uses the
+   next free port.
+3. On the first start, PL8 asks for your Supabase **Project URL** and
+   **Publishable key**. They are saved in this browser only. "Change" at the
+   bottom of the welcome screen removes them.
+4. Close the black window to stop it.
+
+Good to know:
+- The little server only answers this computer, never the network.
+- The form only appears on `localhost`. A real website without settings shows
+  "Backend not configured" instead.
+- The settings in `pl8-config.js` or at the top of `index.html` win over the
+  form.
+
 ## 3. Put it online (IONOS web hosting)
 
 The names of menu items in your IONOS account may differ slightly.
@@ -150,6 +176,8 @@ npm run build:web
 npm run test:web          # opens the built site in Chromium with a mocked Supabase project
 npm run build:web:single
 npm run test:web:single   # the same tests for the single-file version
+npm run build:web:local
+npm run test:web:local    # the starter for a computer (real server, form, sign-in)
 ```
 
 CI runs both on every push.

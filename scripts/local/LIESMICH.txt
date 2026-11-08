@@ -1,0 +1,26 @@
+PL8 auf deinem Computer testen
+==============================
+
+1. Diesen Ordner entpacken (Rechtsklick auf die ZIP -> "Alle extrahieren").
+2. Doppelklick auf "PL8 starten.bat".
+   - Fragt Windows "Der Computer wurde durch Windows geschützt":
+     auf "Weitere Informationen" und dann "Trotzdem ausführen" klicken.
+   - Meldet das Fenster "Node.js fehlt": die LTS-Version von
+     https://nodejs.org installieren und noch einmal starten.
+3. Der Browser öffnet http://localhost:8080 (oder 8081, falls 8080 belegt ist).
+4. Beim ersten Mal fragt PL8 nach deinem Supabase-Projekt:
+   - Project URL:     Supabase -> Project Settings -> Data API
+   - Publishable Key: Supabase -> Project Settings -> API Keys
+   Niemals den Secret-Key eintragen.
+   Die Werte bleiben nur in diesem Browser gespeichert.
+   Zum Ändern: auf dem Startbildschirm unten auf "Ändern" tippen.
+5. Zum Beenden das schwarze Fenster schließen.
+
+Hinweise
+- Der Testserver ist nur auf diesem Computer erreichbar, nicht im Netzwerk.
+- Ein Doppelklick direkt auf index.html funktioniert nicht: PL8 braucht eine
+  Webadresse. Deshalb gibt es "PL8 starten.bat".
+- Für deine echte Website lädst du nur index.html hoch und trägst die zwei
+  Werte oben in der Datei ein (Block "PL8 SETTINGS").
+- In Supabase müssen alle Dateien aus supabase/migrations ausgeführt sein
+  (Anleitung: docs/SUPABASE-SETUP.md).

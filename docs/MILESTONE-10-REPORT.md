@@ -88,6 +88,31 @@ Tick each line. If one fails, send me a screenshot and the step number.
   **18 / 18 passed**. CI now builds and tests both versions.
 - **Mutation check:** the "needs a web address" message switched off → caught.
 
+## 3c. Trying PL8 on your computer (added on your request)
+
+`npm run build:web:local` creates a folder with `index.html` and a starter for
+Windows:
+
+- **Starting:** double-click **`PL8 starten.bat`**. It starts a small web
+  server (it needs Node.js) and opens **http://localhost:8080**. If that port
+  is taken, it uses the next free one.
+- **The server** only answers this computer, never the network. It doesn't
+  hand out its own files, or files outside the folder.
+- **First start on localhost:** PL8 shows a form for the Supabase **Project
+  URL** and **Publishable key**.
+  - The values are saved in this browser only.
+  - A secret key is refused.
+  - "Change" on the welcome screen removes them.
+  - On a real website, the form never appears.
+- **Tests:**
+  - Package with the real starter server: **8 / 8 passed**.
+  - Website version: 17 / 17. Single-file version: 19 / 19.
+  - App tests: 274 / 274.
+- **Mutation check:** the server reachable from the network → caught.
+- **Not tested here:** the `.bat` file itself and Windows. This test machine
+  runs Linux. The `.bat` only checks for Node.js and then starts the tested
+  server.
+
 ## 4. Performance
 
 `npm run perf:db`: **all 23 queries are within budget.**
@@ -126,8 +151,8 @@ new switch adds one quick lookup per person and stays far within budget.
 | Check | Result |
 |---|---|
 | TypeScript strict | ✅ 0 errors |
-| Lint | ✅ 0 errors, 0 warnings |
-| App tests | ✅ **269 / 269 passed** (17 suites; 4 new) |
+| Lint | ✅ 0 errors. **Correction:** this said "0 warnings", but one warning (an unneeded comment in a test file) was missed because only the exit code was checked. Fixed after Milestone 10. |
+| App tests | ✅ **269 / 269 passed** (17 suites; 4 new); 274 / 274 after the localhost form |
 | Database tests | ✅ **506 / 506 passed** (14 new) |
 | Browser test of the web version | ✅ **16 / 16 passed** (1 new); single-file version **18 / 18** |
 | Performance check | ✅ **23 / 23 within budget** |

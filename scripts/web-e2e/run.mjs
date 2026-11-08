@@ -9,204 +9,34 @@ import { fileURLToPath } from 'node:url';
 
 import { chromium } from 'playwright';
 
+import {
+  assert,
+  check,
+  CHAT,
+  CLAIM,
+  expectCall,
+  KEY,
+  mockSupabase,
+  MY_POST,
+  NEW_POST,
+  results,
+  signIn,
+  SUPABASE,
+  watchConsole,
+} from './mock-supabase.mjs';
 import { startServer } from './serve.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 // npm run test:web tests dist-web/; npm run test:web:single tests dist-web-single/.
 const DIST = join(here, '..', '..', process.env.PL8_WEB_DIR ?? 'dist-web');
 const SINGLE = existsSync(join(DIST, '.htaccess')) === false;
-const SUPABASE = 'https://pl8test.supabase.co';
-const KEY = 'sb_publishable_test_key_for_the_browser_test';
-const ME = '11111111-1111-4111-8111-111111111111';
-const BEN = '22222222-2222-4222-8222-222222222222';
-const MY_POST = '33333333-3333-4333-8333-333333333333';
-const NEW_POST = '44444444-4444-4444-8444-444444444444';
-const CLAIM = '55555555-5555-4555-8555-555555555555';
-
-// A 1×1 PNG for every photo the app downloads.
-const PNG = Buffer.from(
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkqGeoBwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
-  'base64',
-);
-
-const now = new Date().toISOString();
-const profile = (id, username, display_name) => ({
-  id, username, display_name, bio: '', avatar_path: null, city: null,
-  instagram_url: null, tiktok_url: null, linkedin_url: null, facebook_url: null,
-  is_private: false, follower_count: 3, following_count: 2, post_count: 1,
-  suspended_at: null, created_at: now, updated_at: now,
-});
-const PROFILES = [profile(ME, 'mia_maier', 'Mia Maier'), profile(BEN, 'ben.bmw', 'Ben Becker')];
-const SETTINGS = {
-  user_id: ME, messaging_policy: 'everyone', locale: 'de', push_enabled: true,
-  push_likes: true, push_comments: true, push_follows: true, push_messages: true,
-  show_in_search: true, show_in_suggestions: true, updated_at: now,
-};
-const FEED = [
-  {
-    post_id: MY_POST, author_id: ME, author_username: 'mia_maier', author_display_name: 'Mia Maier',
-    author_avatar_path: null, vehicle_id: null, vehicle_make: null, vehicle_model: null, vehicle_generation: null,
-    caption: 'Sonntagsausfahrt mit @ben.bmw', media_paths: [`${MY_POST}/a.jpg`], like_count: 4, comment_count: 0,
-    liked: false, saved: false, published_at: now,
-  },
-];
-const CLAIMS = [
-  {
-    claim_id: CLAIM, vehicle_id: 'v1', country: 'DE', plate: 'M-PL-8', status: 'unverified', discoverable: false,
-    show_owner: false, verified_at: null, revoke_reason: null, created_at: now, request_id: 'r1',
-    request_status: 'awaiting_evidence', challenge_code: 'PL8-ABCD', decision_note: null,
-  },
-];
-const CHAT = '66666666-6666-4666-8666-666666666666';
-const CONVERSATION = {
-  conversation_id: CHAT, status: 'active', is_request_for_me: false, i_sent_request: false, other_id: BEN,
-  other_username: 'ben.bmw', other_display_name: 'Ben Becker', other_avatar_path: null, other_last_read_at: now,
-};
-const MESSAGES = [{ id: 'm1', conversation_id: CHAT, sender_id: BEN, body: 'Treffen am Samstag?', created_at: now }];
-const RPC = {
-  conversation_info: [CONVERSATION],
-  get_posts: FEED,
-  my_consent: true,
-  am_i_admin: false,
-  unread_message_count: 0,
-  unread_notification_count: 0,
-  my_plate_claims: CLAIMS,
-  export_my_data: { profile: PROFILES[0], posts: FEED },
-  relationship: [{ following: false, requested: false, follows_me: false, requested_me: false }],
-};
-
-function jwt(payload) {
-  const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
-  return `${b64({ alg: 'HS256', typ: 'JWT' })}.${b64(payload)}.c2ln`;
-}
-const USER = {
-  id: ME, aud: 'authenticated', role: 'authenticated', email: 'mia@example.com',
-  app_metadata: { provider: 'email', providers: ['email'] }, user_metadata: {}, created_at: now,
-};
-function session() {
-  const exp = Math.floor(Date.now() / 1000) + 3600;
-  return {
-    access_token: jwt({ sub: ME, role: 'authenticated', aud: 'authenticated', exp, email: USER.email }),
-    token_type: 'bearer', expires_in: 3600, expires_at: exp, refresh_token: 'refresh-1', user: USER,
-  };
-}
-
-/** Answers the app's Supabase requests and records them. */
-async function mockSupabase(page) {
-  const calls = [];
-  await page.route(`${SUPABASE}/**`, async (route) => {
-    const req = route.request();
-    const url = new URL(req.url());
-    const path = url.pathname;
-    const call = { method: req.method(), path, search: url.search, body: req.postDataBuffer() };
-    calls.push(call);
-    const json = (data, status = 200) =>
-      route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(data) });
-
-    if (path === '/auth/v1/token') return json(session());
-    if (path === '/auth/v1/user') return json(USER);
-    if (path === '/auth/v1/logout') return route.fulfill({ status: 204 });
-
-    if (path.startsWith('/rest/v1/rpc/')) {
-      const fn = path.slice('/rest/v1/rpc/'.length);
-      return json(fn in RPC ? RPC[fn] : []);
-    }
-    if (path.startsWith('/rest/v1/')) {
-      const table = path.slice('/rest/v1/'.length);
-      const wantsObject = (req.headers()['accept'] ?? '').includes('vnd.pgrst.object');
-      if (req.method() === 'POST' && table === 'posts') return json(wantsObject ? { id: NEW_POST } : [{ id: NEW_POST }], 201);
-      if (req.method() === 'PATCH' && table === 'user_settings') {
-        Object.assign(SETTINGS, JSON.parse(req.postData() ?? '{}'));
-        return json(wantsObject ? SETTINGS : [SETTINGS]);
-      }
-      if (req.method() !== 'GET' && req.method() !== 'HEAD') return route.fulfill({ status: 204 });
-      let rows = [];
-      if (table === 'profiles') {
-        const id = url.searchParams.get('id')?.replace(/^eq\./, '');
-        const username = url.searchParams.get('username')?.replace(/^eq\./, '');
-        rows = PROFILES.filter((p) => (!id || p.id === id) && (!username || p.username === username));
-      }
-      if (table === 'user_settings') rows = [SETTINGS];
-      if (table === 'messages') rows = MESSAGES;
-      return json(wantsObject ? (rows[0] ?? null) : rows);
-    }
-
-    if (path.startsWith('/storage/v1/object/sign/') && req.method() === 'POST') {
-      const bucket = path.split('/')[5];
-      const { paths = [] } = JSON.parse(req.postData() ?? '{}');
-      return json(paths.map((p) => ({ path: p, signedURL: `/object/sign/${bucket}/${p}?token=t`, error: null })));
-    }
-    if (path.startsWith('/storage/v1/object/') && req.method() === 'GET') {
-      return route.fulfill({ status: 200, contentType: 'image/png', body: PNG });
-    }
-    if (path.startsWith('/storage/v1/object/') && req.method() === 'POST') {
-      return json({ Key: path.replace('/storage/v1/object/', ''), Id: 'f1' });
-    }
-    return json([]);
-  });
-
-  // Live updates (chat, notifications): accept every channel.
-  await page.routeWebSocket(/pl8test\.supabase\.co/, (ws) => {
-    ws.onMessage((raw) => {
-      let msg;
-      try {
-        msg = JSON.parse(String(raw));
-      } catch {
-        return;
-      }
-      if (Array.isArray(msg)) {
-        const [joinRef, ref, topic, event, payload] = msg;
-        if (event === 'phx_join' || event === 'heartbeat') {
-          const changes = (payload?.config?.postgres_changes ?? []).map((c, i) => ({ ...c, id: i + 1 }));
-          ws.send(JSON.stringify([joinRef, ref, topic, 'phx_reply', { status: 'ok', response: { postgres_changes: changes } }]));
-        }
-      } else if (msg.event === 'phx_join' || msg.event === 'heartbeat') {
-        const changes = (msg.payload?.config?.postgres_changes ?? []).map((c, i) => ({ ...c, id: i + 1 }));
-        ws.send(JSON.stringify({ topic: msg.topic, event: 'phx_reply', ref: msg.ref, payload: { status: 'ok', response: { postgres_changes: changes } } }));
-      }
-    });
-  });
-  return calls;
-}
-
-// ------------------------------------------------------------------ harness --
-const results = [];
-async function check(name, fn) {
-  try {
-    await fn();
-    results.push({ name, ok: true });
-    console.log(`   ✓ ${name}`);
-  } catch (e) {
-    results.push({ name, ok: false });
-    console.log(`   ✗ ${name}\n     ${String(e?.message ?? e).split('\n').slice(0, 6).join('\n     ')}`);
-  }
-}
-function assert(cond, message) {
-  if (!cond) throw new Error(message);
-}
-
-function watchConsole(page) {
-  const problems = [];
-  page.on('pageerror', (e) => problems.push(`page error: ${e.message}`));
-  page.on('console', (m) => {
-    if (m.type() === 'error') problems.push(`console error: ${m.text()}`);
-  });
-  return problems;
-}
-
-async function signIn(page, base) {
-  await page.goto(`${base}/login`);
-  await page.getByLabel('E-Mail').fill('mia@example.com');
-  await page.getByLabel('Passwort', { exact: true }).fill('a-long-password-1');
-  await page.getByRole('button', { name: 'Anmelden' }).click();
-  await page.getByText('Sonntagsausfahrt mit').first().waitFor({ timeout: 15000 });
-}
-
 // -------------------------------------------------------------------- tests --
 async function main() {
-  const browser = await chromium.launch();
+  // pl8.test stands in for a real website address (not "this computer").
+  const browser = await chromium.launch({ args: ['--host-resolver-rules=MAP pl8.test 127.0.0.1'] });
   const empty = await startServer(DIST);
   const emptyBase = `http://127.0.0.1:${empty.address().port}`;
+  const emptySite = `http://pl8.test:${empty.address().port}`;
 
   console.log(`▸ Web version (browser test): ${SINGLE ? 'single file' : 'folder'} ${DIST}`);
 
@@ -219,19 +49,35 @@ async function main() {
     });
     await check('opened as /index.html, the app starts normally', async () => {
       const page = await browser.newPage({ locale: 'de-DE' });
-      await page.goto(`${emptyBase}/index.html`);
+      await page.goto(`${emptySite}/index.html`);
       await page.getByText('pl8-config.js').first().waitFor({ timeout: 15000 });
       await page.close();
     });
   }
 
   // 1. Before pl8-config.js is filled in.
-  await check('without pl8-config.js values, the page explains what to fill in', async () => {
+  await check('on a website without pl8-config.js values, the page explains what to fill in', async () => {
     delete process.env.PL8_TEST_SUPABASE_URL;
     const page = await browser.newPage({ locale: 'de-DE' });
     const problems = watchConsole(page);
+    await page.goto(emptySite);
+    await page.getByText('Backend nicht eingerichtet').waitFor({ timeout: 15000 });
+    assert((await page.getByLabel('Project URL').count()) === 0, 'the local setup form is shown on a website');
+    assert(problems.length === 0, problems.join('\n'));
+    await page.close();
+  });
+
+  await check('on this computer (localhost) without values, PL8 asks for them, and refuses a secret key', async () => {
+    const page = await browser.newPage({ locale: 'de-DE' });
+    const problems = watchConsole(page);
     await page.goto(emptyBase);
-    await page.getByText('pl8-config.js').first().waitFor({ timeout: 15000 });
+    await page.getByText('PL8 auf diesem Computer testen').waitFor({ timeout: 15000 });
+    await page.getByLabel('Project URL').fill(SUPABASE);
+    await page.getByLabel('Publishable Key').fill('sb_secret_' + 'a-made-up-key-for-this-test');
+    await page.getByRole('button', { name: 'Verbinden' }).click();
+    await page.getByText(/Das ist ein geheimer Schlüssel/).waitFor();
+    const saved = await page.evaluate(() => localStorage.getItem('pl8.localConfig'));
+    assert(saved === null, 'a secret key was saved');
     assert(problems.length === 0, problems.join('\n'));
     await page.close();
   });
@@ -394,14 +240,6 @@ async function main() {
   process.exit(failed ? 1 : 0);
 }
 
-async function expectCall(cond, message, timeout = 10000) {
-  const start = Date.now();
-  while (Date.now() - start < timeout) {
-    if (cond()) return;
-    await new Promise((r) => setTimeout(r, 100));
-  }
-  throw new Error(message);
-}
 
 main().catch((e) => {
   console.error(e);

@@ -67,7 +67,9 @@
     "build:web": "bash scripts/build-web.sh",
     "test:web": "node scripts/web-e2e/run.mjs",
     "build:web:single": "node scripts/build-web-single.mjs",
-    "test:web:single": "PL8_WEB_DIR=dist-web-single node scripts/web-e2e/run.mjs"
+    "test:web:single": "PL8_WEB_DIR=dist-web-single node scripts/web-e2e/run.mjs",
+    "build:web:local": "npm run build:web:single && node scripts/package-web-local.mjs",
+    "test:web:local": "node scripts/web-e2e/local.mjs"
   },
   "private": true,
   "jest": {
