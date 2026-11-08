@@ -295,6 +295,8 @@ export type Database = {
           push_comments: boolean;
           push_follows: boolean;
           push_messages: boolean;
+          show_in_search: boolean;
+          show_in_suggestions: boolean;
           updated_at: string;
         };
         Insert: never;
@@ -306,6 +308,8 @@ export type Database = {
           push_comments?: boolean;
           push_follows?: boolean;
           push_messages?: boolean;
+          show_in_search?: boolean;
+          show_in_suggestions?: boolean;
         };
         Relationships: [];
       };

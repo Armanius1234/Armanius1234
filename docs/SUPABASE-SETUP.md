@@ -170,6 +170,15 @@ without it, just more slowly as the app grows.
 Nothing else to set up. Search → People / Cars, "Suggested for you" on
 Discover, and @mentions work right away.
 
+### Milestone 10 update (privacy switches)
+
+Run the ninth file: **SQL Editor → New query**, paste everything from
+`supabase/migrations/20261104090000_privacy_controls.sql`, then **Run**.
+
+Check: **Table Editor → user_settings** has two new columns,
+`show_in_search` and `show_in_suggestions` (both `true` for everyone).
+In the app: **Settings → Privacy → Being found**.
+
 ### Make yourself the reviewer (admin)
 
 Plate verifications are approved by hand in the app. Give your own account the

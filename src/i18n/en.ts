@@ -99,7 +99,12 @@ export const en = {
     messagingFollowers: 'Only people I follow',
     messagingNobody: 'Nobody',
     plateNote:
-      'Your license plate is never public by default. Plate search will need verification and your explicit opt-in (coming with the Garage).',
+      'Your license plate is never public by default. It can only be found in PL8 Search after it is verified and you switch that on for the car (Garage → car → License plate).',
+    findableTitle: 'Being found',
+    showInSearch: 'Show me in people search',
+    showInSearchHint: 'People can find you by name or username in Search and when they type @. Your profile still opens from posts, comments and links, and an exact @username still reaches you.',
+    showInSuggestions: 'Suggest me to others',
+    showInSuggestionsHint: 'You can appear under “Suggested for you” for people with shared connections or the same make of car.',
     blockedUsers: 'Blocked users',
   },
   tabs: {

@@ -101,7 +101,12 @@ export const de: Translations = {
     messagingFollowers: 'Nur Personen, denen ich folge',
     messagingNobody: 'Niemand',
     plateNote:
-      'Dein Kennzeichen ist standardmäßig nie öffentlich. Die Kennzeichensuche erfordert eine Verifizierung und deine ausdrückliche Zustimmung (kommt mit der Garage).',
+      'Dein Kennzeichen ist standardmäßig nie öffentlich. In der PL8 Suche ist es erst zu finden, wenn es verifiziert ist und du das für das Auto einschaltest (Garage → Auto → Kennzeichen).',
+    findableTitle: 'Gefunden werden',
+    showInSearch: 'In der Personensuche zeigen',
+    showInSearchHint: 'Andere finden dich über deinen Namen oder Benutzernamen in der Suche und beim Tippen von @. Dein Profil bleibt über Beiträge, Kommentare und Links erreichbar, und ein genauer @Benutzername erreicht dich weiterhin.',
+    showInSuggestions: 'Anderen vorschlagen',
+    showInSuggestionsHint: 'Du kannst unter „Vorschläge für dich“ erscheinen, wenn ihr gemeinsame Kontakte habt oder dieselbe Automarke fahrt.',
     blockedUsers: 'Blockierte Nutzer',
   },
   tabs: {

@@ -119,13 +119,17 @@ service is active (Sentry etc. would need approval and a review).
 12. **Being found by name.** Since Milestone 8, signed-in members can search
     people by username or display name. The search shows only what profiles
     already show: name, username, picture, private or not. Blocked, suspended
-    and not-yet-consented accounts never appear. There is **no "don't show me
-    in search" setting** yet. Please decide if one is needed. Name and car
+    and not-yet-consented accounts never appear. **Since Milestone 10, everyone
+    can switch this off** (Settings → Privacy → "Show me in people search"). It
+    is on by default. The profile itself stays reachable from posts, comments
+    and links, and an exact @username still reaches the person. Name and car
     search have no rate limit; each search returns at most 50 results.
+    Please confirm that "on by default" is acceptable.
 13. **Suggestions** ("followed by people you follow", "also drives a Porsche")
     use follow relationships and the makes of public cars. Nothing is shown
-    that the person couldn't see anyway. Please confirm the legal basis
-    (legitimate interest?) and whether an opt-out is needed.
+    that the person couldn't see anyway. **Since Milestone 10, everyone can opt
+    out** (Settings → Privacy → "Suggest me to others"; on by default). Please
+    confirm the legal basis (legitimate interest?) and the default.
 14. **Sign in with Apple: revoking on deletion.** Apple requires that deleting
     an account also revokes the Apple sign-in. This needs a server function
     with an Apple key and is **not built yet**. It must be done before App Store
@@ -167,7 +171,7 @@ service is active (Sentry etc. would need approval and a review).
 - Rate limits on searches, plate claims, messages and reports.
 - Blocking hides profiles, posts, comments, messages and notifications in both
   directions.
-- 492 automated database checks, including a security audit (every table
+- 506 automated database checks, including a security audit (every table
   protected, no anonymous access, no unprotected functions).
 - Web version: a Content Security Policy (scripts only from the PL8 website,
   data only from Supabase), no embedding in other websites, photos re-encoded

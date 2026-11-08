@@ -53,6 +53,23 @@ export default function PrivacySettingsScreen() {
         />
       </Section>
 
+      <Section title={t('privacy.findableTitle')}>
+        <SwitchRow
+          label={t('privacy.showInSearch')}
+          hint={t('privacy.showInSearchHint')}
+          value={settings.data.show_in_search}
+          disabled={updateSettings.isPending}
+          onChange={(v) => updateSettings.mutate({ show_in_search: v })}
+        />
+        <SwitchRow
+          label={t('privacy.showInSuggestions')}
+          hint={t('privacy.showInSuggestionsHint')}
+          value={settings.data.show_in_suggestions}
+          disabled={updateSettings.isPending}
+          onChange={(v) => updateSettings.mutate({ show_in_suggestions: v })}
+        />
+      </Section>
+
       <FormMessage message={error ? t(errorKey(error)) : null} />
 
       <AppText variant="caption" color="textSecondary">

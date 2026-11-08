@@ -128,6 +128,8 @@ export type SettingsPatch = {
   push_comments?: boolean;
   push_follows?: boolean;
   push_messages?: boolean;
+  show_in_search?: boolean;
+  show_in_suggestions?: boolean;
 };
 
 export function useUpdateSettings() {

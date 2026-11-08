@@ -37,7 +37,8 @@ const profile = (id, username, display_name) => ({
 const PROFILES = [profile(ME, 'mia_maier', 'Mia Maier'), profile(BEN, 'ben.bmw', 'Ben Becker')];
 const SETTINGS = {
   user_id: ME, messaging_policy: 'everyone', locale: 'de', push_enabled: true,
-  push_likes: true, push_comments: true, push_follows: true, push_messages: true, updated_at: now,
+  push_likes: true, push_comments: true, push_follows: true, push_messages: true,
+  show_in_search: true, show_in_suggestions: true, updated_at: now,
 };
 const FEED = [
   {
@@ -112,6 +113,10 @@ async function mockSupabase(page) {
       const table = path.slice('/rest/v1/'.length);
       const wantsObject = (req.headers()['accept'] ?? '').includes('vnd.pgrst.object');
       if (req.method() === 'POST' && table === 'posts') return json(wantsObject ? { id: NEW_POST } : [{ id: NEW_POST }], 201);
+      if (req.method() === 'PATCH' && table === 'user_settings') {
+        Object.assign(SETTINGS, JSON.parse(req.postData() ?? '{}'));
+        return json(wantsObject ? SETTINGS : [SETTINGS]);
+      }
       if (req.method() !== 'GET' && req.method() !== 'HEAD') return route.fulfill({ status: 204 });
       let rows = [];
       if (table === 'profiles') {
@@ -317,6 +322,17 @@ async function main() {
       const send = calls.find((c) => c.path === '/rest/v1/rpc/send_message');
       return !!send && JSON.parse(send.body.toString()).p_body === 'Klar, 10 Uhr!';
     }, 'message not sent');
+  });
+
+  await check('privacy: "Show me in people search" can be switched off', async () => {
+    await page.goto(`${base}/settings/privacy`);
+    const toggle = page.getByRole('switch', { name: 'In der Personensuche zeigen' });
+    await toggle.waitFor({ timeout: 15000 });
+    await toggle.click();
+    await expectCall(() => {
+      const patch = calls.find((c) => c.method === 'PATCH' && c.path === '/rest/v1/user_settings');
+      return !!patch && JSON.parse(patch.body.toString()).show_in_search === false;
+    }, 'setting not saved');
   });
 
   await check('"Download my data" downloads a JSON file', async () => {
