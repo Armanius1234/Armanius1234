@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { deleteMyAccount } from '@/features/account/api';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -9,6 +9,7 @@ import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { spacing } from '@/theme/tokens';
 import { AppText, Button, FormMessage, Screen, TextField } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 const PROVIDER_NAME = { apple: 'Apple', google: 'Google' } as const;
 

@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router/js-tabs';
 import type { ComponentProps } from 'react';
-import { StyleSheet, View, type ColorValue } from 'react-native';
+import { Platform, StyleSheet, View, type ColorValue } from 'react-native';
 
 import { useMessagesRealtime, useUnreadCount } from '@/features/messaging/api';
 import { useNotificationsRealtime } from '@/features/notifications/api';
@@ -46,8 +46,14 @@ export default function TabsLayout() {
           backgroundColor: colors.bgSecondary,
           borderTopColor: colors.border,
           borderTopWidth: StyleSheet.hairlineWidth,
+          // Browsers have no bottom safe area, so the labels need a little room.
+          ...(Platform.OS === 'web' ? { height: 58, paddingTop: 4, paddingBottom: 6 } : null),
         },
-        tabBarLabelStyle: { fontFamily: fonts.medium, fontSize: 11 },
+        tabBarLabelStyle: {
+          fontFamily: fonts.medium,
+          fontSize: 11,
+          ...(Platform.OS === 'web' ? { lineHeight: 14, flexShrink: 0 } : null),
+        },
       }}
     >
       <Tabs.Screen name="index" options={{ title: t('tabs.home'), tabBarIcon: icon('home', 'home-outline') }} />

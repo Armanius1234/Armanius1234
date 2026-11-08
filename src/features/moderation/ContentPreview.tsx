@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 
 import { useSignedUrls, type PrivateBucket } from '@/features/garage/api';
@@ -7,6 +6,7 @@ import type { Json, ReportTarget } from '@/lib/database.types';
 import { avatarUrl } from '@/lib/supabase';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar } from '@/ui';
+import { SensitiveImage } from '@/ui/SensitiveImage';
 
 const str = (v: unknown) => (typeof v === 'string' ? v : '');
 const strList = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
@@ -48,7 +48,7 @@ export function ContentPreview({
         <View key={path} style={styles.photo}>
           {urls.data?.[path] ? (
             // Reported photos stay in memory only, never in the moderator's disk cache.
-            <Image source={{ uri: urls.data[path] }} style={StyleSheet.absoluteFill} contentFit="contain" cachePolicy="memory" />
+            <SensitiveImage uri={urls.data[path]} style={StyleSheet.absoluteFill} contentFit="contain" />
           ) : null}
         </View>
       ))}

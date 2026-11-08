@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { exportMyData } from '@/features/account/api';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -11,6 +11,7 @@ import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { spacing } from '@/theme/tokens';
 import { AppText, Divider, ListRow, Screen, Section } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 export default function SettingsScreen() {
   const { t, locale } = useI18n();

@@ -8,8 +8,8 @@ import { useFonts } from 'expo-font';
 import { DarkTheme, Stack, ThemeProvider, type Theme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import { AppState, Platform } from 'react-native';
+import { useEffect, type ReactNode } from 'react';
+import { AppState, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
@@ -20,11 +20,16 @@ import { I18nProvider, useI18n } from '@/i18n';
 import { env } from '@/lib/env';
 import { colors, fonts } from '@/theme/tokens';
 import { ErrorView, LoadingView } from '@/ui';
+import { DialogHost } from '@/ui/alert';
 
 void SplashScreen.preventAutoHideAsync();
 
 // Catches crashes in any screen so the app shows a retry screen instead of closing.
 export const ErrorBoundary = CrashScreen;
+
+// A link straight to an inner screen (a reloaded browser page, a shared link,
+// a tapped notification) gets the home screen underneath, so "back" works.
+export const unstable_settings = { initialRouteName: '(tabs)' };
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -74,8 +79,11 @@ export default function RootLayout() {
           <AuthProvider>
             <ThemeProvider value={navTheme}>
               <StatusBar style="light" />
-              <RootNavigator />
-              <OfflineBanner />
+              <WebFrame>
+                <RootNavigator />
+                <OfflineBanner />
+              </WebFrame>
+              <DialogHost />
             </ThemeProvider>
           </AuthProvider>
         </I18nProvider>
@@ -111,7 +119,12 @@ function RootNavigator() {
   }, [ready]);
 
   if (!env.isConfigured) {
-    return <ErrorView title={t('states.setupTitle')} message={t('states.setupBody')} />;
+    return (
+      <ErrorView
+        title={t('states.setupTitle')}
+        message={t(Platform.OS === 'web' ? 'states.setupBodyWeb' : 'states.setupBody')}
+      />
+    );
   }
   if (!ready) return <LoadingView />;
   if (signedIn && profile.isError) {
@@ -193,3 +206,26 @@ function RootNavigator() {
     </Stack>
   );
 }
+
+/** Web: on wide screens the app is a centred column, like on a phone. */
+function WebFrame({ children }: { children: ReactNode }) {
+  if (Platform.OS !== 'web') return <>{children}</>;
+  return (
+    <View style={styles.webOuter}>
+      <View style={styles.webColumn}>{children}</View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  webOuter: { flex: 1, alignItems: 'center', backgroundColor: colors.bgBackdrop },
+  webColumn: {
+    flex: 1,
+    width: '100%',
+    maxWidth: 600,
+    backgroundColor: colors.bgPrimary,
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
+  },
+});

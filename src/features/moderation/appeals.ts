@@ -3,11 +3,10 @@
  * statistics for the transparency report.
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { File, Paths } from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
 
 import type { TKey, TParams } from '@/i18n';
 import type { AppealQueueItem, Decision, ModerationStats } from '@/lib/database.types';
+import { saveTextFile } from '@/lib/files';
 import { supabase } from '@/lib/supabase';
 
 import { moderationKeys } from './api';
@@ -129,10 +128,5 @@ export function statsToCsv(s: ModerationStats): string {
 }
 
 export async function shareStatsCsv(s: ModerationStats, dialogTitle: string): Promise<void> {
-  const file = new File(Paths.cache, `pl8-moderation-${s.to.slice(0, 10)}.csv`);
-  file.create({ overwrite: true });
-  await file.write(statsToCsv(s));
-  if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(file.uri, { mimeType: 'text/csv', dialogTitle, UTI: 'public.comma-separated-values-text' });
-  }
+  await saveTextFile(`pl8-moderation-${s.to.slice(0, 10)}.csv`, statsToCsv(s), 'csv', dialogTitle);
 }

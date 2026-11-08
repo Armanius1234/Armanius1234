@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, FlatList, type AlertButton, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -13,6 +13,7 @@ import { errorKey } from '@/lib/errors';
 import { avatarUrl } from '@/lib/supabase';
 import { colors, fonts, hitSize, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar, EmptyView, ErrorView, LoadingView } from '@/ui';
+import { Alert, type AlertButton } from '@/ui/alert';
 
 export default function PostScreen() {
   const { t } = useI18n();

@@ -3,7 +3,6 @@
  * Every photo is resized and re-encoded as JPEG on the phone, so uploads stay
  * small and the original file's metadata (for example GPS) is not uploaded.
  */
-import { File } from 'expo-file-system';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -84,6 +83,4 @@ export function randomFileName(): string {
   return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export async function readBytes(localUri: string): Promise<ArrayBuffer> {
-  return new File(localUri).arrayBuffer();
-}
+export { readBytes } from './files';

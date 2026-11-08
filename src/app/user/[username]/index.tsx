@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
 import { openReport } from '@/features/moderation/api';
@@ -11,6 +11,7 @@ import { errorKey } from '@/lib/errors';
 import { normalizeUsername } from '@/shared/validation';
 import { colors, hitSize, spacing } from '@/theme/tokens';
 import { EmptyView, ErrorView, LoadingView } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 /** Another member's profile. Opened via pl8://user/<username>. */
 export default function UserProfileScreen() {

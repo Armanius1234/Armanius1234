@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { exportMyData } from '@/features/account/api';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -11,6 +11,7 @@ import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { spacing } from '@/theme/tokens';
 import { AppText, Button, ErrorView, LoadingView, Screen } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 /**
  * What a suspended account sees: the reason, the appeal, and its data rights.

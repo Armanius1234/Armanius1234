@@ -1,19 +1,11 @@
 import 'react-native-url-polyfill/auto';
 
 import { createClient } from '@supabase/supabase-js';
-import * as SecureStore from 'expo-secure-store';
 import { AppState, Platform } from 'react-native';
 
+import { authStorage } from './authStorage';
 import type { Database } from './database.types';
 import { env } from './env';
-import { createChunkedStorage } from './secureStorage';
-
-const storage = createChunkedStorage({
-  getItemAsync: (k) => SecureStore.getItemAsync(k),
-  setItemAsync: (k, v) =>
-    SecureStore.setItemAsync(k, v, { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK }),
-  deleteItemAsync: (k) => SecureStore.deleteItemAsync(k),
-});
 
 // When the backend is not configured yet, a placeholder URL keeps the client
 // constructible; the app shows a "Backend not configured" screen instead.
@@ -22,12 +14,13 @@ export const supabase = createClient<Database>(
   env.isConfigured ? env.supabaseKey : 'not-configured-placeholder-key',
   {
     auth: {
-      storage,
+      storage: authStorage,
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: false,
       // PKCE: a sign-in code caught by another app on the phone is useless
-      // without the secret kept in this app's secure storage.
+      // without the secret kept in this app's secure storage (browser: this
+      // site's storage).
       flowType: 'pkce',
     },
   },

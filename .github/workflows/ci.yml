@@ -19,6 +19,20 @@ jobs:
       - run: npm run lint
       - run: npm test -- --ci
 
+  web:
+    name: Web version (build + browser test)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build:web
+      - run: npm run test:web
+
   database:
     name: Database security tests (RLS)
     runs-on: ubuntu-24.04

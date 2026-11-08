@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useHideConversation, useInbox } from '@/features/messaging/api';
@@ -12,6 +12,7 @@ import { avatarUrl } from '@/lib/supabase';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar, EmptyView, ErrorView, Logo, Skeleton } from '@/ui';
 import { Segmented } from '@/ui/Segmented';
+import { Alert } from '@/ui/alert';
 
 type Tab = 'chats' | 'requests';
 

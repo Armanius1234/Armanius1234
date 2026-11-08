@@ -1,5 +1,6 @@
 import { getLocales } from 'expo-localization';
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Platform } from 'react-native';
 
 import { de } from './de';
 import { en, type Translations } from './en';
@@ -51,6 +52,10 @@ export function I18nProvider({ children, initial }: { children: ReactNode; initi
   const [locale, setLocale] = useState<Locale>(initial ?? deviceLocale());
   const t = useCallback((key: TKey, params?: TParams) => translate(locale, key, params), [locale]);
   const value = useMemo(() => ({ locale, setLocale, t }), [locale, t]);
+  // Web: screen readers and the browser's translation offer read the page language.
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') document.documentElement.lang = locale;
+  }, [locale]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 

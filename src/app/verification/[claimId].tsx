@@ -1,8 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import {
   useAddEvidence,
@@ -17,6 +16,8 @@ import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { colors, fonts, radius, spacing } from '@/theme/tokens';
 import { AppText, Button, EmptyView, ErrorView, FormMessage, LoadingView, Screen } from '@/ui';
+import { SensitiveImage } from '@/ui/SensitiveImage';
+import { Alert } from '@/ui/alert';
 
 const MAX_PHOTOS = 4;
 const MIN_PHOTOS = 2;
@@ -42,6 +43,21 @@ export default function VerificationScreen() {
   }
   if (!requestId || !claim.challenge_code) {
     return <EmptyView icon="document-outline" title={t('errors.invalid_state')} />;
+  }
+
+  // Live photos need the phone's camera. A browser could upload any picture,
+  // so the web version sends people to the phone app (the request is kept).
+  if (Platform.OS === 'web') {
+    return (
+      <Screen contentStyle={styles.center} edges={['bottom']}>
+        <EmptyView
+          icon="phone-portrait-outline"
+          title={t('verification.phoneOnlyTitle')}
+          body={t('verification.phoneOnlyBody')}
+        />
+        <Button label={t('verification.backToCar')} variant="secondary" onPress={() => router.back()} />
+      </Screen>
+    );
   }
 
   return <EvidenceStep requestId={requestId} code={claim.challenge_code} plate={claim.plate} />;
@@ -114,7 +130,7 @@ function EvidenceStep({ requestId, code, plate }: { requestId: string; code: str
             style={styles.tile}
           >
             {urls.data?.[p] ? (
-              <Image source={{ uri: urls.data[p] }} style={StyleSheet.absoluteFill} contentFit="cover" cachePolicy="memory" />
+              <SensitiveImage uri={urls.data[p]} style={StyleSheet.absoluteFill} contentFit="cover" />
             ) : (
               <ActivityIndicator color={colors.textSecondary} />
             )}

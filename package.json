@@ -29,6 +29,7 @@
     "expo-status-bar": "~58.0.4",
     "expo-system-ui": "~58.0.6",
     "expo-web-browser": "~58.0.6",
+    "playwright": "1.63.0",
     "react": "19.3.0",
     "react-native": "0.88.0",
     "react-native-gesture-handler": "~3.3.0",
@@ -62,7 +63,9 @@
     "test:db": "bash scripts/test-db.sh",
     "test:all": "npm run typecheck && npm run lint && npm test && npm run test:db",
     "db:types": "supabase gen types typescript --linked --schema public > src/lib/database.types.ts",
-    "perf:db": "bash scripts/perf-db.sh"
+    "perf:db": "bash scripts/perf-db.sh",
+    "build:web": "bash scripts/build-web.sh",
+    "test:web": "node scripts/web-e2e/run.mjs"
   },
   "private": true,
   "jest": {

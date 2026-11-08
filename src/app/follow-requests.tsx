@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Alert, FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { useFollowRequests, useRespondRequest } from '@/features/social/api';
 import { useI18n } from '@/i18n';
@@ -7,6 +7,7 @@ import { errorKey } from '@/lib/errors';
 import { avatarUrl } from '@/lib/supabase';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar, Button, EmptyView, ErrorView, LoadingView } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 export default function FollowRequestsScreen() {
   const { t } = useI18n();

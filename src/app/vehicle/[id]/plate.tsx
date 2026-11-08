@@ -1,6 +1,6 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
 import {
@@ -20,6 +20,7 @@ import { EMPTY_PLATE, plateError, type PlateParts } from '@/shared/plate';
 import { vehicleTitle } from '@/shared/vehicle';
 import { spacing } from '@/theme/tokens';
 import { AppText, Button, EmptyView, ErrorView, FormMessage, LoadingView, Screen, Section, SwitchRow } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 const REVOKE_TEXT: Record<string, TKey> = {
   transfer: 'plate.revokedTransfer',

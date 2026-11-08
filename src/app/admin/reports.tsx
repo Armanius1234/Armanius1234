@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Alert, FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { useIsAdmin } from '@/features/garage/api';
 import { useReportsQueue, useStorageCleanup } from '@/features/moderation/api';
@@ -8,6 +8,7 @@ import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Button, EmptyView, ErrorView, LoadingView } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 export default function ReportsQueueScreen() {
   const { t } = useI18n();

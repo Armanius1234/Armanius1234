@@ -32,6 +32,8 @@ app actually stores, where, for how long, and which questions are still open.
 | Appeals (who appealed which decision, their explanation, the outcome and the moderator's answer) | `appeals` | the appellant; moderators | deleted together with the report (1 year after the decision) |
 | Chats you deleted for yourself (which chat, when) | `private.hidden_conversations` | operator only | account deletion |
 | Apple / Google sign-in data: email (Apple may give a private relay address), name if shared, provider account ID | Supabase Auth | the user; the operator | account deletion; **sign-ups that never give consent: 7 days** |
+| **Web version:** login session (access and refresh token) | the browser's storage for the PL8 website (`localStorage`) | the user's browser | logging out; otherwise until the session expires |
+| **Web version:** visitors' IP address, time, page requested, browser | server logs of the web host (e.g. IONOS) | the operator / host | according to the host's log settings (**to check**) |
 
 Clean-up runs every night (`private.run_retention()`, see
 docs/SUPABASE-SETUP.md).
@@ -45,6 +47,7 @@ docs/SUPABASE-SETUP.md).
 | **Apple (APNs) / Google (FCM)** | delivering the push to the phone | push token + push text | standard for every app with push |
 | Apple / Google sign-in (optional, off until set up) | signing in | email (and name, if the user shares it) | Apple and Google are usually **separate controllers** for their own sign-in. Please confirm and mention it in the privacy policy. |
 | Supabase email (default sender) | sign-up and reset codes | email address | Replace with an EU email provider before launch (also for sending limits). |
+| **Web host** (e.g. IONOS SE, Germany), only for the web version | delivering the website's files | IP addresses and requests in server logs; no account data | Sign the host's DPA. Check how long logs are kept and whether IP addresses are shortened. |
 
 No analytics, advertising or tracking SDKs are included. No crash-reporting
 service is active (Sentry etc. would need approval and a review).
@@ -130,7 +133,20 @@ service is active (Sentry etc. would need approval and a review).
 15. **Consent for social sign-ups** is collected in the app right after the
     Apple / Google step, not on the sign-up form. The database blocks the
     account until consent is given. Please confirm this order is acceptable.
-16. **Company not founded / domain not confirmed.** These are still missing:
+16. **Web version.**
+    - The browser keeps the login session in `localStorage`. This is strictly
+      necessary for the service the user asked for, so we believe no consent
+      banner is needed (§ 25(2) TDDDG). Please confirm.
+    - No cookies, analytics or third-party content are used.
+    - The website itself needs an **imprint and privacy policy** link reachable
+      from every page, and the web host belongs in the privacy policy.
+    - **Plate verification is disabled in the browser**, because a browser could
+      upload any picture instead of live photos. Note: the live-photo rule has
+      always been enforced by the app, not by the server. Someone could send
+      other photos through the API directly. The manual admin review (code
+      visible, plate readable, same car) remains the real safeguard. Please
+      keep that in mind in the verification process.
+17. **Company not founded / domain not confirmed.** These are still missing:
     - the controller's name and address
     - a contact email
     - the DPAs with providers (they must be signed by the company)
@@ -153,3 +169,7 @@ service is active (Sentry etc. would need approval and a review).
   directions.
 - 492 automated database checks, including a security audit (every table
   protected, no anonymous access, no unprotected functions).
+- Web version: a Content Security Policy (scripts only from the PL8 website,
+  data only from Supabase), no embedding in other websites, photos re-encoded
+  before upload (no GPS metadata), and verification / reported photos kept
+  out of the browser cache.

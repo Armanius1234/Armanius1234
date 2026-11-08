@@ -3,8 +3,23 @@
  * belong here (EXPO_PUBLIC_* is bundled into the app and readable by anyone).
  * NEVER put the Supabase service-role / secret key in an EXPO_PUBLIC_ variable.
  */
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
-const key = process.env.EXPO_PUBLIC_SUPABASE_KEY ?? '';
+type RuntimeConfig = { supabaseUrl?: unknown; supabaseKey?: unknown };
+
+/**
+ * The web version can also read the two public values from pl8-config.js
+ * (public/pl8-config.js, loaded by public/index.html before the app), so a
+ * finished build can be connected to a Supabase project without rebuilding.
+ * Values from .env win. The phone app never loads that file.
+ */
+export function runtimeConfig(source: unknown = globalThis): { url: string; key: string } {
+  const cfg = (source as { PL8_CONFIG?: RuntimeConfig } | undefined)?.PL8_CONFIG;
+  const text = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+  return { url: text(cfg?.supabaseUrl), key: text(cfg?.supabaseKey) };
+}
+
+const runtime = runtimeConfig();
+const url = process.env.EXPO_PUBLIC_SUPABASE_URL || runtime.url;
+const key = process.env.EXPO_PUBLIC_SUPABASE_KEY || runtime.key;
 
 export function looksLikeSecretKey(value: string): boolean {
   if (value.startsWith('sb_secret_')) return true;
@@ -21,7 +36,7 @@ export function looksLikeSecretKey(value: string): boolean {
 
 if (looksLikeSecretKey(key)) {
   throw new Error(
-    'EXPO_PUBLIC_SUPABASE_KEY is a SECRET key. Use the publishable (anon) key instead and rotate the secret key now.',
+    'The Supabase key is a SECRET key. Use the publishable (anon) key instead and rotate the secret key now.',
   );
 }
 

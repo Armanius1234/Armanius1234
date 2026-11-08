@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { useIsAdmin } from '@/features/garage/api';
 import { useAppealsQueue, useDecideAppeal } from '@/features/moderation/appeals';
@@ -11,6 +11,7 @@ import type { AppealQueueItem } from '@/lib/database.types';
 import { errorKey } from '@/lib/errors';
 import { spacing } from '@/theme/tokens';
 import { AppText, Button, EmptyView, FormMessage, LoadingView, Screen, TextField } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 /** What "reverse" will do for this appeal. */
 function reverseEffect(a: AppealQueueItem): TKey {

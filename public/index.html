@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!--
+      Security: scripts only from this website, data only from Supabase.
+      If you use your own Supabase domain, add it to img-src and connect-src.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://*.supabase.co wss://*.supabase.co; media-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>%WEB_TITLE%</title>
+    <!-- Connection to your Supabase project (edit pl8-config.js, not this file). -->
+    <script src="/pl8-config.js"></script>
+    <!-- The react-native-web style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      html,
+      body {
+        height: 100%;
+        background-color: #04060a;
+      }
+      body {
+        overflow: hidden;
+      }
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>PL8 braucht JavaScript. / PL8 needs JavaScript.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

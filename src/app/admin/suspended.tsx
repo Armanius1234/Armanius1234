@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { useIsAdmin } from '@/features/garage/api';
 import { useSuspendedUsers, useUnsuspendUser } from '@/features/moderation/api';
@@ -10,6 +10,7 @@ import { errorKey } from '@/lib/errors';
 import { avatarUrl } from '@/lib/supabase';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar, Button, EmptyView, ErrorView, FormMessage, LoadingView, TextField } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 export default function SuspendedUsersScreen() {
   const { t } = useI18n();

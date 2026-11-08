@@ -1,0 +1,30 @@
+# PL8 web version: settings for Apache web servers (for example IONOS web hosting).
+# Upload this file together with index.html. Files starting with a dot may be
+# hidden in your file manager or FTP program; it still has to be uploaded.
+
+Options -Indexes
+DirectoryIndex index.html
+
+# Addresses like /post/123 or /user/ben.bmw belong to the app:
+# the server answers them with index.html, and the app shows the right screen.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/(_expo|assets)/
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # Other websites may not show PL8 inside a frame (the rest of the policy is in index.html).
+  Header always set Content-Security-Policy "frame-ancestors 'none'"
+  # The start page and the configuration are always checked for a newer version.
+  <FilesMatch "^(index\.html|pl8-config\.js)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

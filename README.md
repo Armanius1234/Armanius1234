@@ -7,12 +7,13 @@ verified license plates to digital vehicle profiles.
 
 | | |
 |---|---|
-| Status | **Milestone 8 — Discovery** (awaiting founder approval) |
-| App | React Native + Expo SDK 58 + TypeScript (strict), iOS & Android |
+| Status | **Milestone 9 — Web version** (awaiting founder approval) |
+| App | React Native + Expo SDK 58 + TypeScript (strict), iOS & Android, plus a web version from the same code |
 | Backend | Supabase (Postgres + Row Level Security, Auth, Storage), EU region |
 | Plan | [docs/MILESTONE-0-PLAN.md](docs/MILESTONE-0-PLAN.md) |
-| Latest report | [docs/MILESTONE-8-REPORT.md](docs/MILESTONE-8-REPORT.md) |
+| Latest report | [docs/MILESTONE-9-REPORT.md](docs/MILESTONE-9-REPORT.md) |
 | Beta builds | [docs/BETA-DEPLOYMENT.md](docs/BETA-DEPLOYMENT.md) (installable app with push) |
+| Web version | [docs/WEB-VERSION.md](docs/WEB-VERSION.md) (PL8 in the browser, upload to your web space) |
 | Google / Apple sign-in | [docs/SOCIAL-LOGIN-SETUP.md](docs/SOCIAL-LOGIN-SETUP.md) (off until set up) |
 | Legal review | [docs/PRIVACY-NOTES.md](docs/PRIVACY-NOTES.md) (open points before public launch) |
 | Store listing | [docs/STORE-LISTING.md](docs/STORE-LISTING.md) (texts DE/EN, privacy answers, checklist) |
@@ -78,6 +79,8 @@ npm run lint        # ESLint (expo config)
 npm test            # unit + component tests (Jest)
 npm run test:db     # database security tests (needs PostgreSQL 15+ locally, or DATABASE_URL)
 npm run test:all    # everything above
+npm run build:web   # web version into dist-web/ (see docs/WEB-VERSION.md)
+npm run test:web    # browser test of the built web version (Chromium via Playwright)
 ```
 
 ### Project structure

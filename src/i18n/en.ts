@@ -1,5 +1,6 @@
 export const en = {
   common: {
+    ok: 'OK',
     continue: 'Continue',
     back: 'Back',
     save: 'Save',
@@ -233,6 +234,8 @@ export const en = {
     verifiedBadge: 'Verified PL8',
   },
   verification: {
+    phoneOnlyTitle: 'Verify on your phone',
+    phoneOnlyBody: 'Plate verification needs live photos taken in the PL8 phone app. Open PL8 on your phone to continue. Your request is saved.',
     title: 'Verify your plate',
     step1: 'Write this code clearly on a piece of paper:',
     step2:
@@ -609,6 +612,8 @@ export const en = {
     setupTitle: 'Backend not configured',
     setupBody:
       'Add EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_KEY to your .env file, then restart the app. See README.md.',
+    setupBodyWeb:
+      'Add your Supabase Project URL and publishable key to pl8-config.js on your web space, then reload the page. See docs/WEB-VERSION.md.',
   },
   errors: {
     required: 'This field is required.',

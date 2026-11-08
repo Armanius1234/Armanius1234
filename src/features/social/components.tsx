@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
 import { MentionText } from '@/features/discovery/mentions';
@@ -16,6 +16,7 @@ import { compactCount, timeAgo } from '@/shared/time';
 import { vehicleTitle } from '@/shared/vehicle';
 import { colors, hitSize, spacing } from '@/theme/tokens';
 import { AppText, Avatar, Button, EmptyView } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 import { useDeletePost, useFollow, useRelationship, useToggleLike, useToggleSave, useUnfollow } from './api';
 

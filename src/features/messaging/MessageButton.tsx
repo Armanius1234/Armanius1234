@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
-import { Alert } from 'react-native';
 
 import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { Button } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 import { useStartConversation } from './api';
 

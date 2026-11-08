@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
 import { latestClaimFor, useMyClaims, useSignedUrls, useVehicle } from '@/features/garage/api';
@@ -14,6 +14,7 @@ import { avatarUrl } from '@/lib/supabase';
 import { vehicleTitle } from '@/shared/vehicle';
 import { colors, hitSize, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar, Button, EmptyView, ErrorView, LoadingView } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 const LIVE = ['not_verified', 'pending', 'verified'];
 

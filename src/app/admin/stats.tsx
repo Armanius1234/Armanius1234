@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useIsAdmin } from '@/features/garage/api';
 import { shareStatsCsv, useModerationStats } from '@/features/moderation/appeals';
@@ -9,6 +9,7 @@ import { errorKey } from '@/lib/errors';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Button, EmptyView, ErrorView, LoadingView, Screen } from '@/ui';
 import { Segmented } from '@/ui/Segmented';
+import { Alert } from '@/ui/alert';
 
 type Period = '30' | '365';
 

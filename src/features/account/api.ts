@@ -1,10 +1,8 @@
 /**
  * Account deletion and data export (GDPR Art. 15, 17, 20).
  */
-import { File, Paths } from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
-
 import { unregisterPush } from '@/features/notifications/push';
+import { saveTextFile } from '@/lib/files';
 import { supabase } from '@/lib/supabase';
 
 async function listAll(bucket: string, folder: string): Promise<string[]> {
@@ -70,15 +68,10 @@ export async function deleteMyAccount(confirm: DeleteConfirmation): Promise<void
   await supabase.auth.signOut({ scope: 'local' });
 }
 
-/** Builds a JSON file with all the user's data and opens the share sheet. */
+/** Builds a JSON file with all the user's data: share sheet on the phone, download in the browser. */
 export async function exportMyData(dialogTitle: string): Promise<void> {
   const { data, error } = await supabase.rpc('export_my_data');
   if (error) throw error;
   const date = new Date().toISOString().slice(0, 10);
-  const file = new File(Paths.cache, `pl8-data-${date}.json`);
-  file.create({ overwrite: true });
-  await file.write(JSON.stringify(data, null, 2));
-  if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(file.uri, { mimeType: 'application/json', dialogTitle, UTI: 'public.json' });
-  }
+  await saveTextFile(`pl8-data-${date}.json`, JSON.stringify(data, null, 2), 'json', dialogTitle);
 }

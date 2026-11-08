@@ -1,8 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { useDecideVerification, useIsAdmin, useSignedUrls, useVerificationQueue } from '@/features/garage/api';
 import { PlateBadge } from '@/features/garage/components';
@@ -11,6 +10,8 @@ import { errorKey } from '@/lib/errors';
 import { vehicleTitle } from '@/shared/vehicle';
 import { colors, fonts, radius, spacing } from '@/theme/tokens';
 import { AppText, Button, EmptyView, FormMessage, LoadingView, Screen, TextField } from '@/ui';
+import { SensitiveImage } from '@/ui/SensitiveImage';
+import { Alert } from '@/ui/alert';
 
 export default function ReviewScreen() {
   const { t } = useI18n();
@@ -95,7 +96,7 @@ export default function ReviewScreen() {
         // Evidence photos stay in memory only, never in the phone's disk cache.
         <View key={p} style={[styles.photo, { height: (width - spacing.md * 2) * 0.75 }]}>
           {photos.data?.[p] ? (
-            <Image source={{ uri: photos.data[p] }} style={StyleSheet.absoluteFill} contentFit="contain" cachePolicy="memory" />
+            <SensitiveImage uri={photos.data[p]} style={StyleSheet.absoluteFill} contentFit="contain" />
           ) : (
             <ActivityIndicator color={colors.textSecondary} />
           )}

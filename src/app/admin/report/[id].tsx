@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { useIsAdmin } from '@/features/garage/api';
 import { useReportsQueue, useResolveReport } from '@/features/moderation/api';
@@ -10,6 +10,7 @@ import { useI18n } from '@/i18n';
 import { errorKey } from '@/lib/errors';
 import { spacing } from '@/theme/tokens';
 import { AppText, Button, EmptyView, FormMessage, LoadingView, Screen, TextField } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 export default function ReportDetailScreen() {
   const { t } = useI18n();

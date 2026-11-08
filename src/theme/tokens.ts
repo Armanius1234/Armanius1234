@@ -6,6 +6,8 @@ export const colors = {
   bgPrimary: '#080B12',
   bgSecondary: '#121722',
   bgElevated: '#1A2030',
+  // Around the app column on wide screens (web version).
+  bgBackdrop: '#04060A',
   accent: '#087CFF',
   // Filled backgrounds behind white text: slightly deeper, for WCAG AA contrast
   // (white on accent is 3.9:1, on accentSolid 4.6:1).

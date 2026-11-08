@@ -55,6 +55,14 @@
     ],
     "experiments": {
       "reactCompiler": true
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png",
+      "lang": "de",
+      "themeColor": "#080B12",
+      "description": "PL8 – Every car has a story.",
+      "output": "single",
+      "bundler": "metro"
     }
   }
 }

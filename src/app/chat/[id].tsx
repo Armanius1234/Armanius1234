@@ -3,7 +3,6 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -33,6 +32,7 @@ import { errorKey } from '@/lib/errors';
 import { avatarUrl } from '@/lib/supabase';
 import { colors, fonts, hitSize, radius, spacing } from '@/theme/tokens';
 import { AppText, Avatar, Button, EmptyView, ErrorView, LoadingView } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 export default function ChatScreen() {
   const { t } = useI18n();

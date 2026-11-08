@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { MentionSuggestions } from '@/features/discovery/mentions';
 import { useMyVehicles } from '@/features/garage/api';
@@ -13,6 +13,7 @@ import { pickImage, pickImages, type PreparedImage } from '@/lib/images';
 import { vehicleTitle } from '@/shared/vehicle';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Button, FormMessage, Screen, TextField } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 const MAX = 10;
 

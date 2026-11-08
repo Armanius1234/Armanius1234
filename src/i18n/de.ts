@@ -2,6 +2,7 @@ import type { Translations } from './en';
 
 export const de: Translations = {
   common: {
+    ok: 'OK',
     continue: 'Weiter',
     back: 'Zurück',
     save: 'Speichern',
@@ -236,6 +237,8 @@ export const de: Translations = {
     verifiedBadge: 'Verifiziertes PL8',
   },
   verification: {
+    phoneOnlyTitle: 'Auf dem Handy verifizieren',
+    phoneOnlyBody: 'Für die Verifizierung brauchst du Live-Fotos aus der PL8-App auf dem Handy. Öffne PL8 auf deinem Handy, um weiterzumachen. Deine Anfrage bleibt gespeichert.',
     title: 'Kennzeichen verifizieren',
     step1: 'Schreibe diesen Code gut lesbar auf ein Blatt Papier:',
     step2:
@@ -614,6 +617,8 @@ export const de: Translations = {
     setupTitle: 'Backend nicht eingerichtet',
     setupBody:
       'Trage EXPO_PUBLIC_SUPABASE_URL und EXPO_PUBLIC_SUPABASE_KEY in deine .env-Datei ein und starte die App neu. Siehe README.md.',
+    setupBodyWeb:
+      'Trage die Project URL und den Publishable Key deines Supabase-Projekts in die Datei pl8-config.js auf deinem Webspace ein und lade die Seite neu. Siehe docs/WEB-VERSION.md.',
   },
   errors: {
     required: 'Dieses Feld ist erforderlich.',

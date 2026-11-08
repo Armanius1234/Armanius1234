@@ -2,8 +2,8 @@
  * Which screen does the app show? Renders the real root layout (guards and
  * all) with stand-in screens, for each kind of account.
  */
-import { Stack } from 'expo-router';
-import { renderRouter, screen, waitFor } from 'expo-router/testing-library';
+import { router, Stack } from 'expo-router';
+import { act, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 
 import * as AuthLayout from '@/app/(auth)/_layout';
@@ -102,6 +102,16 @@ describe('Which screen opens', () => {
     await renderRouter(routes, { initialUrl: '/' });
     expect(await screen.findByText('HOME')).toBeTruthy();
     expect(screen.queryByText('SUSPENDED')).toBeNull();
+  });
+
+  it('a link straight to an inner screen has home underneath, so "back" works', async () => {
+    mockState.session = session;
+    mockState.profile = profile(false);
+    await renderRouter(routes, { initialUrl: '/post/123' });
+    expect(await screen.findByText('POST')).toBeTruthy();
+    expect(router.canGoBack()).toBe(true);
+    await act(() => router.back());
+    expect(await screen.findByText('HOME')).toBeTruthy();
   });
 
   it('suspended: only the suspension screen, even when opening a post link', async () => {

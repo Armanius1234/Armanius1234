@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useI18n } from '@/i18n';
 import type { Vehicle } from '@/lib/database.types';
@@ -10,6 +10,7 @@ import { errorKey } from '@/lib/errors';
 import { EMPTY_VEHICLE_FORM, POPULAR_MAKES, vehicleSchema, type VehicleErrorKey, type VehicleForm } from '@/shared/vehicle';
 import { colors, radius, spacing } from '@/theme/tokens';
 import { AppText, Button, FormMessage, Screen, Section, SwitchRow, TextField } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 import {
   useAddVehiclePhoto,

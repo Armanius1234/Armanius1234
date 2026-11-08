@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Modal, StyleSheet, View } from 'react-native';
+import { Modal, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { LegalContent } from '@/features/legal/LegalContent';
@@ -8,6 +8,7 @@ import { errorKey } from '@/lib/errors';
 import { supabase } from '@/lib/supabase';
 import { colors, spacing } from '@/theme/tokens';
 import { AppText, Button, Checkbox, FormMessage, Screen } from '@/ui';
+import { Alert } from '@/ui/alert';
 
 import { useRecordConsent } from './consent';
 
