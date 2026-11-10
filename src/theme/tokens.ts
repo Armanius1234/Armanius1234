@@ -50,7 +50,8 @@ export const fonts = {
   medium: 'Inter_500Medium',
   semibold: 'Inter_600SemiBold',
   bold: 'Inter_700Bold',
-  logo: 'Orbitron_900Black',
+  // PL8TE wordmark: heavy, slanted (like the brand images).
+  logo: 'Exo2_800ExtraBold_Italic',
 } as const;
 
 export const typography = {
@@ -68,3 +69,6 @@ export type TypographyVariant = keyof typeof typography;
 
 /** Minimum touch target (iOS HIG / Material). */
 export const hitSize = 44;
+
+/** Web version: the app is a centred column of at most this width on wide screens. */
+export const WEB_COLUMN_WIDTH = 600;

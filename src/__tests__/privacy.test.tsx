@@ -59,6 +59,6 @@ describe('Being found (privacy settings)', () => {
 
   it('the plate note describes how plate search works today', async () => {
     await wrap();
-    expect(screen.getByText(/only be found in PL8 Search after it is verified/)).toBeTruthy();
+    expect(screen.getByText(/only be found in PL8TE Search after it is verified/)).toBeTruthy();
   });
 });

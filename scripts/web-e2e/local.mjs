@@ -60,9 +60,9 @@ async function main() {
 
   await check('it serves the app, also for inner pages, and not its own files', async () => {
     const home = await get('127.0.0.1', PORT, '/');
-    assert(home.status === 200 && /text\/html/.test(home.type) && home.body.includes('PL8 SETTINGS'), 'home');
+    assert(home.status === 200 && /text\/html/.test(home.type) && home.body.includes('PL8TE SETTINGS'), 'home');
     const inner = await get('127.0.0.1', PORT, '/settings/privacy');
-    assert(inner.status === 200 && inner.body.includes('PL8 SETTINGS'), 'inner page');
+    assert(inner.status === 200 && inner.body.includes('PL8TE SETTINGS'), 'inner page');
     const missing = await get('127.0.0.1', PORT, '/_expo/static/js/web/missing.js');
     assert(missing.status === 404, `missing app file: ${missing.status}`);
     const own = await get('127.0.0.1', PORT, '/pl8-server.js');
@@ -96,7 +96,7 @@ async function main() {
 
   await check('first start: PL8 asks for the Supabase values and connects', async () => {
     await page.goto(base);
-    await page.getByText('PL8 auf diesem Computer testen').waitFor({ timeout: 15000 });
+    await page.getByText('PL8TE auf diesem Computer testen').waitFor({ timeout: 15000 });
     await page.getByLabel('Project URL').fill(SUPABASE);
     await page.getByLabel('Publishable Key').fill(KEY);
     await page.getByRole('button', { name: 'Verbinden' }).click();
@@ -115,7 +115,7 @@ async function main() {
     await page.getByRole('button', { name: 'Abmelden' }).click();
     await page.getByRole('alert').getByRole('button', { name: 'Abmelden' }).click();
     await page.getByRole('button', { name: 'Ändern' }).click();
-    await page.getByText('PL8 auf diesem Computer testen').waitFor({ timeout: 15000 });
+    await page.getByText('PL8TE auf diesem Computer testen').waitFor({ timeout: 15000 });
     assert((await page.evaluate(() => localStorage.getItem('pl8.localConfig'))) === null, 'values still saved');
   });
 

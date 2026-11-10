@@ -30,7 +30,7 @@ export default function MessagesScreen() {
       <View style={styles.header}>
         <View style={styles.titleRow}>
           <AppText variant="title">{t('tabs.messages')}</AppText>
-          <Logo width={64} framed={false} />
+          <Logo width={96} frame="none" />
         </View>
         <Segmented<Tab>
           value={tab}

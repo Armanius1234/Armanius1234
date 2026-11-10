@@ -19,7 +19,7 @@ export default function MyProfileScreen() {
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.topBar}>
-        <Logo width={64} framed={false} />
+        <Logo width={96} frame="none" />
         <View style={styles.topActions}>
           <Pressable
             accessibilityRole="button"

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "PL8",
+    "name": "PL8TE",
     "slug": "pl8",
     "version": "0.1.0",
     "orientation": "portrait",
@@ -61,7 +61,7 @@
       "favicon": "./assets/images/favicon.png",
       "lang": "de",
       "themeColor": "#080B12",
-      "description": "PL8 – Every car has a story.",
+      "description": "PL8TE – Turn your plate into a story.",
       "output": "single",
       "bundler": "metro"
     }

@@ -10,6 +10,7 @@ dist-web/
 dist-web-single/
 dist-web-local/
 dist-sql/
+dist-web-iis/
 web-build/
 expo-env.d.ts
 

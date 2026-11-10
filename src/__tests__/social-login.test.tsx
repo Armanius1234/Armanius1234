@@ -251,7 +251,7 @@ describe('Consent step for Apple / Google sign-ups', () => {
   it('needs both confirmations before anything is sent', async () => {
     await wrap(<ConsentStep />);
     await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
-    expect(screen.getByText('You must be 18 or older to use PL8.')).toBeTruthy();
+    expect(screen.getByText('You must be 18 or older to use PL8TE.')).toBeTruthy();
     expect(screen.getByText('Please accept the Terms and Privacy Policy.')).toBeTruthy();
     expect(mockRpc).not.toHaveBeenCalled();
   });

@@ -19,7 +19,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.topBar}>
-        <Logo width={72} framed={false} />
+        <Logo width={104} frame="none" />
         <View style={styles.actions}>
         <Pressable
           accessibilityRole="button"

@@ -1,0 +1,41 @@
+PL8TE auf deinem IIS-Server (Windows 11)
+========================================
+
+Du brauchst nur IIS. Kein Node.js, kein Starter, keine weiteren Programme.
+
+A. IIS einschalten (einmal)
+   1. Windows-Taste, "Windows-Features aktivieren oder deaktivieren" eingeben, öffnen.
+   2. Haken bei "Internet Information Services" setzen -> OK -> warten.
+   3. Test: im Browser http://localhost öffnen. Es erscheint die blaue IIS-Seite.
+
+B. PL8TE hineinkopieren
+   1. Den Inhalt des Ordners "website" (index.html und web.config) nach
+      C:\inetpub\wwwroot kopieren. Windows fragt nach Administratorrechten: "Fortsetzen".
+      Wichtig: direkt in wwwroot, nicht in einen Unterordner.
+   2. Im Browser http://localhost öffnen (bei offener Seite: Strg+F5 zum Neuladen).
+   3. PL8TE erscheint und fragt nach deinem Supabase-Projekt.
+
+C. Mit Supabase verbinden
+   - Noch kein Projekt? Anleitung: SUPABASE-SCHNELLSTART.md (in diesem Ordner,
+     mit dem Editor öffnen). Dort steht auch, wie du die Datenbank mit
+     PL8-Datenbank-komplett.sql in einem Schritt einrichtest.
+   - Project URL und Publishable Key ins Formular eintragen -> "Verbinden".
+     Niemals den Secret-Key eintragen.
+   - Das Formular erscheint nur unter http://localhost. Sollen andere Geräte
+     PL8TE über deinen PC öffnen, trag die zwei Werte stattdessen oben in
+     index.html ein (Block "PL8TE SETTINGS", mit dem Editor).
+
+Wenn etwas nicht klappt
+   - "HTTP-Fehler 500.19" (Konfigurationsfehler): web.config löschen. PL8TE
+     läuft dann trotzdem; nur das Neuladen von Unterseiten (z. B. /settings)
+     zeigt "Nicht gefunden" - dann einfach http://localhost öffnen.
+   - Die blaue IIS-Seite statt PL8TE: index.html liegt nicht direkt in
+     C:\inetpub\wwwroot, oder der Browser zeigt die alte Seite (Strg+F5).
+   - "Backend nicht eingerichtet": die zwei Werte oben in index.html fehlen
+     (beim Öffnen über eine andere Adresse als localhost).
+
+Hinweise
+   - PL8TE ist kein Programm auf deinem PC: die Daten liegen bei Supabase
+     (kostenlos, Rechenzentrum Frankfurt). IIS liefert nur die Seite aus.
+   - Für eine öffentliche Website brauchst du HTTPS (Zertifikat). Für den
+     Test auf deinem PC reicht http://localhost.

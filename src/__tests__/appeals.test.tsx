@@ -122,7 +122,7 @@ describe('Moderation decisions (users)', () => {
     await wrap(<DecisionsScreen />);
     expect(await screen.findAllByText('Your post was removed')).toHaveLength(2);
     expect(screen.getByText('Your report about a post: no violation found')).toBeTruthy();
-    expect(screen.getAllByText('Note from the PL8 team: “Insults in the caption”')).toHaveLength(2);
+    expect(screen.getAllByText('Note from the PL8TE team: “Insults in the caption”')).toHaveLength(2);
     expect(screen.getByText('The time to appeal has ended.')).toBeTruthy();
     const appeals = screen.getAllByRole('button', { name: 'Appeal' });
     expect(appeals).toHaveLength(2);
@@ -136,7 +136,7 @@ describe('Moderation decisions (users)', () => {
     };
     await wrap(<DecisionsScreen />);
     expect(await screen.findByText('Appeal accepted: the decision was reversed')).toBeTruthy();
-    expect(screen.getByText('Answer from the PL8 team: “Context shows a quote”')).toBeTruthy();
+    expect(screen.getByText('Answer from the PL8TE team: “Context shows a quote”')).toBeTruthy();
     expect(screen.getByText(/out-of-court dispute settlement body/)).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Appeal' })).toBeNull();
   });
@@ -182,7 +182,7 @@ describe('Suspended account screen', () => {
     await wrap(<SuspendedScreen />);
     expect(await screen.findByText('Your account is suspended')).toBeTruthy();
     expect(screen.getByText('Your account was suspended')).toBeTruthy();
-    expect(screen.getByText('Note from the PL8 team: “Repeated insults”')).toBeTruthy();
+    expect(screen.getByText('Note from the PL8TE team: “Repeated insults”')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Send appeal' })).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Download my data' }));

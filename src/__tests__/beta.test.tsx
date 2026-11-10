@@ -269,7 +269,7 @@ describe('Report screen', () => {
         p_details: 'insults in caption',
       }),
     );
-    expect(await screen.findByText(/The PL8 team will review your report/)).toBeTruthy();
+    expect(await screen.findByText(/The PL8TE team will review your report/)).toBeTruthy();
   });
 
   it('shows the daily limit message from the server', async () => {

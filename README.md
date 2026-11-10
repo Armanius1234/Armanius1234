@@ -1,17 +1,17 @@
-# PL8
+# PL8TE
 
-*Every car has a story.* — *See it. Search it. Connect.*
+*Turn your plate into a story.* — *Driven to connect.*
 
-PL8 is a premium automotive social network that links voluntarily claimed,
+PL8TE (formerly PL8) is a premium automotive social network that links voluntarily claimed,
 verified license plates to digital vehicle profiles.
 
 | | |
 |---|---|
-| Status | **Milestone 10 — Privacy switches and clean-up** (awaiting founder approval) |
+| Status | **Milestone 11 — PL8TE design and Windows IIS** (awaiting founder approval) |
 | App | React Native + Expo SDK 58 + TypeScript (strict), iOS & Android, plus a web version from the same code |
 | Backend | Supabase (Postgres + Row Level Security, Auth, Storage), EU region |
 | Plan | [docs/MILESTONE-0-PLAN.md](docs/MILESTONE-0-PLAN.md) |
-| Latest report | [docs/MILESTONE-10-REPORT.md](docs/MILESTONE-10-REPORT.md) |
+| Latest report | [docs/MILESTONE-11-REPORT.md](docs/MILESTONE-11-REPORT.md) |
 | Beta builds | [docs/BETA-DEPLOYMENT.md](docs/BETA-DEPLOYMENT.md) (installable app with push) |
 | Web version | [docs/WEB-VERSION.md](docs/WEB-VERSION.md) (PL8 in the browser, upload to your web space) |
 | Supabase quick start (German) | [docs/SUPABASE-SCHNELLSTART.md](docs/SUPABASE-SCHNELLSTART.md) (project, the two values, database in one step) |
@@ -85,6 +85,7 @@ npm run build:web   # web version into dist-web/ (see docs/WEB-VERSION.md)
 npm run test:web    # browser test of the built web version (Chromium via Playwright)
 npm run build:web:single  # the web version as one index.html (dist-web-single/)
 npm run build:web:local   # index.html + Windows starter to try it on a computer (dist-web-local/)
+npm run build:web:iis     # index.html + web.config for Windows IIS (dist-web-iis/)
 ```
 
 ### Project structure

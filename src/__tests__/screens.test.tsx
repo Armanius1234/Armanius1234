@@ -81,7 +81,7 @@ describe('Register screen', () => {
     await fireEvent.changeText(screen.getByLabelText('Repeat password'), 'carlover2026');
     await fireEvent.press(screen.getByRole('button', { name: 'Create account' }));
 
-    expect(await screen.findByText('You must be 18 or older to use PL8.')).toBeTruthy();
+    expect(await screen.findByText('You must be 18 or older to use PL8TE.')).toBeTruthy();
     expect(screen.getByText('Please accept the Terms and Privacy Policy.')).toBeTruthy();
     expect(auth.signUp).not.toHaveBeenCalled();
   });

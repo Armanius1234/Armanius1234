@@ -203,7 +203,7 @@ describe('Suggested people', () => {
     const view = await wrap(<SuggestedPeople />);
     expect(await screen.findByText('Followed by @ben.bmw and 2 more')).toBeTruthy();
     expect(screen.getByText('Also drives a Porsche')).toBeTruthy();
-    expect(screen.getByText('Popular on PL8')).toBeTruthy();
+    expect(screen.getByText('Popular on PL8TE')).toBeTruthy();
     expect((await screen.findAllByRole('button', { name: 'Follow' })).length).toBe(3);
     expect(a11yProblems(view.root!)).toEqual([]);
   });

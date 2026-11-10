@@ -50,7 +50,7 @@ The result is **`dist-web-single/index.html`** (about 5 MB). It contains
 everything: the app, fonts and icons.
 
 1. **Fill in the settings.** Open the file in a text editor (Notepad, TextEdit),
-   find the block **"PL8 SETTINGS"** near the top, and enter the two values
+   find the block **"PL8TE SETTINGS"** near the top, and enter the two values
    between the quotes:
 
    ```json
@@ -97,6 +97,27 @@ Good to know:
   "Backend not configured" instead.
 - The settings in `pl8-config.js` or at the top of `index.html` win over the
   form.
+
+## 2d. Windows IIS (no extra software)
+
+```bash
+npm run build:web:iis
+```
+
+The result is **`dist-web-iis/`**:
+
+- **`website/`**: copy this into the IIS site folder (e.g. `C:\inetpub\wwwroot`).
+  - `index.html`: the single-file app.
+  - `web.config`: start page, app addresses answered with `index.html`, and
+    security headers.
+  - It only uses IIS features that are on by default (Static Content, Default
+    Document, HTTP Errors). No URL Rewrite, no Node.js, no ASP.NET.
+- **`Einrichtung/`**: German guide `LIESMICH-IIS.txt`, the Supabase quick start
+  and the one-file database. **Not** for the web folder.
+
+The app must be at the top level of the IIS site, not in a sub-folder. If IIS
+reports *HTTP 500.19*, delete `web.config`. The app still runs; only reloading
+an inner page shows "Not found".
 
 ## 3. Put it online (IONOS web hosting)
 

@@ -19,7 +19,7 @@ export default function DiscoverScreen() {
           <View style={styles.header}>
             <View style={styles.titleRow}>
               <AppText variant="title">{t('tabs.discover')}</AppText>
-              <Logo width={64} framed={false} />
+              <Logo width={96} frame="none" />
             </View>
             <AppText variant="callout" color="textSecondary">
               {t('feed.discoverHint')}

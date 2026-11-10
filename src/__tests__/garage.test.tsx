@@ -184,7 +184,7 @@ describe('PL8 Search screen', () => {
     await wrap(<PlateSearchScreen />);
     await typePlate('F', 'AB', '1');
     await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
-    expect(await screen.findByText('No PL8 found')).toBeTruthy();
+    expect(await screen.findByText('No PL8TE found')).toBeTruthy();
   });
 
   it('explains the rate limit', async () => {

@@ -63,7 +63,7 @@ export default function PlateSearchScreen() {
     <Screen scroll edges={['top']} contentStyle={styles.content}>
       <View style={styles.header}>
         <AppText variant="title">{t('tabs.search')}</AppText>
-        <Logo width={64} framed={false} />
+        <Logo width={96} frame="none" />
       </View>
       <Segmented<Mode>
         value={mode}

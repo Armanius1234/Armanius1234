@@ -35,6 +35,8 @@ jobs:
       - run: npm run build:web:local
       - run: npm run test:web:single
       - run: npm run test:web:local
+      - run: node scripts/package-web-iis.mjs
+      - run: npm run test:web:iis
 
   database:
     name: Database security tests (RLS)

@@ -2,9 +2,10 @@ import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
 import { Inter_500Medium } from '@expo-google-fonts/inter/500Medium';
 import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
 import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
-import { Orbitron_900Black } from '@expo-google-fonts/orbitron/900Black';
+import { Exo2_800ExtraBold_Italic } from '@expo-google-fonts/exo-2/800ExtraBold_Italic';
 import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
+import { Image } from 'expo-image';
 import { DarkTheme, Stack, ThemeProvider, type Theme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -19,7 +20,7 @@ import { LocalSetup } from '@/features/system/LocalSetup';
 import { OfflineBanner } from '@/features/system/OfflineBanner';
 import { I18nProvider, useI18n } from '@/i18n';
 import { env, isLocalhost } from '@/lib/env';
-import { colors, fonts } from '@/theme/tokens';
+import { colors, fonts, WEB_COLUMN_WIDTH } from '@/theme/tokens';
 import { ErrorView, LoadingView } from '@/ui';
 import { DialogHost } from '@/ui/alert';
 
@@ -31,6 +32,8 @@ export const ErrorBoundary = CrashScreen;
 // A link straight to an inner screen (a reloaded browser page, a shared link,
 // a tapped notification) gets the home screen underneath, so "back" works.
 export const unstable_settings = { initialRouteName: '(tabs)' };
+
+const HERO = require('../../assets/images/hero-car.webp');
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,7 +70,7 @@ export default function RootLayout() {
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
-    Orbitron_900Black,
+    Exo2_800ExtraBold_Italic,
   });
 
   // Keep the splash screen until fonts are ready (or failed: then system fonts are used).
@@ -221,6 +224,9 @@ function WebFrame({ children }: { children: ReactNode }) {
   if (Platform.OS !== 'web') return <>{children}</>;
   return (
     <View style={styles.webOuter}>
+      {/* The brand picture, blurred, around the app column. */}
+      <Image source={HERO} style={StyleSheet.absoluteFill} contentFit="cover" blurRadius={24} />
+      <View style={[StyleSheet.absoluteFill, styles.webShade]} />
       <View style={styles.webColumn}>{children}</View>
     </View>
   );
@@ -228,10 +234,11 @@ function WebFrame({ children }: { children: ReactNode }) {
 
 const styles = StyleSheet.create({
   webOuter: { flex: 1, alignItems: 'center', backgroundColor: colors.bgBackdrop },
+  webShade: { backgroundColor: 'rgba(4, 6, 10, 0.78)' },
   webColumn: {
     flex: 1,
     width: '100%',
-    maxWidth: 600,
+    maxWidth: WEB_COLUMN_WIDTH,
     backgroundColor: colors.bgPrimary,
     borderLeftWidth: StyleSheet.hairlineWidth,
     borderRightWidth: StyleSheet.hairlineWidth,

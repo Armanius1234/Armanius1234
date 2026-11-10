@@ -27,7 +27,7 @@ const exported = readFileSync(join(tmp, 'index.html'), 'utf8');
 const scripts = [...exported.matchAll(/<script src="([^"]+)" defer><\/script>/g)].map((m) => m[1]);
 if (scripts.length === 0) throw new Error('No scripts found in the exported index.html');
 
-const MIME = { '.ttf': 'font/ttf', '.otf': 'font/otf', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
+const MIME = { '.ttf': 'font/ttf', '.otf': 'font/otf', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
 const dataUri = (file) => {
   const type = MIME[extname(file)];
   if (!type) throw new Error(`Unknown file type: ${file}`);
@@ -84,15 +84,15 @@ const html = `<!doctype html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>PL8</title>
-    <meta name="description" content="PL8 – Every car has a story." />
+    <title>PL8TE</title>
+    <meta name="description" content="PL8TE – Turn your plate into a story." />
     <meta name="theme-color" content="#080B12" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta http-equiv="Content-Security-Policy" content="${csp}" />
     ${favicon ? `<link rel="icon" href="${favicon}" />` : ''}
 
     <!-- =====================================================================
-         PL8 SETTINGS: the connection to your Supabase project.
+         PL8TE SETTINGS: the connection to your Supabase project.
          Fill in the two PUBLIC values between the quotes, then save:
            supabaseUrl: Supabase -> Project Settings -> Data API -> Project URL
            supabaseKey: Supabase -> Project Settings -> API Keys -> Publishable key
@@ -114,7 +114,7 @@ const html = `<!doctype html>
     </style>
   </head>
   <body>
-    <noscript>PL8 braucht JavaScript. / PL8 needs JavaScript.</noscript>
+    <noscript>PL8TE braucht JavaScript. / PL8TE needs JavaScript.</noscript>
     <div id="root"></div>
 ${code.map((js) => `    <script>${js}</script>`).join('\n')}
   </body>

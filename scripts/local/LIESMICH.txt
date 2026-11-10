@@ -1,4 +1,4 @@
-PL8 auf deinem Computer testen
+PL8TE auf deinem Computer testen
 ==============================
 
 0. Noch kein Supabase-Projekt? Zuerst SUPABASE-SCHNELLSTART.md lesen
@@ -22,9 +22,9 @@ PL8 auf deinem Computer testen
 
 Hinweise
 - Der Testserver ist nur auf diesem Computer erreichbar, nicht im Netzwerk.
-- Ein Doppelklick direkt auf index.html funktioniert nicht: PL8 braucht eine
+- Ein Doppelklick direkt auf index.html funktioniert nicht: PL8TE braucht eine
   Webadresse. Deshalb gibt es "PL8 starten.bat".
 - Für deine echte Website lädst du nur index.html hoch und trägst die zwei
-  Werte oben in der Datei ein (Block "PL8 SETTINGS").
+  Werte oben in der Datei ein (Block "PL8TE SETTINGS").
 - In Supabase muss die Datenbank eingerichtet sein
   (PL8-Datenbank-komplett.sql, siehe SUPABASE-SCHNELLSTART.md).

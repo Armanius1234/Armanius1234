@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
 import { MentionText } from '@/features/discovery/mentions';
@@ -16,6 +16,7 @@ import { compactCount, timeAgo } from '@/shared/time';
 import { vehicleTitle } from '@/shared/vehicle';
 import { colors, hitSize, spacing } from '@/theme/tokens';
 import { AppText, Avatar, Button, EmptyView } from '@/ui';
+import { useContentWidth } from '@/ui/useContentWidth';
 import { Alert } from '@/ui/alert';
 
 import { useDeletePost, useFollow, useRelationship, useToggleLike, useToggleSave, useUnfollow } from './api';
@@ -99,9 +100,9 @@ export function FollowButton({ profile }: { profile: Pick<Profile, 'id' | 'usern
 export function ProfileStats({ profile, canOpenLists }: { profile: Profile; canOpenLists: boolean }) {
   const { t } = useI18n();
   const items = [
-    { label: t('social.posts'), value: profile.post_count, kind: null },
     { label: t('social.followers'), value: profile.follower_count, kind: 'followers' as const },
     { label: t('social.followingTitle'), value: profile.following_count, kind: 'following' as const },
+    { label: t('social.posts'), value: profile.post_count, kind: null },
   ];
   return (
     <View style={styles.stats}>
@@ -167,7 +168,7 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
   const { t } = useI18n();
   const ago = useTimeAgo();
   const uid = useAuth().session?.user.id;
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   const urls = useSignedUrls('post-media', post.media_paths);
   const likeMutation = useToggleLike();
   const saveMutation = useToggleSave();
@@ -345,7 +346,7 @@ export function PostCard({ post, onOpen }: { post: FeedPost; onOpen?: () => void
 /** Three-column photo grid (profile posts, discover). */
 export function PostGrid({ posts }: { posts: FeedPost[] }) {
   const { t } = useI18n();
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   const size = Math.floor((width - 4) / 3);
   const covers = posts.flatMap((p) => (p.media_paths[0] ? [p.media_paths[0]] : []));
   const urls = useSignedUrls('post-media', covers);

@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { useDecideVerification, useIsAdmin, useSignedUrls, useVerificationQueue } from '@/features/garage/api';
 import { PlateBadge } from '@/features/garage/components';
@@ -10,6 +10,7 @@ import { errorKey } from '@/lib/errors';
 import { vehicleTitle } from '@/shared/vehicle';
 import { colors, fonts, radius, spacing } from '@/theme/tokens';
 import { AppText, Button, EmptyView, FormMessage, LoadingView, Screen, TextField } from '@/ui';
+import { useContentWidth } from '@/ui/useContentWidth';
 import { SensitiveImage } from '@/ui/SensitiveImage';
 import { Alert } from '@/ui/alert';
 
@@ -21,7 +22,7 @@ export default function ReviewScreen() {
   const item = queue.data?.find((q) => q.request_id === requestId);
   const photos = useSignedUrls('verification-evidence', item?.evidence_paths ?? []);
   const decide = useDecideVerification();
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   const [note, setNote] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 

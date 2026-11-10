@@ -36,7 +36,7 @@ describe('translations', () => {
   });
 
   it('keeps the brand slogan identical in both languages', () => {
-    expect(translate('de', 'brand.tagline')).toBe('Every car has a story.');
-    expect(translate('en', 'brand.tagline')).toBe('Every car has a story.');
+    expect(translate('de', 'brand.tagline')).toBe('Turn your plate into a story.');
+    expect(translate('en', 'brand.tagline')).toBe('Turn your plate into a story.');
   });
 });

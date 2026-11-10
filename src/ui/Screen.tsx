@@ -12,12 +12,14 @@ type Props = {
   edges?: Edge[];
   contentStyle?: ViewStyle;
   footer?: ReactNode;
+  /** false: no background colour (e.g. over the hero image). */
+  background?: boolean;
 };
 
-export function Screen({ children, scroll, padded = true, edges = ['top', 'bottom'], contentStyle, footer }: Props) {
+export function Screen({ children, scroll, padded = true, edges = ['top', 'bottom'], contentStyle, footer, background = true }: Props) {
   const inner = [padded && styles.padded, contentStyle];
   return (
-    <SafeAreaView style={styles.root} edges={edges}>
+    <SafeAreaView style={[styles.root, !background && styles.clear]} edges={edges}>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         {scroll ? (
           <ScrollView
@@ -39,6 +41,7 @@ export function Screen({ children, scroll, padded = true, edges = ['top', 'botto
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgPrimary },
+  clear: { backgroundColor: 'transparent' },
   flex: { flex: 1 },
   padded: { paddingHorizontal: spacing.md },
   scrollContent: { flexGrow: 1, paddingBottom: spacing.xl },

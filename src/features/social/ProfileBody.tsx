@@ -30,6 +30,8 @@ export function ProfileBody({ profile, isMe, actions }: { profile: Profile; isMe
     <View style={styles.wrap}>
       <ProfileHeader
         profile={profile}
+        isMe={isMe}
+        stats={<ProfileStats profile={profile} canOpenLists={canSee} />}
         actions={
           isMe ? (
             actions
@@ -49,7 +51,6 @@ export function ProfileBody({ profile, isMe, actions }: { profile: Profile; isMe
           </AppText>
         </View>
       ) : null}
-      <ProfileStats profile={profile} canOpenLists={canSee} />
 
       {!isMe && rel.isPending && profile.is_private ? (
         <ActivityIndicator color={colors.accent} />

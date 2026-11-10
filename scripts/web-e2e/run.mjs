@@ -44,7 +44,7 @@ async function main() {
     await check('opened as a file on the computer, the page explains it needs a web address', async () => {
       const page = await browser.newPage({ locale: 'de-DE' });
       await page.goto(`file://${join(DIST, 'index.html')}`);
-      await page.getByText('PL8 braucht eine Webadresse').waitFor({ timeout: 15000 });
+      await page.getByText('PL8TE braucht eine Webadresse').waitFor({ timeout: 15000 });
       await page.close();
     });
     await check('opened as /index.html, the app starts normally', async () => {
@@ -71,7 +71,7 @@ async function main() {
     const page = await browser.newPage({ locale: 'de-DE' });
     const problems = watchConsole(page);
     await page.goto(emptyBase);
-    await page.getByText('PL8 auf diesem Computer testen').waitFor({ timeout: 15000 });
+    await page.getByText('PL8TE auf diesem Computer testen').waitFor({ timeout: 15000 });
     await page.getByLabel('Project URL').fill(SUPABASE);
     await page.getByLabel('Publishable Key').fill('sb_secret_' + 'a-made-up-key-for-this-test');
     await page.getByRole('button', { name: 'Verbinden' }).click();
@@ -115,6 +115,18 @@ async function main() {
     const box = await page.getByLabel('E-Mail').boundingBox();
     assert(box && box.x >= (1280 - 600) / 2 && box.x + box.width <= (1280 + 600) / 2, `field at ${JSON.stringify(box)}`);
     await page.close();
+  });
+
+  await check('on a wide screen, profile photos are a 3-column grid inside the column', async () => {
+    const wide = await browser.newPage({ locale: 'de-DE', viewport: { width: 1280, height: 800 } });
+    await mockSupabase(wide);
+    await signIn(wide, base);
+    await wide.goto(`${base}/profile`);
+    const tile = wide.getByRole('button', { name: 'Beitrag', exact: true }).first();
+    await tile.waitFor({ timeout: 15000 });
+    const box = await tile.boundingBox();
+    assert(box && box.width <= 600 / 3 + 2, `grid tile is ${box?.width}px wide`);
+    await wide.close();
   });
 
   // 2. Signed in.

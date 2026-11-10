@@ -86,7 +86,7 @@ PL8 schickt bei der Registrierung einen Code statt eines Links.
 
 - **Auf deinem PC:** „PL8 starten.bat“ starten. Das Formular erscheint. Trag
   **Project URL** und **Publishable Key** ein und klicke **Verbinden**.
-- **Auf deiner Website:** oben in `index.html` im Block **„PL8 SETTINGS“**.
+- **Auf deiner Website:** oben in `index.html` im Block **„PL8TE SETTINGS“**.
 - **In der Handy-App (Expo Go):** in die Datei `.env` (siehe README).
 
 ## 6. Optional: dich zum Admin machen
